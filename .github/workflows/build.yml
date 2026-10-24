@@ -28,7 +28,9 @@ jobs:
           sed -i 's/#303F9F/#000000/g; s/#3F51B5/#000000/g' android/app/src/main/res/values/colors.xml || true
           find android/app/src/main/res -name 'splash.png' -exec sh -c 'convert -size $(identify -format "%wx%h" "$1") xc:black "$1"' _ {} \; || true
       - name: Raise version code on every build (so the new APK installs over the old one)
-        run: sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"1.${{ github.run_number }}\"/" android/app/build.gradle
+        run: |
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/" android/app/build.gradle
+          sed -i "s/versionName \"1.0\"/versionName \"1.${{ github.run_number }}\"/" android/app/build.gradle
       - name: Use the fixed signing key (keeps your data when updating)
         run: |
           mkdir -p ~/.android
