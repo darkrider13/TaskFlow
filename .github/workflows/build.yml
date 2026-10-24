@@ -1,4 +1,4 @@
-name: Build HabitX APK
+name: Build TaskFlow APK
 on:
   push:
     branches:
@@ -86,9 +86,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk HabitX.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk TaskFlow.apk
           gh release delete latest --cleanup-tag --yes || true
-          gh release create latest HabitX.apk \
-            --title "HabitX (build ${{ github.run_number }})" \
-            --notes "HabitX latest build. Download HabitX.apk and install it over the old version." \
+          gh release create latest TaskFlow.apk \
+            --title "TaskFlow (build ${{ github.run_number }})" \
+            --notes "TaskFlow latest build. Download TaskFlow.apk and install it over the old version." \
             --target ${{ github.sha }}
