@@ -47,6 +47,14 @@ jobs:
           else
             echo "No assets/icon-only.png yet, using default icon"
           fi
+      - name: Make sure adaptive icon background exists
+        run: |
+          R=android/app/src/main/res
+          for d in "mdpi 108" "hdpi 162" "xhdpi 216" "xxhdpi 324" "xxxhdpi 432"; do
+            set -- $d
+            mkdir -p $R/mipmap-$1
+            [ -f $R/mipmap-$1/ic_launcher_background.png ] || convert -size $2x$2 xc:'#000000' $R/mipmap-$1/ic_launcher_background.png
+          done
       - name: Notification icons
         run: |
           D=android/app/src/main/res/drawable
