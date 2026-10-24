@@ -1,0 +1,12 @@
+{
+  "appId": "com.habit.tracker",
+  "appName": "HabitX",
+  "webDir": "www",
+  "backgroundColor": "#000000",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#2196F3"
+    }
+  }
+}
