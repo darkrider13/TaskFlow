@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>HabitX</title>
+<title>TaskFlow</title>
 <style>
 :root{--bgc:#000;--bgi:none;--ink:#F4F4F5;--muted:rgba(244,244,245,.56);--glass:rgba(255,255,255,.08);--glass2:rgba(255,255,255,.16);--edge:rgba(255,255,255,.18);--hi:rgba(255,255,255,.2);--sh:rgba(0,0,0,.5);--panel:rgba(22,22,26,.78);--daybg:rgba(255,255,255,.06);--cross:#FF0000;--streak:#FFFF00;--shade:rgba(0,0,0,.6);--ac:#00FFFF;--tink:#041014;--mono:#fff}
 :root[data-theme=light]{--mono:#000;--bgc:#E6EEF5;--bgi:radial-gradient(circle at 12% 6%,rgba(94,234,212,.55),transparent 42%),radial-gradient(circle at 92% 28%,rgba(167,139,250,.45),transparent 45%),radial-gradient(circle at 18% 96%,rgba(251,146,160,.4),transparent 45%);--ink:#10253A;--muted:rgba(16,37,58,.6);--glass:rgba(255,255,255,.5);--glass2:rgba(255,255,255,.78);--edge:rgba(255,255,255,.95);--hi:rgba(255,255,255,.9);--sh:rgba(40,70,110,.18);--panel:rgba(244,249,255,.85);--daybg:rgba(255,255,255,.45);--cross:#FF0000;--streak:#FFC400;--shade:rgba(16,37,58,.35)}
@@ -394,7 +394,7 @@ body.fe::after{opacity:1!important}
 <div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div><p class="hint" data-i="daysHint" style="margin:6px 2px 0"></p></div>
 <div class="row" id="fsvrow"><button style="flex:1" id="fsave" data-i="save"></button></div>
 </div></div>
-<div id="onb" class="hid"><div class="obh"><small data-i="obHi"></small><b>HabitX</b><span data-i="obSub"></span></div>
+<div id="onb" class="hid"><div class="obh"><small data-i="obHi"></small><b>TaskFlow</b><span data-i="obSub"></span></div>
 <div class="obc"><h2 data-i="obProf"></h2><div class="obr"><div class="oba"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0z"/></svg></div><input type="text" id="obn" maxlength="40" autocomplete="off" data-p="nameTitle"></div></div>
 <div class="obg"><button id="obgo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#FF0000" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="start"></span></button></div></div>
 <div class="sheet" id="ssheet"><div class="panel">
@@ -465,7 +465,7 @@ catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write 
 repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
 wds:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],onDays:(d,x)=>`${d} at ${x}`,snooze:'Remind in 10 min',doneA:'Done',yesA:'Yes',noA:'No',
 bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore it on a new phone.',bkEx:'Save backup file',bkCp:'Copy backup as text',bkImT:'Restore',bkFile:'Choose backup file',bkPh:'Or paste backup text here',bkPaste:'Restore from text',
-bkBad:'This is not a valid HabitX backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
+bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
 wd:['S','M','T','W','T','F','S'],loc:'en-US'},
 bn:{userPh:'এখানে ট্যাপ করে আপনার নাম লিখুন',userPh2:'আপনার নাম লিখুন',nameTitle:'আপনার নাম কী?',start:'শুরু করুন',obHi:'স্বাগতম',obSub:'আপনার ড্যাশবোর্ড সাজিয়ে নিন',obProf:'আপনার প্রোফাইল',
 add:'+ নতুন অভ্যাস',streak:'টানা দিন',total:'মোট দিন',left:'এ মাসে বাকি',
@@ -490,7 +490,7 @@ catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'ন�
 repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
 wds:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],onDays:(d,x)=>`${d} — ${x}-এ`,snooze:'১০ মিনিট পরে',doneA:'সম্পন্ন',yesA:'হ্যাঁ',noA:'না',
 bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেটা ফাইলে সংরক্ষণ করুন, নতুন ফোনে ফিরিয়ে আনতে পারবেন।',bkEx:'ব্যাকআপ ফাইল সংরক্ষণ',bkCp:'ব্যাকআপ লেখা আকারে কপি',bkImT:'ফিরিয়ে আনুন',bkFile:'ব্যাকআপ ফাইল বাছুন',bkPh:'অথবা ব্যাকআপের লেখা এখানে পেস্ট করুন',bkPaste:'লেখা থেকে ফিরিয়ে আনুন',
-bkBad:'এটি সঠিক HabitX ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
+bkBad:'এটি সঠিক TaskFlow ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
 wd:['র','সো','ম','বু','বৃ','শু','শ'],loc:'bn-BD'}
 };
 const COLORS=['#00FFFF','#0000FF','#8000FF','#FF8000','#FF0080','#00FF00'];
@@ -992,7 +992,7 @@ if(e.actionId==='snooze'){safe(()=>LN.schedule({notifications:[{id:2000000+o.nid
 else if(e.actionId==='yes'||e.actionId==='done'){if(ex.kind==='habit'){S.marks[a.id]=S.marks[a.id]||{};S.marks[a.id][dk(new Date())]=1;save()}else setDone(x,true);render()}
 else if(e.actionId==='no'){render()}}));
 
-const dump=()=>JSON.stringify({app:'habitx',v:1,at:new Date().toISOString(),data:Object.assign({},S,{lock:undefined})});
+const dump=()=>JSON.stringify({app:'taskflow',v:1,at:new Date().toISOString(),data:Object.assign({},S,{lock:undefined})});
 async function clearAllN(){await safe(async()=>{const p=await LN.getPending();if(p.notifications.length)await LN.cancel(p)})}
 function dlg(o){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ${o.kind||''}">${ic(o.kind==='bad'?'x':o.kind==='ask'?'reset':'check')}</div><b>${o.title}</b><p>${o.text}</p><div class="dbt">${o.cancel?`<button class="dc">${o.cancel}</button>`:''}<button class="dok">${o.ok}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dok').onclick=()=>done(true);const c=w.querySelector('.dc');if(c)c.onclick=()=>done(false)})}
 const bkBadD=()=>dlg({kind:'bad',title:t('bkBadT'),text:t('bkBad'),ok:t('bkOkB')});
@@ -1020,12 +1020,15 @@ if(FS&&SH){try{const r=await FS.writeFile({path:fn,data:json,directory:'CACHE',e
 const f=new File([json],fn,{type:'application/json'});
 if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:fn})}catch(e){if(e&&e.name==='AbortError')return false;throw e}return true}
 throw new Error('share-unavailable')}
+/* backup file/folder name follows the app language (Bangla app -> Bangla file name, Bangla digits) */
+const bkDir=()=>S.set.lang==='bn'?'টাস্কফ্লো':'TaskFlow';
+const bkName=()=>S.set.lang==='bn'?'টাস্কফ্লো-ব্যাকআপ-'+todayKey.replace(/\d/g,c=>'০১২৩৪৫৬৭৮৯'[c])+'.json':'taskflow-backup-'+todayKey+'.json';
 async function exSave(json,fn){
 const FS=CP.Filesystem;
 if(FS){try{await FS.requestPermissions()}catch(e){}
-await FS.writeFile({path:'HabitX/'+fn,data:json,directory:'DOCUMENTS',encoding:'utf8',recursive:true});return 'Documents/HabitX/'+fn}
+await FS.writeFile({path:bkDir()+'/'+fn,data:json,directory:'DOCUMENTS',encoding:'utf8',recursive:true});return 'Documents/'+bkDir()+'/'+fn}
 const u=URL.createObjectURL(new Blob([json],{type:'application/json'})),l=document.createElement('a');l.href=u;l.download=fn;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return ''}
-$('#bex').onclick=async()=>{const json=dump(),fn='habitx-backup-'+todayKey+'.json';
+$('#bex').onclick=async()=>{const json=dump(),fn=bkName();
 if(new Blob([json]).size>MAXB){await exErr(t('exBig'));return}
 const c=await exChoose();if(!c)return;
 try{if(c==='share'){if(!await exShare(json,fn))return;await exOk()}
