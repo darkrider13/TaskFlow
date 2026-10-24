@@ -1,6 +1,6 @@
 {
   "appId": "com.habit.tracker",
-  "appName": "HabitX",
+  "appName": "TaskFlow",
   "webDir": "www",
   "backgroundColor": "#000000",
   "plugins": {
