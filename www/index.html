@@ -333,6 +333,12 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 :root[data-theme=light] .cxc.evt .cxd{color:#2563EB}
 .tl>.cxc{scroll-snap-align:start}
 .cxc.hol .cxt,.cxc.evt .cxt{text-align:center;font-size:6.5px;font-weight:600;line-height:1.35}
+/* More tab: spread App lock and credit down to fill the empty gap above the nav */
+#v-more:not(.hid){display:flex;flex-direction:column}
+#v-more>*{flex-shrink:0}
+#v-more>h3:last-of-type{margin-top:auto;padding-top:18px}
+#v-more>.g.card:nth-last-child(2){margin-bottom:18px}
+#v-more>.g.foot{margin-top:auto}
 </style></head>
 <body>
 <div class="top"><div><button class="user" id="user"></button></div><div class="tools"><button class="tbtn" id="gear" aria-label="Settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div></div>
@@ -785,6 +791,11 @@ const IC={"gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.7 1
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24">${IC[n]}</svg>`;
 const TABS=['home','cal','up','rep','more'];
 const ICONS={rep:'<path d="M5 20V10M12 20V4M19 20v-7"/>',more:'<circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/>',home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',up:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'};
+/* Switching tabs only shows/hides the already-rendered views (data changes call render() themselves), so it is instant */
+function tabGo(k){if(k===tab)return;tab=k;
+$('#navb').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===k));
+TABS.forEach(z=>$('#v-'+z).classList.toggle('hid',tab!==z));
+$('#v-'+k).querySelectorAll('.tl,.stl').forEach(tlSettle);if(k==='home')hlGo(hlI,false)}
 function applyStatic(){
 const r=document.documentElement;r.dataset.theme=S.set.theme;r.lang=S.set.lang;
 document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
@@ -792,7 +803,7 @@ document.querySelectorAll('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));
 $('#user').classList.toggle('ph',!S.set.name);$('#user').innerHTML=S.set.name?ic('user')+'<span>'+esc(S.set.name)+'</span>':esc(t('userPh'));
 $('#lg').textContent=S.set.lang==='bn'?'English':'বাংলা';$('#th').innerHTML=ic(S.set.theme==='dark'?'moon':'sun')+' '+t(S.set.theme==='dark'?'thD':'thL');
 $('#navb').innerHTML=TABS.map(k=>`<button data-t="${k}" class="${tab===k?'on':''}"><svg viewBox="0 0 24 24">${ICONS[k]}</svg>${t({home:'tHome',up:'tUp',cal:'tCal',rep:'tRep',more:'tMore'}[k])}</button>`).join('');
-$('#navb').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+$('#navb').querySelectorAll('button').forEach(b=>b.onclick=()=>tabGo(b.dataset.t));
 TABS.forEach(k=>$('#v-'+k).classList.toggle('hid',tab!==k))}
 
 let hlI=0,HN=6;
@@ -885,7 +896,7 @@ const card=(k,tt,c,f)=>`<div class="g cxc ${c}${f?' first':''}" data-cd="${k}"><
 let items=[];
 if(hol){const e=new Date(vy,vm+1,0),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()),s0=new Date(vy,vm,1);for(let d=s0<t0?t0:s0;d<=e;d.setDate(d.getDate()+1)){const k=dk(d),n=holInfo(k).gx;if(n.length)items.push([k,n.join(' / ')])}}
 else items=S.todos.filter(x=>!x.done&&x.date>=todayKey).sort((a,b)=>(a.date+(a.time||'99'))>(b.date+(b.time||'99'))?1:-1).map(x=>[x.date,x.text]);
-const body=items.length?`<div class="tl" data-n="4">${items.map((it,i)=>card(it[0],it[1],hol?'hol':'evt',hol&&i===0)).join('')}</div>`:`<div class="g empty">${t(hol?'cxNoH':'cxNoE')}</div>`;
+const body=items.length?`<div class="tl" data-n="5">${items.map((it,i)=>card(it[0],it[1],hol?'hol':'evt',hol&&i===0)).join('')}</div>`:`<div class="g empty">${t(hol?'cxNoH':'cxNoE')}</div>`;
 el.innerHTML=tabs+body;
 el.querySelectorAll('[data-cx]').forEach(b=>b.onclick=()=>{cxTab=b.dataset.cx;renderCx()});
 el.querySelectorAll('[data-cd]').forEach(c=>{const k=c.dataset.cd,go=()=>{const d=dparse(k);vy=d.getFullYear();vm=d.getMonth();pickKey=k};c.onclick=()=>{go();render();S.todos.forEach(x=>{if(x.date===k)openT.delete(x.id)});showDay(k)};const dd=c.querySelector('.cxd');if(dd)dd.onclick=e=>{e.stopPropagation();go();render();window.scrollTo({top:0,behavior:'smooth'})}})}
@@ -1256,7 +1267,7 @@ window.addEventListener('resize',fitFsn);fitFsn();
 /* ---- kill native overscroll glow/stretch: block any drag that cannot scroll further ---- */
 (()=>{let sx=0,sy=0,gk='',gv=0;
 const can=(el,dx,dy)=>{for(;el&&el.nodeType===1&&el!==document.documentElement;el=el.parentElement){const c=getComputedStyle(el);
-if(Math.abs(dy)>=Math.abs(dx)){if(/(auto|scroll)/.test(c.overflowY)&&el.scrollHeight>el.clientHeight+1){if(dy>0&&el.scrollTop>0)return 1;if(dy<0&&el.scrollTop+el.clientHeight<el.scrollHeight-1)return 1}}
+if(Math.abs(dy)>=Math.abs(dx)){if(/(auto|scroll)/.test(c.overflowY)&&el.scrollHeight>el.clientHeight+1){if(dy>0&&el.scrollTop>0)return 1;if(dy<0&&el.scrollTop+el.clientHeight<el.scrollHeight-1)return 1;if(c.overscrollBehaviorY!=='auto')return 0}}
 else if(/(auto|scroll)/.test(c.overflowX)&&el.scrollWidth>el.clientWidth+1){if(dx>0&&el.scrollLeft>0)return 1;if(dx<0&&el.scrollLeft+el.clientWidth<el.scrollWidth-1)return 1}}
 return 0};
 document.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;gk=''},{passive:true,capture:true});
