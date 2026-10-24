@@ -1,9 +1,10 @@
 name: Build HabitX APK
 on:
   push:
-    tags-ignore:
-      - '**'
-  workflow_dispatch:
+    branches:
+      - main
+      - master
+  workflow_dispatch: {}
 permissions:
   contents: write
 jobs:
