@@ -126,7 +126,7 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .moods button.on{opacity:1;background:var(--glass2)}
 .bdgs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .bdg{padding:12px 8px;border-radius:16px;border:1px solid var(--edge);background:var(--glass);opacity:.45;text-align:center}
-.bdg.on{opacity:1;background:var(--glass2);box-shadow:0 0 14px var(--streak)}
+.bdg.on{opacity:1;background:var(--glass2);border-color:var(--bc);box-shadow:0 0 16px var(--bc)}
 .bdg i{font-style:normal;font-size:26px;display:block}.bdg b{font-size:13.5px;display:block;margin:4px 0 2px}.bdg small{color:var(--muted);font-size:12px}
 .big2{font-size:34px;font-weight:700}
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translate(-50%,-140px);padding:12px 18px;border-radius:16px;z-index:30;background:var(--panel);border:1px solid var(--edge);transition:transform .3s;max-width:90%;text-align:center;font-size:14px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
@@ -142,13 +142,24 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .lpad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .lpad button{height:62px;border-radius:18px;border:1px solid var(--edge);background:var(--glass);color:var(--ink);font-size:24px}
 .ovl{display:flex;align-items:center;justify-content:space-between;width:100%;padding:13px 14px;margin-bottom:12px;border:0;font:inherit;font-size:15px;font-weight:600;color:#ff0000;text-align:left}.ovl .ic{width:20px;height:20px}
+.dlg{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--shade);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.dbox{width:100%;max-width:340px;border-radius:22px;padding:26px 20px 20px;text-align:center;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);color:var(--ink)}
+.dic{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:#16A34A;color:#fff;box-shadow:0 0 0 8px rgba(22,163,74,.22)}
+.dic .ic{width:32px;height:32px;stroke-width:3}
+.dic.ask{background:var(--glass2);color:var(--ink);box-shadow:0 0 0 8px var(--glass)}
+.dic.bad{background:#FF0000;box-shadow:0 0 0 8px rgba(255,0,0,.22)}
+.dbox b{display:block;font-size:19px;margin-bottom:8px}
+.dbox p{white-space:pre-line;margin:0 0 20px;color:var(--muted);font-size:14.5px;line-height:1.5}
+.dbt{display:flex;gap:10px;justify-content:center}
+.dbt button{flex:1;max-width:150px;height:46px;border-radius:14px;border:0;font-size:16px;font-weight:700;font-family:inherit}
+.dok{background:#FF0000;color:#fff}.dc{background:var(--glass2);color:var(--ink)}
 .foot{margin-top:18px;text-align:center;padding:12px 12px 10px}.foot b{display:block;font-size:12.5px;color:var(--muted)}.foot small{display:block;font-size:10px;font-weight:600;color:var(--muted)}.fi{display:flex;justify-content:center;gap:8px;align-items:center;margin:6px 6px 4px}.fi a{color:var(--ink);width:38px;height:38px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}.fi .ic{width:22px;height:22px}.fi .ic.f{fill:currentColor;stroke:none}
 .ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
 #gear{color:var(--muted)}#gear .ic{width:20px;height:20px}
 .mnav .ic{width:24px;height:24px}
 .moods button{color:var(--muted)}.moods button.on{color:var(--ink)}.moods .ic{width:24px;height:24px}
 .bdg i{width:46px;height:46px;border-radius:50%;background:var(--glass2);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;color:var(--muted);font-size:22px}
-.bdg.on i{color:var(--ink)}
+.bdg.on i{color:var(--bc);box-shadow:inset 0 0 0 2px var(--bc)}.bdg.on small{color:var(--bc)}.bdg.on .bar i{width:100%;height:100%;margin:0;border-radius:6px;background:var(--bc);box-shadow:none}
 .sw{position:relative;margin-bottom:10px}
 .sw .ic{position:absolute;left:12px;top:50%;margin-top:-.575em;color:var(--muted);pointer-events:none}
 .row .pri{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex:1;min-width:0}
@@ -429,7 +440,7 @@ catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write 
 repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
 wds:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],onDays:(d,x)=>`${d} at ${x}`,snooze:'Remind in 10 min',doneA:'Done',yesA:'Yes',noA:'No',
 bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore it on a new phone.',bkEx:'Save backup file',bkCp:'Copy backup as text',bkImT:'Restore',bkFile:'Choose backup file',bkPh:'Or paste backup text here',bkPaste:'Restore from text',
-bkBad:'This is not a valid HabitX backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
+bkBad:'This is not a valid HabitX backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
 wd:['S','M','T','W','T','F','S'],loc:'en-US'},
 bn:{userPh:'এখানে ট্যাপ করে আপনার নাম লিখুন',userPh2:'আপনার নাম লিখুন',nameTitle:'আপনার নাম কী?',start:'শুরু করুন',obHi:'স্বাগতম',obSub:'আপনার ড্যাশবোর্ড সাজিয়ে নিন',obProf:'আপনার প্রোফাইল',
 add:'+ নতুন অভ্যাস',streak:'টানা দিন',total:'মোট দিন',left:'এ মাসে বাকি',
@@ -454,7 +465,7 @@ catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'ন�
 repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
 wds:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],onDays:(d,x)=>`${d} — ${x}-এ`,snooze:'১০ মিনিট পরে',doneA:'সম্পন্ন',yesA:'হ্যাঁ',noA:'না',
 bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেটা ফাইলে সংরক্ষণ করুন, নতুন ফোনে ফিরিয়ে আনতে পারবেন।',bkEx:'ব্যাকআপ ফাইল সংরক্ষণ',bkCp:'ব্যাকআপ লেখা আকারে কপি',bkImT:'ফিরিয়ে আনুন',bkFile:'ব্যাকআপ ফাইল বাছুন',bkPh:'অথবা ব্যাকআপের লেখা এখানে পেস্ট করুন',bkPaste:'লেখা থেকে ফিরিয়ে আনুন',
-bkBad:'এটি সঠিক HabitX ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
+bkBad:'এটি সঠিক HabitX ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
 wd:['র','সো','ম','বু','বৃ','শু','শ'],loc:'bn-BD'}
 };
 const COLORS=['#00FFFF','#0000FF','#8000FF','#FF8000','#FF0080','#00FF00'];
@@ -874,9 +885,8 @@ const card=(k,tt,c,f)=>`<div class="g cxc ${c}${f?' first':''}" data-cd="${k}"><
 let items=[];
 if(hol){const e=new Date(vy,vm+1,0),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()),s0=new Date(vy,vm,1);for(let d=s0<t0?t0:s0;d<=e;d.setDate(d.getDate()+1)){const k=dk(d),n=holInfo(k).gx;if(n.length)items.push([k,n.join(' / ')])}}
 else items=S.todos.filter(x=>!x.done&&x.date>=todayKey).sort((a,b)=>(a.date+(a.time||'99'))>(b.date+(b.time||'99'))?1:-1).map(x=>[x.date,x.text]);
-const body=items.length?`<div class="cxbox">${items.map((it,i)=>card(it[0],it[1],hol?'hol':'evt',hol&&i===0)).join('')}</div>`:`<div class="g empty">${t(hol?'cxNoH':'cxNoE')}</div>`;
+const body=items.length?`<div class="tl" data-n="4">${items.map((it,i)=>card(it[0],it[1],hol?'hol':'evt',hol&&i===0)).join('')}</div>`:`<div class="g empty">${t(hol?'cxNoH':'cxNoE')}</div>`;
 el.innerHTML=tabs+body;
-{const bx=el.querySelector('.cxbox');if(bx&&bx.children.length>4){const fit=()=>{if(!bx.isConnected){ro.disconnect();return}const c=bx.children[3];if(!c||!c.offsetHeight)return;const h=(c.offsetTop+c.offsetHeight+4)+'px';if(bx.style.maxHeight!==h)bx.style.maxHeight=h},ro=new ResizeObserver(fit);ro.observe(bx);fit()}}
 el.querySelectorAll('[data-cx]').forEach(b=>b.onclick=()=>{cxTab=b.dataset.cx;renderCx()});
 el.querySelectorAll('[data-cd]').forEach(c=>{const k=c.dataset.cd,go=()=>{const d=dparse(k);vy=d.getFullYear();vm=d.getMonth();pickKey=k};c.onclick=()=>{go();render();S.todos.forEach(x=>{if(x.date===k)openT.delete(x.id)});showDay(k)};const dd=c.querySelector('.cxd');if(dd)dd.onclick=e=>{e.stopPropagation();go();render();window.scrollTo({top:0,behavior:'smooth'})}})}
 function render(){applyStatic();renderHome();renderUp();renderCal();renderCx();renderRep();renderMore();checkBadges()}
@@ -949,12 +959,15 @@ else if(e.actionId==='no'){render()}}));
 
 const dump=()=>JSON.stringify({app:'habitx',v:1,at:new Date().toISOString(),data:Object.assign({},S,{lock:undefined})});
 async function clearAllN(){await safe(async()=>{const p=await LN.getPending();if(p.notifications.length)await LN.cancel(p)})}
-async function doImport(txt){let o;try{o=JSON.parse(txt)}catch(e){alert(t('bkBad'));return}
-const d=o&&o.data?o.data:o;if(!d||!Array.isArray(d.acts)||!Array.isArray(d.todos)||!d.marks||typeof d.marks!=='object'){alert(t('bkBad'));return}
-if(!confirm(t('bkConf',d.acts.length,d.todos.length)))return;
+function dlg(o){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ${o.kind||''}">${ic(o.kind==='bad'?'x':o.kind==='ask'?'reset':'check')}</div><b>${o.title}</b><p>${o.text}</p><div class="dbt">${o.cancel?`<button class="dc">${o.cancel}</button>`:''}<button class="dok">${o.ok}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dok').onclick=()=>done(true);const c=w.querySelector('.dc');if(c)c.onclick=()=>done(false)})}
+const bkBadD=()=>dlg({kind:'bad',title:t('bkBadT'),text:t('bkBad'),ok:t('bkOkB')});
+const MAXB=10*1024*1024;
+async function doImport(txt){if(txt.length>MAXB){await dlg({kind:'bad',title:t('bkBadT'),text:t('imBig'),ok:t('bkOkB')});return}let o;try{o=JSON.parse(txt)}catch(e){await bkBadD();return}
+const d=o&&o.data?o.data:o;if(!d||!Array.isArray(d.acts)||!Array.isArray(d.todos)||!d.marks||typeof d.marks!=='object'){await bkBadD();return}
+if(!await dlg({kind:'ask',title:t('bkQT'),text:t('bkQ'),ok:t('bkImB'),cancel:t('cancelT')}))return;
 const ol=S.lock;S=d;if(ol)S.lock=ol;else delete S.lock;S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];migMood();S.nid=Math.max(S.nid||1,...[...S.acts,...S.todos].map(z=>(z.nid||0)+1));
 sel=S.acts[0]?S.acts[0].id:null;save();$('#bsheet').classList.remove('show');render();
-if(LN){await clearAllN();await regActions();await rescheduleAll()}alert(t('bkOk'))}
+if(LN){await clearAllN();await regActions();await rescheduleAll()}await dlg({title:t('bkDoneT'),text:t('bkDoneD',d.acts.length,d.todos.length),ok:t('bkOkB')})}
 $('#gear').onclick=()=>{$('#sn').value=S.set.name;$('#stsheet').classList.add('show')};
 $('#stcl').onclick=()=>$('#stsheet').classList.remove('show');
 $('#stsave').onclick=()=>{S.set.name=$('#sn').value.trim();save();$('#stsheet').classList.remove('show');render()};
@@ -962,12 +975,30 @@ $('#stex').onclick=()=>$('#bex').click();
 $('#stim').onclick=()=>{$('#stsheet').classList.remove('show');$('#bin').click()};
 $('#stalt').onclick=()=>{$('#stsheet').classList.remove('show');$('#btx').value='';$('#bsheet').classList.add('show')};
 $('#bcl').onclick=()=>$('#bsheet').classList.remove('show');
+const CP=window.Capacitor&&Capacitor.Plugins||{};
+function exChoose(){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ask">${ic('reset')}</div><b>${t('exQT')}</b><p>${t('exQ')}</p><div class="dbt"><button class="dc">${t('exShare')}</button><button class="dok">${t('exSave')}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dc').onclick=()=>done('share');w.querySelector('.dok').onclick=()=>done('save');w.onclick=e=>{if(e.target===w)done(null)}})}
+const exErr=m=>dlg({kind:'bad',title:t('exBadT'),text:m||t('exBadD'),ok:t('bkOkB')});
+const exOk=extra=>dlg({title:t('exDoneT'),text:t('exDoneD',S.acts.length,S.todos.length)+(extra?'\n'+extra:''),ok:t('bkOkB')});
+async function exShare(json,fn){
+const FS=CP.Filesystem,SH=CP.Share;
+if(FS&&SH){try{const r=await FS.writeFile({path:fn,data:json,directory:'CACHE',encoding:'utf8'});await SH.share({title:fn,url:r.uri,dialogTitle:fn})}catch(e){const m=String(e&&e.message||e);if(/cancel/i.test(m))return false;throw e}return true}
+const f=new File([json],fn,{type:'application/json'});
+if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:fn})}catch(e){if(e&&e.name==='AbortError')return false;throw e}return true}
+throw new Error('share-unavailable')}
+async function exSave(json,fn){
+const FS=CP.Filesystem;
+if(FS){try{await FS.requestPermissions()}catch(e){}
+await FS.writeFile({path:'HabitX/'+fn,data:json,directory:'DOCUMENTS',encoding:'utf8',recursive:true});return 'Documents/HabitX/'+fn}
+const u=URL.createObjectURL(new Blob([json],{type:'application/json'})),l=document.createElement('a');l.href=u;l.download=fn;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return ''}
 $('#bex').onclick=async()=>{const json=dump(),fn='habitx-backup-'+todayKey+'.json';
-try{const f=new File([json],fn,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:fn});return}}catch(e){if(e&&e.name==='AbortError')return}
-try{const u=URL.createObjectURL(new Blob([json],{type:'application/json'})),l=document.createElement('a');l.href=u;l.download=fn;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}catch(e){$('#bcp').click()}};
+if(new Blob([json]).size>MAXB){await exErr(t('exBig'));return}
+const c=await exChoose();if(!c)return;
+try{if(c==='share'){if(!await exShare(json,fn))return;await exOk()}
+else{const p=await exSave(json,fn);await exOk(p?t('exSavedAt',p):'')}}
+catch(e){await exErr()}};
 $('#bcp').onclick=async()=>{try{await navigator.clipboard.writeText(dump());alert(t('bkCopied'))}catch(e){$('#btx').value=dump();$('#btx').select()}};
 $('#bfile').onclick=()=>$('#bin').click();
-$('#bin').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>doImport(r.result);r.readAsText(f);e.target.value=''};
+$('#bin').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>MAXB){await dlg({kind:'bad',title:t('bkBadT'),text:t('imBig'),ok:t('bkOkB')});return}const r=new FileReader();r.onload=()=>doImport(r.result);r.readAsText(f)};
 $('#bpaste').onclick=()=>doImport($('#btx').value.trim());
 
 $('#ct').querySelectorAll('button').forEach(b=>b.onclick=()=>{cat=b.dataset.v;$('#ct').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))});
@@ -988,9 +1019,10 @@ let rmode='w',ddate=todayKey;
 function longest(a){const marks=S.marks[a.id]||{},ks=Object.keys(marks).concat([a.start||todayKey]).sort(),c=dparse(ks[0]),end=dparse(todayKey);let cur=0,best=0,g=0;
 while(c<=end&&g++<4000){const k=dk(c);if(marks[k]){cur++;if(cur>best)best=cur}else if(isSched(a,c)&&k!==todayKey)cur=0;c.setDate(c.getDate()+1)}return best}
 function badgeList(){const best=Math.max(0,...S.acts.map(longest)),tot=S.acts.reduce((p,a)=>p+Object.keys(S.marks[a.id]||{}).length,0),td=S.todos.filter(x=>x.done).length,o=[];
+const BC={s7:'#FF8000',s30:'#FF0000',s100:'#FF0080',s365:'#8000FF',t10:'#00FFFF',t50:'#0080FF',t100:'#00FF80',t500:'#FFB800',k10:'#80FF00',k50:'#FF00FF',k100:'#FFB800'};
 [7,30,100,365].forEach(n=>o.push({id:'s'+n,ic:'flame',txt:t('bStreak',n),cur:best,n}));
 [10,50,100,500].forEach(n=>o.push({id:'t'+n,ic:'award',txt:t('bTotal',n),cur:tot,n}));
-[10,50,100].forEach(n=>o.push({id:'k'+n,ic:'checkc',txt:t('bTask',n),cur:td,n}));return o}
+[10,50,100].forEach(n=>o.push({id:'k'+n,ic:'checkc',txt:t('bTask',n),cur:td,n}));o.forEach(b=>b.c=BC[b.id]||'#fff');return o}
 function checkBadges(){const earned=badgeList().filter(b=>b.cur>=b.n);
 if(!S.bd){S.bd=earned.map(b=>b.id);save();return}
 const nw=earned.filter(b=>!S.bd.includes(b.id));if(nw.length){S.bd.push(...nw.map(b=>b.id));save();toast(t('newBadge')+': '+nw.map(b=>b.txt).join(', '),'award')}}
@@ -1012,7 +1044,7 @@ return `<rect x="${(i*bw+bw*.15).toFixed(1)}" y="${(96-hh).toFixed(1)}" width="$
 h+=`<div class="g card" style="margin-top:10px"><div class="big2">${bn(pct(tdn,tsc))}%</div><div class="hint" style="margin:2px 0 6px;font-size:13px">${t('rHero',bn(pct(tdn,tsc)))}</div><div class="hint" style="margin:0;font-size:13px">${t('rTasks',bn(tdone),bn(tt.length))}</div></div>`;
 h+=`<h3>${t(rmode==='y'?'rChartM':'rChart')}</h3><div class="g card"><svg viewBox="0 0 ${W} 118" style="width:100%;display:block">${bars}</svg></div>`;
 h+=`<h3>${t('rHab')}</h3>`+rows.map(r=>`<div class="g card" style="--ac:${r.a.color};padding:12px;margin-bottom:8px"><div class="pl" style="margin-top:0"><span>${esc(r.a.name)}</span><em>${dig(r.dn)}/${dig(r.sc)} · ${bn(pct(r.dn,r.sc))}%</em></div><div class="bar"><i style="width:${pct(r.dn,r.sc)}%"></i></div></div>`).join('')}
-h+=`<h3>${t('badgesT')}</h3><div class="bdgs">`+badgeList().map(b=>`<div class="bdg ${b.cur>=b.n?'on':''}"><i>${ic(b.ic)}</i><b>${b.txt}</b><small>${bn(Math.min(b.cur,b.n))}/${bn(b.n)} · ${bn(pct(b.cur,b.n))}%</small><div class="bar" style="margin-top:8px;height:6px"><i style="width:${pct(b.cur,b.n)}%"></i></div></div>`).join('')+`</div>`;
+h+=`<h3>${t('badgesT')}</h3><div class="bdgs">`+badgeList().map(b=>`<div class="bdg ${b.cur>=b.n?'on':''}" style="--bc:${b.c}"><i>${ic(b.ic)}</i><b>${b.txt}</b><small>${bn(Math.min(b.cur,b.n))}/${bn(b.n)} · ${bn(pct(b.cur,b.n))}%</small><div class="bar" style="margin-top:8px;height:6px"><i style="width:${pct(b.cur,b.n)}%"></i></div></div>`).join('')+`</div>`;
 const r=$('#v-rep'),ci=h.indexOf('</div>')+6;r.innerHTML=h.slice(0,ci)+'<div class="rscroll">'+h.slice(ci)+'</div>';r.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{rmode=b.dataset.r;renderRep()})}
 
 const FM={focus:25,short:5,long:15},ft={mode:'focus',left:1500,end:0,run:false,n:0},FNID=3000001;
