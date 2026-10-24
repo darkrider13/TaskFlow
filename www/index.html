@@ -69,7 +69,6 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .day.e{background:none;border:0}
 .day.today{border:2px solid var(--ink)}
 .day.hol{color:#FF6B6B}
-.day.hol::before{content:'';position:absolute;top:5px;left:6px;width:5px;height:5px;border-radius:50%;background:#FF6B6B}
 .holn{margin:2px 0 10px;padding:8px 12px;border-radius:12px;background:rgba(255,107,107,.14);color:#FF6B6B;font-size:13px;font-weight:600;line-height:1.5}
 .day.tick{background:var(--tc);color:var(--tink);font-weight:700;border-color:transparent;box-shadow:0 0 14px var(--tc)}
 .day.cross{color:var(--cross)}
@@ -471,25 +470,59 @@ const HOL_YEARLY={2026:{
 function holOf(k){const y=+k.slice(0,4),md=k.slice(5),i=S.set.lang==='bn'?1:0,o=[];
 if(HOL_FIXED[md]&&(md!=='08-05'||y>=2025))o.push(HOL_FIXED[md][i]);
 const Y=HOL_YEARLY[y];if(Y&&Array.isArray(Y[md])&&Y[md][i]||Y&&Array.isArray(Y[md])&&Y[md][0])o.push(Y[md][i]||Y[md][0]);return o}
-/* Moon-dependent holidays: when the phone is online the app fetches the year's official list
-   (a tiny holidays.json) and keeps it on the device. Once the year is marked final it stops asking. */
-const HOL_URL='';/* e.g. https://raw.githubusercontent.com/<username>/<repo>/main/holidays.json */
+/* Moon-dependent holidays: the app reads a free public Bangladesh holiday calendar feed (iCal) by itself.
+   Years that are built in above (official gazette list) are never overwritten; the feed fills the other years.
+   Checks: Nov-Jan every 2 days until the new year is covered, and daily during the 10 days before any
+   moon-dependent holiday (dates get confirmed or changed late). Runs when the app is opened or comes back online. */
+const HOL_FEED='https://www.bangladatetoday.com/api/ical/holidays-bd.ics';
+const HOL_BUILTIN=new Set(Object.keys(HOL_YEARLY));
 const holCache=()=>{try{return JSON.parse(localStorage.getItem('hb_hol')||'null')}catch(e){return null}};
-const holMerge=d=>{if(!d)return;Object.keys(d).forEach(y=>{if(/^\d{4}$/.test(y)&&d[y]&&typeof d[y]==='object')HOL_YEARLY[y]=d[y]})};
+const holMerge=d=>{if(!d)return;Object.keys(d).forEach(y=>{if(/^\d{4}$/.test(y)&&!HOL_BUILTIN.has(y)&&d[y]&&typeof d[y]==='object')HOL_YEARLY[y]=d[y]})};
 {const c=holCache();if(c)holMerge(c.data)}
-async function holSync(){
-if(!HOL_URL||!navigator.onLine)return;
-const c=holCache(),dt=new Date(),Y=dt.getFullYear(),fin=(c&&c.final)||[];
-if(c&&fin.includes(Y)&&(dt.getMonth()<9||fin.includes(Y+1)))return;
-if(c&&Date.now()-c.at<43200000)return;
-try{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),8000);
-const r=await fetch(HOL_URL+'?t='+Date.now(),{signal:ctl.signal,cache:'no-store'});clearTimeout(to);
-if(!r.ok)return;const j=await r.json(),data={};
-Object.keys(j.years||{}).forEach(y=>{if(/^\d{4}$/.test(y)&&j.years[y]&&typeof j.years[y]==='object')data[y]=j.years[y]});
-if(!Object.keys(data).length)return;
-localStorage.setItem('hb_hol',JSON.stringify({at:Date.now(),final:(j.final||[]).map(Number),data}));
-holMerge(data);render()}catch(e){}}
-window.addEventListener('online',holSync);
+function holIcs(txt){const ev=[];let cur=null;
+String(txt).replace(/\r?\n[ \t]/g,'').split(/\r?\n/).forEach(l=>{
+if(l==='BEGIN:VEVENT'){cur={};return}
+if(l==='END:VEVENT'){if(cur&&cur.s&&cur.n)ev.push(cur);cur=null;return}
+if(!cur)return;const i=l.indexOf(':');if(i<0)return;const k=l.slice(0,i).split(';')[0],v=l.slice(i+1);
+if(k==='DTSTART'&&/^\d{8}/.test(v))cur.s=v.slice(0,8);
+else if(k==='DTEND'&&/^\d{8}/.test(v))cur.e=v.slice(0,8);
+else if(k==='SUMMARY')cur.n=v.replace(/\\n/g,' ').replace(/\\([,;\\])/g,'$1').trim()});
+const m={};
+ev.forEach(x=>{const d0=new Date(+x.s.slice(0,4),+x.s.slice(4,6)-1,+x.s.slice(6,8));let n=1;
+if(x.e&&x.e>x.s&&x.e.length===8&&!/T/.test(x.e)){n=Math.round((new Date(+x.e.slice(0,4),+x.e.slice(4,6)-1,+x.e.slice(6,8))-d0)/864e5);if(n<1||n>10)n=1}
+for(let i=0;i<n;i++){const d=new Date(d0.getFullYear(),d0.getMonth(),d0.getDate()+i),k=key(d.getFullYear(),d.getMonth(),d.getDate());(m[k]=m[k]||[]).includes(x.n)||m[k].push(x.n)}});
+return m}
+function holBuild(en,bn){const data={},cov={};
+Object.keys(en).forEach(k=>{const y=k.slice(0,4),md=k.slice(5);cov[y]=1;
+if(HOL_BUILTIN.has(y)||HOL_FIXED[md])return;
+(data[y]=data[y]||{})[md]=[en[k].join(' / '),(bn&&bn[k]||en[k]).join(' / ')]});
+return {data,cov:Object.keys(cov).map(Number)}}
+let holTry=0;
+async function holGet(u){const c=new AbortController();let to;
+const r=await Promise.race([fetch(u,{signal:c.signal,cache:'no-store'}),new Promise((_,j)=>to=setTimeout(()=>{c.abort();j(0)},9000))]);clearTimeout(to);
+if(!r.ok)throw 0;return r.text()}
+async function holSync(now){
+if(!HOL_FEED||!navigator.onLine)return;
+const dt=now instanceof Date?now:new Date(),T=dt.getTime(),H=3600000;
+if(T-holTry<600000)return;
+const c=holCache(),Y=dt.getFullYear(),M=dt.getMonth(),cov=(c&&c.cov)||[],age=c?T-c.at:Infinity;
+let near=false;for(let i=0;i<=10&&!near;i++){const d=new Date(Y,M,dt.getDate()+i),yy=HOL_YEARLY[d.getFullYear()];if(yy&&yy[key(d.getFullYear(),d.getMonth(),d.getDate()).slice(5)])near=true}
+const want=M>=9?[Y,Y+1]:[Y],missing=want.some(y=>!cov.includes(y)&&!HOL_BUILTIN.has(String(y)));
+let gap;
+if(!c)gap=0;
+else if(near)gap=20*H;
+else if(missing)gap=(M>=10||M===0)?48*H:72*H;
+else return;
+if(age<gap)return;
+holTry=T;
+try{const en=holIcs(await holGet(HOL_FEED));
+if(!Object.keys(en).length)return;
+let bn=null;try{bn=holIcs(await holGet(HOL_FEED+'?lang=bn'))}catch(e){}
+const r=holBuild(en,bn);
+localStorage.setItem('hb_hol',JSON.stringify({at:T,cov:r.cov,data:r.data}));
+holMerge(r.data);render()}catch(e){}}
+window.addEventListener('online',()=>holSync());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)holSync()});
 
 const LN=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
 const safe=async f=>{try{return await f()}catch(e){}};
