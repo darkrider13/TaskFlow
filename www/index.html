@@ -354,6 +354,9 @@ body.fe::after{opacity:1!important}
 #sft.on{opacity:1}
 /* the last card of a snapping list must not add a bottom margin: it let the list scroll ~8px past its last snap point, cutting the top card */
 .tl>:last-child,.stl>:last-child{margin-bottom:0}
+#sb{box-sizing:border-box;height:auto;min-height:0;flex:none;padding:11px 11px 0;line-height:24px;resize:none;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
+#sb::-webkit-scrollbar{display:none}
+#cx .tl,#cx .tl.sfs,#cx .tl.sfu,#cx .tl.sfd{-webkit-mask-image:none!important;mask-image:none!important}
 </style></head>
 <body>
 <div class="top"><div><button class="user" id="user"></button></div><div class="tools"><button class="tbtn" id="gear" aria-label="Settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div></div>
@@ -382,7 +385,7 @@ body.fe::after{opacity:1!important}
 <div class="row"><label data-i="priL"></label><div class="pri" id="pr"><button data-v="0" data-i="p0"></button><button data-v="1" data-i="p1"></button><button data-v="2" data-i="p2"></button></div></div>
 <div class="row"><label data-i="repL"></label><div class="pri" id="rp"><button data-v="none" data-i="r0"></button><button data-v="daily" data-i="r1"></button><button data-v="weekly" data-i="r2"></button><button data-v="monthly" data-i="r3"></button></div></div>
 <div class="row"><label data-i="catL"></label><div class="pri" id="ct"><button data-v="" data-i="cNone"></button><button data-v="study" data-i="cStudy"></button><button data-v="work" data-i="cWork"></button><button data-v="personal" data-i="cPers"></button></div></div>
-<textarea id="sb" data-p="subPh"></textarea></div>
+<textarea id="sb" rows="4" data-p="subPh"></textarea></div>
 <div id="f-habit"><div class="row"><input type="text" id="an" data-p="namePh"></div>
 <div class="row"><label data-i="askTime"></label><input type="time" id="at" value="21:00"></div>
 <div class="row"><label data-i="gmL"></label><input type="number" id="gm" min="0" max="31" value="00"></div>
@@ -506,6 +509,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)dayRoll()}
 let vy=now.getFullYear(),vm=now.getMonth(),sel=S.acts[0]?S.acts[0].id:null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],cat='';
 const act=()=>S.acts.find(a=>a.id===sel);
 const esc=x=>{const d=document.createElement('div');d.textContent=x;return d.innerHTML};
+const SB_PFX=/^\s*[0-9\u09E6-\u09EF]+\s*[.)]\s?/,sbStrip=z=>String(z).replace(SB_PFX,'');
 const pct=(a,b)=>b>0?Math.min(100,Math.round(a/b*100)):0;
 const fdate=(k,o)=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString(t('loc'),o)};
 /* ===== Holidays =====
@@ -932,7 +936,7 @@ $('#f-task').classList.toggle('hid',kind!=='task');$('#f-habit').classList.toggl
 $('#seg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===kind));
 $('#pr').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==pri));
 $('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();
-buildCt();$('#sb').value=tx?(tx.sub||[]).map(z=>z.t).join('\n'):'';
+buildCt();$('#sb').value=tx?(tx.sub||[]).map((z,i)=>bn(i+1)+'. '+z.t).join('\n'):'';
 $('#tx').value=tx?tx.text:'';$('#td').value=tx?tx.date:(dkey||todayKey);$('#tmv').value=tx&&tx.time?tx.time:'00:00';
 $('#an').value=a?a.name:'';$('#at').value=a?a.time:'21:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';
 }
@@ -961,9 +965,9 @@ $('#scl').onclick=()=>$('#ssheet').classList.remove('show');
 $('#seg').querySelectorAll('button').forEach(b=>b.onclick=()=>inl?fillForm(b.dataset.k,null,null,inl):openForm(b.dataset.k));
 $('#pr').querySelectorAll('button').forEach(b=>b.onclick=()=>{pri=+b.dataset.v;$('#pr').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))});
 $('#fsave').onclick=async()=>{
-if(fm==='task'&&edTodo){const text=$('#tx').value.trim();if(!text)return;const x=edTodo,old=x.sub||[];x.text=text;x.date=$('#td').value||todayKey;x.time=$('#tmv').value==='00:00'?'':$('#tmv').value;x.pri=pri;x.rep=rep;x.cat=cat;x.sub=$('#sb').value.split('\n').map(z=>z.trim()).filter(Boolean).map(z=>({t:z,d:!!(old.find(o=>o.t===z)||{}).d}));save();await askPerm();await schedTodo(x)}
+if(fm==='task'&&edTodo){const text=$('#tx').value.trim();if(!text)return;const x=edTodo,old=x.sub||[];x.text=text;x.date=$('#td').value||todayKey;x.time=$('#tmv').value==='00:00'?'':$('#tmv').value;x.pri=pri;x.rep=rep;x.cat=cat;x.sub=$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:!!(old.find(o=>o.t===z)||{}).d}));save();await askPerm();await schedTodo(x)}
 else if(fm==='task'){const text=$('#tx').value.trim();if(!text)return;
-const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>z.trim()).filter(Boolean).map(z=>({t:z,d:false}))};
+const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:false}))};
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name)return;
 const vals={name,time:$('#at').value||'21:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:wsel.length===7?[]:wsel.slice().sort((p,q)=>p-q)};
@@ -1256,7 +1260,7 @@ if(i>=it.length)i=it.length-1;const t=it[i].offsetTop-P,H=k=>it[k].offsetTop+it[
 if(n){while(j+1<it.length&&j-i+1<n)j++}else{const bud=tlBudget(l);while(j+1<it.length&&(j-i+1<3||H(j+1)<=bud))j++}
 l.style.scrollPaddingTop=P+'px';const h=H(j)+'px';if(l.style.maxHeight!==h)l.style.maxHeight=h;if(Math.abs(l.scrollTop-t)>.5)l.scrollTop=t}
 const SF_SMALL='.panel,.cxbox,.tl,.stl,#onb,.hl',SF_TOP='body>section,#ulist,.rscroll';
-function tlFade(l){if(!l||!l.matches||!l.matches(SF_SMALL)||l.matches('.hl'))return;
+function tlFade(l){if(!l||!l.matches||!l.matches(SF_SMALL)||l.matches('.hl')||l.closest('#cx'))return;
 l.classList.toggle('sfu',l.scrollTop>2);l.classList.toggle('sfd',l.scrollTop+l.clientHeight<l.scrollHeight-2)}
 const sft=document.createElement('div');sft.id='sft';document.body.appendChild(sft);
 /* top fade of the visible page/list: on whenever it is scrolled down, off when it is at the very top */
@@ -1266,7 +1270,7 @@ window.addEventListener('resize',sfSync);
 {const _ta=tlApply;tlApply=function(l){const r=_ta.apply(this,arguments);tlFade(l);return r}}
 document.addEventListener('scroll',e=>{const l=e.target;if(!l||!l.matches)return;
 if(l.matches(SF_TOP)){if(l.id==='v-home'){sft.classList.remove('on');return}const y=l.scrollTop;if(y>2){if(!sft.classList.contains('on'))sft.style.top=l.getBoundingClientRect().top+'px';sft.classList.add('on')}else sft.classList.remove('on');return}
-if(l.matches(SF_SMALL)&&!l.matches('.hl')){const y=l.scrollTop;if(Math.abs(y-(l._sy||0))<1)return;l._sy=y;tlFade(l);l.classList.add('sfs');clearTimeout(l._sft);l._sft=setTimeout(()=>l.classList.remove('sfs'),130)}},true);
+if(l.matches(SF_SMALL)&&!l.matches('.hl')&&!l.closest('#cx')){const y=l.scrollTop;if(Math.abs(y-(l._sy||0))<1)return;l._sy=y;tlFade(l);l.classList.add('sfs');clearTimeout(l._sft);l._sft=setTimeout(()=>l.classList.remove('sfs'),130)}},true);
 {const _rn=render;render=function(){_rn.apply(this,arguments);sfSync()}}
 function tlSettle(l){if(!l.children.length||!l.offsetParent)return;tlApply(l,tlNear(l,l.scrollTop))}
 document.addEventListener('scroll',e=>{const l=e.target;if(!l||!l.classList)return;if(l.dataset&&l.dataset.k)tlPos[l.dataset.k]=l.scrollTop;if(l.classList.contains('tl')||l.classList.contains('stl')){clearTimeout(l._t);l._t=setTimeout(()=>tlTouch?0:tlSettle(l),130)}},true);
@@ -1294,4 +1298,26 @@ migMood();regActions().then(()=>rescheduleAll());render();if(!S.set.name)$('#onb
 holSync();gazSync();
 if(S.lock)showLock('unlock');
 bioOk().then(v=>{bioAv=v;renderMore();if(!$('#lock').classList.contains('hid')){lockDraw();if(lmode==='unlock')tryBio()}});
+
+/* Subtask box (#sb): lines are numbered automatically (১. ২. ৩.) and the box scrolls one line at a time (snap) */
+(function(){const ta=document.getElementById('sb');if(!ta)return;const LH0=24,lh=()=>parseFloat(getComputedStyle(ta).lineHeight)||LH0;
+/* exactly 4 whole lines are visible: size the box from the real line height */
+const fit=()=>{if(!ta.offsetParent)return;const pt=parseFloat(getComputedStyle(ta).paddingTop)||0,want=pt+4*lh();if(Math.abs(ta.clientHeight-want)>.75)ta.style.height=(ta.offsetHeight-ta.clientHeight+want)+'px'};
+const number=(v,force)=>{let n=0;return v.split('\n').map((z,i)=>{const b=sbStrip(z);if(!b.trim()&&i!==force)return '';n++;return bn(n)+'. '+b}).join('\n')};
+const pos=(ls,i)=>{let p=0;for(let k=0;k<i;k++)p+=ls[k].length+1;return p};
+const caret=p=>{try{ta.setSelectionRange(p,p)}catch(e){}};
+ta.addEventListener('input',e=>{const ty=e.inputType||'',v=ta.value;
+if(ty==='insertLineBreak'||ty==='insertParagraph'){const p=ta.selectionStart,force=v.slice(0,p).split('\n').length-1,ls=v.split('\n');
+if(force>0&&!sbStrip(ls[force-1]).trim()){ls.splice(force,1);ls[force-1]='';const out=number(ls.join('\n')).split('\n');ta.value=out.join('\n');caret(pos(out,force-1));return}
+const out=number(v,force);ta.value=out;const os=out.split('\n'),m=os[force].match(/^[0-9\u09E6-\u09EF]+\.\s/);caret(pos(os,force)+(m?m[0].length:0));
+if(ta.selectionStart>=ta.value.length)ta.scrollTop=ta.scrollHeight;return}
+if(ty==='insertFromPaste'||ty==='insertFromDrop'){ta.value=number(v);caret(ta.value.length)}});
+ta.addEventListener('focus',()=>{fit();if(!ta.value.trim()){ta.value=bn(1)+'. ';caret(ta.value.length)}});
+ta.addEventListener('blur',()=>{ta.value=sbStrip(ta.value).trim()||ta.value.split('\n').some(z=>sbStrip(z).trim())?number(ta.value):''});
+let st,down=0;const snap=()=>{const LH=lh(),k=Math.round(ta.scrollTop/LH)*LH;if(Math.abs(k-ta.scrollTop)>.5)ta.scrollTo({top:k,behavior:'smooth'})};
+ta.addEventListener('scroll',()=>{fit();clearTimeout(st);st=setTimeout(()=>{if(!down)snap()},110)});
+ta.addEventListener('touchstart',()=>{fit();down=1},{passive:true});new ResizeObserver(fit).observe(ta);window.addEventListener('resize',fit);
+['touchend','touchcancel'].forEach(ev=>ta.addEventListener(ev,()=>{down=0;clearTimeout(st);st=setTimeout(snap,140)},{passive:true}));
+ta.addEventListener('wheel',e=>{const mx=ta.scrollHeight-ta.clientHeight,d=e.deltaY>0?1:-1;if((d>0&&ta.scrollTop>=mx-1)||(d<0&&ta.scrollTop<=0))return;e.preventDefault();if(ta._w)return;ta._w=setTimeout(()=>ta._w=0,120);{const LH=lh();ta.scrollTo({top:Math.round(ta.scrollTop/LH)*LH+d*LH,behavior:'smooth'})}},{passive:false});
+})();
 </script></body></html>
