@@ -1,1 +1,71 @@
-
+name: Build HabitX APK
+on:
+  push:
+    tags-ignore:
+      - '**'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: npm install
+      - run: npx cap add android
+      - name: Add notification and alarm permissions
+        run: |
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
+      - name: Black status bar and black launch screen
+        run: |
+          sed -i 's/#303F9F/#000000/g; s/#3F51B5/#000000/g' android/app/src/main/res/values/colors.xml || true
+          find android/app/src/main/res -name 'splash.png' -exec sh -c 'convert -size $(identify -format "%wx%h" "$1") xc:black "$1"' _ {} \; || true
+      - name: Raise version code on every build (so the new APK installs over the old one)
+        run: sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"1.${{ github.run_number }}\"/" android/app/build.gradle
+      - name: Use the fixed signing key (keeps your data when updating)
+        run: |
+          mkdir -p ~/.android
+          cp debug.keystore ~/.android/debug.keystore
+      - name: App launcher icon (only if assets/icon-only.png exists)
+        run: |
+          if [ -f assets/icon-only.png ]; then
+            npx capacitor-assets generate --android --iconBackgroundColor '#000000' --iconBackgroundColorDark '#000000' || echo "icon generation skipped"
+          else
+            echo "No assets/icon-only.png yet, using default icon"
+          fi
+      - name: Notification icons
+        run: |
+          D=android/app/src/main/res/drawable
+          mkdir -p $D
+          if [ -f assets/icon-only.png ]; then
+            convert assets/icon-only.png -resize 192x192 $D/ic_large_icon.png
+          else
+            convert -size 192x192 xc:'#000000' $D/ic_large_icon.png
+          fi
+          if [ -f assets/notification-icon.png ]; then
+            convert assets/notification-icon.png -resize 96x96 $D/ic_stat_icon.png
+          else
+            convert -size 96x96 xc:none -fill white -draw 'circle 48,48 48,8' $D/ic_stat_icon.png
+          fi
+      - run: npx cap sync android
+      - run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Publish APK to Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk HabitX.apk
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest HabitX.apk \
+            --title "HabitX (build ${{ github.run_number }})" \
+            --notes "HabitX latest build. Download HabitX.apk and install it over the old version." \
+            --target ${{ github.sha }}
