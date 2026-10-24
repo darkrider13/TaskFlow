@@ -356,6 +356,7 @@ body.fe::after{opacity:1!important}
 .tl>:last-child,.stl>:last-child{margin-bottom:0}
 #sb{box-sizing:border-box;height:auto;min-height:0;flex:none;padding:0 11px;line-height:24px;resize:none;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
 #sb::-webkit-scrollbar{display:none}
+.hl .sl,.hl .stl{touch-action:pan-y}
 #cx .tl,#cx .tl.sfs,#cx .tl.sfu,#cx .tl.sfd{-webkit-mask-image:none!important;mask-image:none!important}
 </style></head>
 <body>
@@ -421,7 +422,7 @@ body.fe::after{opacity:1!important}
 <div class="row" style="margin-top:0"><button id="th" style="flex:1"></button><button id="lg" style="flex:1"></button></div>
 <h3 data-i="dataT"></h3>
 <div class="row" style="margin-top:0"><button style="flex:1" id="stex" data-i="expT"></button><button style="flex:1" id="stim" data-i="impT"></button></div>
-<button class="link" id="stalt" data-i="altT"></button>
+
 <button class="big" id="stsave" data-i="save" style="margin:16px 0 0"></button>
 </div></div>
 <div class="sheet" id="csheet"><div class="panel">
@@ -835,10 +836,10 @@ i=Math.max(0,Math.min(Math.max(0,n-HN),i));hlI=i;const top=it[i].offsetTop,last=
 const e='cubic-bezier(.2,.8,.2,1)';w.style.transition=anim?'transform .3s '+e:'none';l.style.transition=anim?'height .3s '+e:'none';
 w.style.transform='translateY('+(-top)+'px)';l.style.height=h+'px';hlFade(l,-top,-it[Math.max(0,n-HN)].offsetTop,anim?340:0)}
 function hlFade(l){l.classList.remove('sfu','sfd','sfs')}
-function hlBind(l){const w=l.firstElementChild;let id=null,sy=0,sx=0,sT=0,lock=0,v=0,ly=0,lt=0,cur=0,py=0,pm=0;
+function hlBind(l){const w=l.firstElementChild;let id=null,sy=0,sx=0,sT=0,lock=0,v=0,ly=0,lt=0,cur=0,py=0,pm=0,skip=0;
 const maxT=()=>-w.children[Math.max(0,w.children.length-HN)].offsetTop;
-l.addEventListener('pointerdown',e=>{if(e.button>0)return;id=e.pointerId;sx=e.clientX;sy=e.clientY;ly=sy;lt=Date.now();lock=0;v=0;pm=0;sT=-w.children[hlI].offsetTop;cur=sT;const sc=l.closest('section');if(sc)sc._f=(sc._f||0)+1});
-l.addEventListener('pointermove',e=>{if(e.pointerId!==id)return;const dx=e.clientX-sx,dy=e.clientY-sy;
+l.addEventListener('pointerdown',e=>{if(e.button>0)return;skip=e.target.closest&&e.target.closest('.stl')?1:0;id=e.pointerId;sx=e.clientX;sy=e.clientY;ly=sy;lt=Date.now();lock=0;v=0;pm=0;sT=-w.children[hlI].offsetTop;cur=sT;const sc=l.closest('section');if(sc)sc._f=(sc._f||0)+1});
+l.addEventListener('pointermove',e=>{if(e.pointerId!==id||skip)return;const dx=e.clientX-sx,dy=e.clientY-sy;
 if(!lock){if(l.querySelector('.todo.sw'))return;if(Math.abs(dy)>6&&Math.abs(dy)>Math.abs(dx)){lock=1;l._d=1;sy=e.clientY;py=e.clientY;l.querySelectorAll('.todo.cx.open').forEach(w=>{openT.delete(+w.dataset.id);w.classList.remove('open')});try{l.setPointerCapture(id)}catch(_){}w.style.transition='none';l.style.transition='none'}else return}
 const n=Date.now();v=.7*v+.3*((e.clientY-ly)/Math.max(1,n-lt));ly=e.clientY;lt=n;
 const s=e.clientY-py;py=e.clientY;let r=s;const sec=l.closest('section');if(sec){const b=sec.scrollTop;sec.scrollTop=b-s;const m=b-sec.scrollTop;if(m)pm=1;r=s-m}
@@ -1007,7 +1008,7 @@ $('#stcl').onclick=()=>$('#stsheet').classList.remove('show');
 $('#stsave').onclick=()=>{S.set.name=$('#sn').value.trim();save();$('#stsheet').classList.remove('show');render()};
 $('#stex').onclick=()=>$('#bex').click();
 $('#stim').onclick=()=>{$('#stsheet').classList.remove('show');$('#bin').click()};
-$('#stalt').onclick=()=>{$('#stsheet').classList.remove('show');$('#btx').value='';$('#bsheet').classList.add('show')};
+($('#stalt')||{}).onclick=()=>{$('#stsheet').classList.remove('show');$('#btx').value='';$('#bsheet').classList.add('show')};
 $('#bcl').onclick=()=>$('#bsheet').classList.remove('show');
 const CP=window.Capacitor&&Capacitor.Plugins||{};
 function exChoose(){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ask">${ic('reset')}</div><b>${t('exQT')}</b><p>${t('exQ')}</p><div class="dbt"><button class="dc">${t('exShare')}</button><button class="dok">${t('exSave')}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dc').onclick=()=>done('share');w.querySelector('.dok').onclick=()=>done('save');w.onclick=e=>{if(e.target===w)done(null)}})}
