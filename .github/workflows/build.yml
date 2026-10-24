@@ -24,6 +24,10 @@ jobs:
       - name: Add notification and alarm permissions
         run: |
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
+      - name: Install ImageMagick (for icon and splash conversion)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
       - name: Black status bar and black launch screen
         run: |
           sed -i 's/#303F9F/#000000/g; s/#3F51B5/#000000/g' android/app/src/main/res/values/colors.xml || true
@@ -39,7 +43,7 @@ jobs:
       - name: App launcher icon (only if assets/icon-only.png exists)
         run: |
           if [ -f assets/icon-only.png ]; then
-            npx capacitor-assets generate --android --iconBackgroundColor '#000000' --iconBackgroundColorDark '#000000' || echo "icon generation skipped"
+            npx capacitor-assets generate --android --iconBackgroundColor '#000000' --iconBackgroundColorDark '#000000' || echo "::warning::icon generation failed, default icon will be used"
           else
             echo "No assets/icon-only.png yet, using default icon"
           fi
