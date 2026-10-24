@@ -24,6 +24,9 @@ jobs:
       - name: Add notification and alarm permissions
         run: |
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
+      - name: Add storage permissions (for saving backups on Android 9 and below)
+        run: |
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
       - name: Install ImageMagick (for icon and splash conversion)
         run: |
           sudo apt-get update
