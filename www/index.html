@@ -358,6 +358,7 @@ body.fe::after{opacity:1!important}
 #sb::-webkit-scrollbar{display:none}
 .hl .sl,.hl .stl{touch-action:pan-y}
 #cx .tl,#cx .tl.sfs,#cx .tl.sfu,#cx .tl.sfd{-webkit-mask-image:none!important;mask-image:none!important}
+body.fb::after{opacity:0!important;transition:opacity .2s!important}
 .stl>.sub{scroll-snap-stop:always}
 /* Home subtask list: one subtask per swipe, and a hard 4px blank strip at the top so no sliver of the previous subtask ever shows (no fade) */
 .hl .stl,.hl .stl.sfs,.hl .stl.sfu,.hl .stl.sfd{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 4px,#000 4px)!important;mask-image:linear-gradient(to bottom,transparent 0,transparent 4px,#000 4px)!important}
@@ -510,7 +511,7 @@ let tmrKey=(()=>{const tm=new Date(now);tm.setDate(tm.getDate()+1);return dk(tm)
 /* Day rollover: if the app stays open past midnight, move 'today' forward and redraw everything */
 function dayRoll(){try{const n=new Date(),k=dk(n);if(k===todayKey)return;now=n;todayKey=k;const t2=new Date(n);t2.setDate(t2.getDate()+1);tmrKey=dk(t2);vy=n.getFullYear();vm=n.getMonth();pickKey=null;render()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)dayRoll()});window.addEventListener('focus',dayRoll);setInterval(dayRoll,30000);
-let vy=now.getFullYear(),vm=now.getMonth(),sel=S.acts[0]?S.acts[0].id:null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],cat='';
+let vy=now.getFullYear(),vm=now.getMonth(),sel=null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],cat='';
 const act=()=>S.acts.find(a=>a.id===sel);
 const esc=x=>{const d=document.createElement('div');d.textContent=x;return d.innerHTML};
 const SB_PFX=/^\s*[0-9\u09E6-\u09EF]+\s*[.)]\s?/,sbStrip=z=>String(z).replace(SB_PFX,'');
@@ -891,7 +892,7 @@ const r=$('#ulist'),st=r.scrollTop;$('#v-up').classList.toggle('emp',h.includes(
 
 function renderCal(){
 const loc=t('loc'),ch=$('#chips');ch.innerHTML='';
-S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=a.id;render()};ch.appendChild(b)});
+S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=sel===a.id?null:a.id;render()};ch.appendChild(b)});
 ch.style.display=S.acts.length?'':'none';
 const a=act();let h='';
 if(a){const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
@@ -906,8 +907,8 @@ const first=new Date(vy,vm,1).getDay(),last=new Date(vy,vm+1,0).getDate();
 for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day e';g.appendChild(e)}
 const marks=a?S.marks[a.id]||{}:{};
 for(let d=1;d<=last;d++){const k=key(vy,vm,d),b=document.createElement('button');
-let cls='day'+(k===todayKey?' today':'')+(k===pickKey?' pick':'')+((h=>h.g.length?' hol':h.o.length?' hol2':'')(holInfo(k))),inner=bn(d),shown=false;
-const dt=S.todos.filter(x=>x.date===k),all=dt.length>0&&dt.every(x=>x.done);if(dt.length&&!all)cls+=' ev';
+let cls='day'+(k===todayKey?' today':'')+(k===pickKey?' pick':'')+(a?'':(h=>h.g.length?' hol':h.o.length?' hol2':'')(holInfo(k))),inner=bn(d),shown=false;
+const dt=a?[]:S.todos.filter(x=>x.date===k),all=dt.length>0&&dt.every(x=>x.done);if(dt.length&&!all)cls+=' ev';
 if(a){if(marks[k]){cls+=' tick';b.style.setProperty('--tc',a.color);inner+='<span class="m">'+ic('check')+'</span>';shown=true}
 else if(!isSched(a,new Date(vy,vm,d))){cls+=' off'}
 else if(k>=a.start&&k<todayKey){cls+=' cross';inner+='<span class="m">'+ic('x')+'</span>';shown=true}}
@@ -1279,6 +1280,13 @@ document.addEventListener('scroll',e=>{const l=e.target;if(!l||!l.matches)return
 if(l.matches(SF_TOP)){if(l.id==='v-home'){sft.classList.remove('on');return}const y=l.scrollTop;if(y>2){if(!sft.classList.contains('on'))sft.style.top=l.getBoundingClientRect().top+'px';sft.classList.add('on')}else sft.classList.remove('on');return}
 if(l.matches(SF_SMALL)&&!l.matches('.hl')&&!l.closest('#cx,.hl')){const y=l.scrollTop;if(Math.abs(y-(l._sy||0))<1)return;l._sy=y;tlFade(l);l.classList.add('sfs');clearTimeout(l._sft);l._sft=setTimeout(()=>l.classList.remove('sfs'),130)}},true);
 {const _rn=render;render=function(){_rn.apply(this,arguments);sfSync()}}
+/* bottom cover above the nav hides only when the page is scrolled all the way to its last card */
+function sfBot(){const el=tab==='up'?$('#ulist'):tab==='rep'?document.querySelector('#v-rep .rscroll'):$('#v-'+tab);let on=false;
+if(el&&el.offsetParent&&el.scrollHeight>el.clientHeight+2){on=el.scrollTop+el.clientHeight>=el.scrollHeight-3;
+if(on&&tab==='cal'){const tl=document.querySelector('#cx .tl');if(tl&&tl.scrollHeight>tl.clientHeight+2&&tl.scrollTop+tl.clientHeight<tl.scrollHeight-3)on=false}}
+document.body.classList.toggle('fb',on)}
+{const _s=sfSync;sfSync=function(){_s.apply(this,arguments);sfBot()}}
+{let q=0;document.addEventListener('scroll',()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;sfBot()})},true)}
 function tlSettle(l){if(!l.children.length||!l.offsetParent)return;tlApply(l,tlNear(l,l.scrollTop))}
 document.addEventListener('scroll',e=>{const l=e.target;if(!l||!l.classList)return;if(l.dataset&&l.dataset.k)tlPos[l.dataset.k]=l.scrollTop;if(l.classList.contains('tl')||l.classList.contains('stl')){clearTimeout(l._t);l._t=setTimeout(()=>tlTouch?0:tlSettle(l),130)}},true);
 document.addEventListener('touchstart',()=>{tlTouch=1},true);
