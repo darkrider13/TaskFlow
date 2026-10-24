@@ -45,6 +45,12 @@ h3{font-size:15px;margin:18px 2px 8px;color:var(--muted);font-weight:600}
 .todo button[data-e] .ic{width:20px;height:20px}
 input[type=checkbox]{width:22px;height:22px;accent-color:#14B8A6}
 .empty{padding:18px;text-align:center;color:var(--muted);font-size:14px}
+section.emp:not(.hid){display:flex;flex-direction:column}
+section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
+.es{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:0 26px;margin-top:-30px}
+.es .ic{width:64px;height:64px;stroke-width:1.4;color:var(--muted);opacity:.55}
+.es b{font-size:21px;font-weight:600;line-height:1.55;max-width:300px;color:var(--ink)}
+.es .fabi{width:1.55em;height:1.55em;font-size:.8em}
 .over h3{color:var(--cross)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px}
 .chip{flex:none;padding:8px 15px;border-radius:20px;color:var(--ink);font-size:15px;border:1px solid var(--edge);background:var(--glass)}
@@ -62,6 +68,9 @@ input[type=checkbox]{width:22px;height:22px;accent-color:#14B8A6}
 .day{height:44px;border-radius:12px;font-size:14px;position:relative;color:var(--ink);display:flex;align-items:center;justify-content:center;border:1px solid var(--edge);background:var(--daybg)}
 .day.e{background:none;border:0}
 .day.today{border:2px solid var(--ink)}
+.day.hol{color:#FF6B6B}
+.day.hol::before{content:'';position:absolute;top:5px;left:6px;width:5px;height:5px;border-radius:50%;background:#FF6B6B}
+.holn{margin:2px 0 10px;padding:8px 12px;border-radius:12px;background:rgba(255,107,107,.14);color:#FF6B6B;font-size:13px;font-weight:600;line-height:1.5}
 .day.tick{background:var(--tc);color:var(--tink);font-weight:700;border-color:transparent;box-shadow:0 0 14px var(--tc)}
 .day.cross{color:var(--cross)}
 .day .m{position:absolute;top:2px;right:5px;font-size:12px;font-weight:700}
@@ -433,6 +442,54 @@ const act=()=>S.acts.find(a=>a.id===sel);
 const esc=x=>{const d=document.createElement('div');d.textContent=x;return d.innerHTML};
 const pct=(a,b)=>b>0?Math.min(100,Math.round(a/b*100)):0;
 const fdate=(k,o)=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString(t('loc'),o)};
+/* ===== Holidays (offline, built in — no internet needed) =====
+   FIXED: same date every year. YEARLY: exact list per year (religious dates follow the moon,
+   so each year's official gazette list is added once at the start of the year). */
+const HOL_FIXED={'02-21':['Shaheed Day & Intl Mother Language Day','শহীদ দিবস ও আন্তর্জাতিক মাতৃভাষা দিবস'],'03-26':['Independence Day','স্বাধীনতা দিবস'],'04-14':['Pahela Baishakh','পহেলা বৈশাখ'],'05-01':['May Day','মে দিবস'],'08-05':['July Uprising Day','জুলাই গণঅভ্যুত্থান দিবস'],'12-16':['Victory Day','বিজয় দিবস'],'12-25':['Christmas Day','বড়দিন']};
+const HOL_YEARLY={2026:{
+'02-04':['Shab-e-Barat','শবে বরাত'],
+'03-17':['Shab-e-Qadr','শবে কদর'],
+'03-18':['Eid-ul-Fitr holiday','ঈদুল ফিতরের ছুটি'],
+'03-19':['Eid-ul-Fitr holiday','ঈদুল ফিতরের ছুটি'],
+'03-20':['Jumatul Bida','জুমাতুল বিদা'],
+'03-21':['Eid-ul-Fitr','ঈদুল ফিতর'],
+'03-22':['Eid-ul-Fitr holiday','ঈদুল ফিতরের ছুটি'],
+'03-23':['Eid-ul-Fitr holiday','ঈদুল ফিতরের ছুটি'],
+'05-01':['Buddha Purnima','বুদ্ধ পূর্ণিমা'],
+'05-26':['Eid-ul-Adha holiday','ঈদুল আযহার ছুটি'],
+'05-27':['Eid-ul-Adha holiday','ঈদুল আযহার ছুটি'],
+'05-28':['Eid-ul-Adha','ঈদুল আযহা'],
+'05-29':['Eid-ul-Adha holiday','ঈদুল আযহার ছুটি'],
+'05-30':['Eid-ul-Adha holiday','ঈদুল আযহার ছুটি'],
+'05-31':['Eid-ul-Adha holiday','ঈদুল আযহার ছুটি'],
+'06-26':['Ashura','আশুরা'],
+'08-26':['Eid-e-Miladunnabi','ঈদে মিলাদুন্নবী'],
+'09-04':['Janmashtami','জন্মাষ্টমী'],
+'10-20':['Durga Puja (Mahanabami)','দুর্গাপূজা (মহানবমী)'],
+'10-21':['Durga Puja (Bijoya Dashami)','দুর্গাপূজা (বিজয়া দশমী)'],
+'10-22':['Durga Puja holiday','দুর্গাপূজার ছুটি']}};
+function holOf(k){const y=+k.slice(0,4),md=k.slice(5),i=S.set.lang==='bn'?1:0,o=[];
+if(HOL_FIXED[md]&&(md!=='08-05'||y>=2025))o.push(HOL_FIXED[md][i]);
+const Y=HOL_YEARLY[y];if(Y&&Array.isArray(Y[md])&&Y[md][i]||Y&&Array.isArray(Y[md])&&Y[md][0])o.push(Y[md][i]||Y[md][0]);return o}
+/* Moon-dependent holidays: when the phone is online the app fetches the year's official list
+   (a tiny holidays.json) and keeps it on the device. Once the year is marked final it stops asking. */
+const HOL_URL='';/* e.g. https://raw.githubusercontent.com/<username>/<repo>/main/holidays.json */
+const holCache=()=>{try{return JSON.parse(localStorage.getItem('hb_hol')||'null')}catch(e){return null}};
+const holMerge=d=>{if(!d)return;Object.keys(d).forEach(y=>{if(/^\d{4}$/.test(y)&&d[y]&&typeof d[y]==='object')HOL_YEARLY[y]=d[y]})};
+{const c=holCache();if(c)holMerge(c.data)}
+async function holSync(){
+if(!HOL_URL||!navigator.onLine)return;
+const c=holCache(),dt=new Date(),Y=dt.getFullYear(),fin=(c&&c.final)||[];
+if(c&&fin.includes(Y)&&(dt.getMonth()<9||fin.includes(Y+1)))return;
+if(c&&Date.now()-c.at<43200000)return;
+try{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),8000);
+const r=await fetch(HOL_URL+'?t='+Date.now(),{signal:ctl.signal,cache:'no-store'});clearTimeout(to);
+if(!r.ok)return;const j=await r.json(),data={};
+Object.keys(j.years||{}).forEach(y=>{if(/^\d{4}$/.test(y)&&j.years[y]&&typeof j.years[y]==='object')data[y]=j.years[y]});
+if(!Object.keys(data).length)return;
+localStorage.setItem('hb_hol',JSON.stringify({at:Date.now(),final:(j.final||[]).map(Number),data}));
+holMerge(data);render()}catch(e){}}
+window.addEventListener('online',holSync);
 
 const LN=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
 const safe=async f=>{try{return await f()}catch(e){}};
@@ -555,7 +612,9 @@ const ha=S.acts.filter(a=>isSched(a,now)||(S.marks[a.id]||{})[todayKey]);
 if(ha.length)h+=`<h3>${t('habitsT')}</h3>`+ha.map(a=>{const on=(S.marks[a.id]||{})[todayKey],s=stats(a,now.getFullYear(),now.getMonth());
 return `<div class="g hab" style="--ac:${a.color}"><div class="hi" data-o="${a.id}"><b>${esc(a.name)}</b><small>${ic('flame')} ${bn(s.streak)}${a.goalM?' · '+t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
 if(td.length)h+=`<h3>${t('today')}</h3>`+catChips()+`<div class="hl" id="hl"><div class="hlin">${fl(td).map(x=>taskHtml(x,{cx:1})).join('')}</div></div>`;
-const r=$('#v-home');r.innerHTML=h;bindTasks(r,render);hlSetup();
+const r=$('#v-home'),emptyAll=!td.length&&!ha.length;
+if(emptyAll)h=`<div class="g hero"><small>${fdate(todayKey,{weekday:'long',day:'numeric',month:'long'})}</small></div><div class="es">${ic('check')}<b>${t('noToday').replace('+','<span class="fabi">+</span>')}</b></div>`;
+r.classList.toggle('emp',emptyAll);r.innerHTML=h;bindTasks(r,render);hlSetup();
 r.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{const id=b.dataset.h;S.marks[id]=S.marks[id]||{};if(S.marks[id][todayKey])delete S.marks[id][todayKey];else S.marks[id][todayKey]=1;save();render()});
 r.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{sel=+b.dataset.o;tab='cal';render()})}
 
@@ -571,9 +630,10 @@ const over=pend.filter(x=>x.date<todayKey),rest=pend.filter(x=>x.date>=todayKey)
 if(over.length)h+=`<div class="over"><h3>${t('over')} (${bn(over.length)})</h3><button class="link" data-mvall style="padding:0 0 8px 2px">${t('mvAll')}</button>${tlw('uo',over.map(x=>taskHtml(x,{ovr:1})).join(''))}</div>`;
 const gr={};rest.forEach(x=>(gr[x.date]=gr[x.date]||[]).push(x));
 Object.keys(gr).forEach(k=>{h+=`<h3>${k===todayKey?t('today'):k===tmrKey?t('tmr'):fdate(k,{weekday:'short',day:'numeric',month:'short'})}</h3>`+tlw('u'+k,gr[k].map(x=>taskHtml(x)).join(''))});
-if(!pend.length)h+=`<div class="g empty">${t('noUp')}</div>`;
+if(!pend.length&&!S.acts.length)h+=`<div class="es">${ic('clock')}<b>${t('noUp')}</b></div>`;
+else if(!pend.length)h+=`<div class="g empty" style="font-size:17px;padding:22px 18px">${t('noUp')}</div>`;
 if(S.acts.length)h+=`<h3>${t('dailyR')}</h3>`+S.acts.map(a=>`<div class="g hab" style="--ac:${a.color}"><div class="hi"><b>${esc(a.name)}</b><small>${ic('clock')} ${evLabel(a)}</small></div></div>`).join('')}
-const r=$('#ulist'),st=r.scrollTop;r.innerHTML=h;r.scrollTop=st;bindTasks(r,render)}
+const r=$('#ulist'),st=r.scrollTop;$('#v-up').classList.toggle('emp',h.includes('class="es"'));r.innerHTML=h;r.scrollTop=st;bindTasks(r,render)}
 
 function renderCal(){
 const loc=t('loc'),ch=$('#chips');ch.innerHTML='';
@@ -592,7 +652,7 @@ const first=new Date(vy,vm,1).getDay(),last=new Date(vy,vm+1,0).getDate();
 for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day e';g.appendChild(e)}
 const marks=a?S.marks[a.id]||{}:{};
 for(let d=1;d<=last;d++){const k=key(vy,vm,d),b=document.createElement('button');
-let cls='day'+(k===todayKey?' today':''),inner=bn(d),shown=false;
+let cls='day'+(k===todayKey?' today':'')+(holOf(k).length?' hol':''),inner=bn(d),shown=false;
 const dt=S.todos.filter(x=>x.date===k),all=dt.length>0&&dt.every(x=>x.done);
 if(a){if(marks[k]){cls+=' tick';b.style.setProperty('--tc',a.color);inner+='<span class="m">'+ic('check')+'</span>';shown=true}
 else if(!isSched(a,new Date(vy,vm,d))){cls+=' off'}
@@ -619,6 +679,7 @@ function tlFit(st){const l=$('#tl');if(!l)return;const it=l.querySelectorAll(':s
 function showDay(k){
 const a=act(),p=$('#panel'),_st=($('#tl')||{}).scrollTop||0;
 let h=`<div class="ph"><h2>${fdate(k,{weekday:'long',day:'numeric',month:'long'})}</h2><button class="x" id="cl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
+{const hn=holOf(k);if(hn.length)h+=`<div class="holn">${hn.map(esc).join('<br>')}</div>`}
 if(a){const on=(S.marks[a.id]||{})[k];h+=`<button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button>`}
 const _tl=S.todos.filter(x=>x.date===k).map(x=>taskHtml(x,{cx:1})).join('');h+=_tl?`<div class="tl" id="tl" data-n="3" data-k="day">${_tl}</div>`:'';
 h+=`<div class="row"><input type="text" id="tt" placeholder="${t('todoPh')}"><input type="time" id="tmx" value="00:00"></div><div class="row"><button style="flex:1" id="ta">${t('addTodo')}</button></div>`;
@@ -921,6 +982,7 @@ if(el.closest&&el.closest('input,textarea,select'))return;const dx=t.clientX-sx,
 const obDone=()=>{const v=$('#obn').value.trim();if(!v){const e=$('#obn');e.classList.remove('err');void e.offsetWidth;e.classList.add('err');e.focus();return}S.set.name=v;save();$('#onb').classList.add('hid');render()};
 $('#obgo').onclick=obDone;$('#obn').onkeydown=e=>{if(e.key==='Enter')obDone()};
 migMood();regActions().then(()=>rescheduleAll());render();if(!S.set.name)$('#onb').classList.remove('hid');
+holSync();
 if(S.lock)showLock('unlock');
 bioOk().then(v=>{bioAv=v;renderMore();if(!$('#lock').classList.contains('hid')){lockDraw();if(lmode==='unlock')tryBio()}});
 </script></body></html>
