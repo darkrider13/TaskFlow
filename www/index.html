@@ -170,8 +170,11 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .dbox{width:100%;max-width:340px;border-radius:22px;padding:26px 20px 20px;text-align:center;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);color:var(--ink)}
 .dic{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:#16A34A;color:#fff;box-shadow:0 0 0 8px rgba(22,163,74,.22)}
 .dic .ic{width:32px;height:32px;stroke-width:3}
-.dic.ask{background:var(--glass2);color:var(--ink);box-shadow:0 0 0 8px var(--glass)}
+[data-ic],.dbt button.wi{display:inline-flex;align-items:center;justify-content:center;gap:8px}[data-ic] .ic,.dbt button.wi .ic{width:20px;height:20px;stroke-width:2.2}
+.dic.ask,.dic.export,.dic.import{background:var(--glass2);color:var(--ink);box-shadow:0 0 0 8px var(--glass)}
 .dic.bad{background:#FF0000;box-shadow:0 0 0 8px rgba(255,0,0,.22)}
+.dic.warn{background:#F59E0B;color:#fff;box-shadow:0 0 0 8px rgba(245,158,11,.22)}
+.dic.warn .ic{stroke-width:2.6}
 .dbox b{display:block;font-size:19px;margin-bottom:8px}
 .dbox p{white-space:pre-line;margin:0 0 20px;color:var(--muted);font-size:14.5px;line-height:1.5}
 .dbt{display:flex;gap:10px;justify-content:center}
@@ -446,12 +449,12 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="sheet" id="bsheet"><div class="panel">
 <div class="ph"><h2 data-i="bkT"></h2><button class="x" id="bcl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <p class="hint" data-i="bkHint" style="margin-top:0"></p>
-<button class="big" id="bex" data-i="bkEx"></button>
-<div class="row"><button style="flex:1" id="bcp" data-i="bkCp"></button></div>
+<button class="big" id="bex" data-i="bkEx" data-ic="export"></button>
+<div class="row"><button style="flex:1" id="bcp" data-i="bkCp" data-ic="export"></button></div>
 <h3 data-i="bkImT"></h3>
-<div class="row"><button style="flex:1" id="bfile" data-i="bkFile"></button><input type="file" id="bin" accept=".json,application/json" class="hid"></div>
+<div class="row"><button style="flex:1" id="bfile" data-i="bkFile" data-ic="import"></button><input type="file" id="bin" accept=".json,application/json" class="hid"></div>
 <textarea id="btx" data-p="bkPh"></textarea>
-<div class="row"><button style="flex:1" id="bpaste" data-i="bkPaste"></button></div>
+<div class="row"><button style="flex:1" id="bpaste" data-i="bkPaste" data-ic="import"></button></div>
 </div></div>
 
 <div class="sheet" id="stsheet"><div class="panel">
@@ -461,7 +464,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <h3 data-i="appear"></h3>
 <div class="row" style="margin-top:0"><button id="th" style="flex:1"></button><button id="lg" style="flex:1"></button></div>
 <h3 data-i="dataT"></h3>
-<div class="row" style="margin-top:0"><button style="flex:1" id="stex" data-i="expT"></button><button style="flex:1" id="stim" data-i="impT"></button></div>
+<div class="row" style="margin-top:0"><button style="flex:1" id="stex" data-i="expT" data-ic="export"></button><button style="flex:1" id="stim" data-i="impT" data-ic="import"></button></div>
 
 <button class="big" id="stsave" data-i="save" style="margin:16px 0 0"></button>
 </div></div>
@@ -487,7 +490,7 @@ add:'+ New habit',streak:'Day streak',total:'Total days',left:'Left this month',
 monthGoal:(x,y)=>`This month: ${x}/${y} days`,totalGoal:(x,y)=>`Overall goal: ${x}/${y} days`,
 hint:'Tap any date to see its tick and tasks.',empty:'Tap "+ New habit" to start tracking with a goal.',
 did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo:'Add',
-edit:'Edit & goals',del:'Delete',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
+edit:'Edit & goals',del:'Delete',delT:'Delete?',bkCopT:'Copied',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
 newT:'Add new',editT:'Edit habit',editTk:'Edit task',namePh:'Write a name for your habit',askTime:'Ask me every day at',
 gmL:'Monthly goal',gtL:'Overall goal',save:'Save',
 notifT:'Did you do it today?',notifB:n=>`${n}, did you do it?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
@@ -512,7 +515,7 @@ add:'+ নতুন অভ্যাস',streak:'টানা দিন',total:'�
 monthGoal:(x,y)=>`এই মাসের লক্ষ্য: ${x}/${y} দিন`,totalGoal:(x,y)=>`সব মিলিয়ে লক্ষ্য: ${x}/${y} দিন`,
 hint:'যেকোনো তারিখে ট্যাপ করলে সেদিনের টিক ও করণীয় দেখতে পাবেন।',empty:'"+ নতুন অভ্যাস" চেপে লক্ষ্যসহ শুরু করুন।',
 did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'করণীয় বা রিমাইন্ডার লিখুন',addTodo:'যোগ করুন',
-edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
+edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',delT:'মুছে ফেলবেন?',bkCopT:'কপি হয়েছে',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
 newT:'নতুন যোগ করুন',editT:'অভ্যাস সম্পাদনা',editTk:'করণীয় সম্পাদনা',namePh:'অভ্যাসের একটি নাম লিখুন',askTime:'প্রতিদিন মনে করানোর সময়',
 gmL:'মাসিক লক্ষ্য',gtL:'সব মিলিয়ে লক্ষ্য',save:'সংরক্ষণ করুন',
 notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`${n}, কাজটি করেছেন কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
@@ -852,7 +855,7 @@ const ma=r.querySelector('[data-mvall]');if(ma)ma.onclick=()=>{fl(S.todos.filter
 r.querySelectorAll('[data-fc]').forEach(c=>c.onclick=()=>{const sl=c.parentElement.scrollLeft;fcat=c.dataset.fc;render();document.querySelectorAll('.chips.snap').forEach(e=>e.scrollLeft=sl)});
 r.querySelectorAll('[data-addcat]').forEach(c=>c.onclick=openCat)}
 
-const IC={"trash": "<path d=\"M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z\"/>", "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21a8 8 0 0 1 16 0\"/>", "flame": "<path d=\"M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>", "repeat": "<path d=\"M17 2l4 4-4 4\"/><path d=\"M3 11V9a3 3 0 0 1 3-3h15\"/><path d=\"M7 22l-4-4 4-4\"/><path d=\"M21 13v2a3 3 0 0 1-3 3H3\"/>", "checksq": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><path d=\"M8 12l3 3 5-6\"/>", "book": "<path d=\"M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z\"/><path d=\"M5 17a3 3 0 0 1 3-3h11\"/>", "briefcase": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18\"/>", "home": "<path d=\"M3 11l9-8 9 8v10h-6v-6H9v6H3z\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-4-4\"/>", "moon": "<path d=\"M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/>", "finger": "<path d=\"M12 11v3a6 6 0 0 1-1 3\"/><path d=\"M8 11a4 4 0 0 1 8 0v2a10 10 0 0 1-2 6\"/><path d=\"M5 12a7 7 0 0 1 14 0v1a14 14 0 0 1-1 5\"/><path d=\"M8.5 20a14 14 0 0 0 1-5v-4\"/>", "x": "<path d=\"M6 6l12 12M18 6L6 18\"/>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>", "back": "<path d=\"M21 5H9l-6 7 6 7h12z\"/><path d=\"M13 9l4 6M17 9l-4 6\"/>", "edit": "<path d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"M13.5 6.5l4 4\"/>", "award": "<circle cx=\"12\" cy=\"9\" r=\"6\"/><path d=\"M8.5 14L7 22l5-3 5 3-1.5-8\"/>", "checkc": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12.5l3 3 5-6\"/>", "timer": "<circle cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4l2 2M9 2h6\"/>", "laugh": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 13h8a4 4 0 0 1-8 0z\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "smile": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 14.5c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "neutral": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 15h7\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "sad": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 16c1-1.2 2.2-1.8 3.5-1.8s2.5.6 3.5 1.8\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "angry": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 8.5l2.5 1.2M16 8.5l-2.5 1.2\"/><path d=\"M8.5 16c1-1 2.2-1.5 3.5-1.5s2.5.5 3.5 1.5\"/><path d=\"M9.5 12h.01M14.5 12h.01\"/>", "note": "<path d=\"M6 3h9l4 4v14H6z\"/><path d=\"M14 3v5h5M9 13h7M9 17h5\"/>", "chevl": "<path d=\"M15 5l-7 7 7 7\"/>", "chevr": "<path d=\"M9 5l7 7-7 7\"/>", "expand": "<path d=\"M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5\"/>", "reset": "<path d=\"M3 12a9 9 0 1 0 3-6.7L3 8\"/><path d=\"M3 3v5h5\"/>", "tag": "<path d=\"M3 12V4h8l9 9-8 8z\"/><path d=\"M7.5 8h.01\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>"};
+const IC={"share": "<circle cx=\"6\" cy=\"12\" r=\"2.6\"/><circle cx=\"18\" cy=\"6\" r=\"2.6\"/><circle cx=\"18\" cy=\"18\" r=\"2.6\"/><path d=\"M8.3 10.8l7.4-3.6M8.3 13.2l7.4 3.6\"/>", "save": "<path d=\"M12 4v11M8 11l4 4 4-4\"/><path d=\"M5 19h14\"/>", "export": "<path d=\"M12 15V4M8 8l4-4 4 4\"/><path d=\"M5 13v6h14v-6\"/>", "import": "<path d=\"M12 4v11M8 11l4 4 4-4\"/><path d=\"M5 13v6h14v-6\"/>", "warn": "<path d=\"M12 3.5l9.5 16.5h-19z\"/><path d=\"M12 10v4.5\"/><circle cx=\"12\" cy=\"17.2\" r=\".6\" fill=\"currentColor\"/>", "trash": "<path d=\"M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z\"/>", "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21a8 8 0 0 1 16 0\"/>", "flame": "<path d=\"M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>", "repeat": "<path d=\"M17 2l4 4-4 4\"/><path d=\"M3 11V9a3 3 0 0 1 3-3h15\"/><path d=\"M7 22l-4-4 4-4\"/><path d=\"M21 13v2a3 3 0 0 1-3 3H3\"/>", "checksq": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><path d=\"M8 12l3 3 5-6\"/>", "book": "<path d=\"M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z\"/><path d=\"M5 17a3 3 0 0 1 3-3h11\"/>", "briefcase": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18\"/>", "home": "<path d=\"M3 11l9-8 9 8v10h-6v-6H9v6H3z\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-4-4\"/>", "moon": "<path d=\"M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/>", "finger": "<path d=\"M12 11v3a6 6 0 0 1-1 3\"/><path d=\"M8 11a4 4 0 0 1 8 0v2a10 10 0 0 1-2 6\"/><path d=\"M5 12a7 7 0 0 1 14 0v1a14 14 0 0 1-1 5\"/><path d=\"M8.5 20a14 14 0 0 0 1-5v-4\"/>", "x": "<path d=\"M6 6l12 12M18 6L6 18\"/>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>", "back": "<path d=\"M21 5H9l-6 7 6 7h12z\"/><path d=\"M13 9l4 6M17 9l-4 6\"/>", "edit": "<path d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"M13.5 6.5l4 4\"/>", "award": "<circle cx=\"12\" cy=\"9\" r=\"6\"/><path d=\"M8.5 14L7 22l5-3 5 3-1.5-8\"/>", "checkc": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12.5l3 3 5-6\"/>", "timer": "<circle cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4l2 2M9 2h6\"/>", "laugh": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 13h8a4 4 0 0 1-8 0z\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "smile": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 14.5c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "neutral": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 15h7\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "sad": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 16c1-1.2 2.2-1.8 3.5-1.8s2.5.6 3.5 1.8\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "angry": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 8.5l2.5 1.2M16 8.5l-2.5 1.2\"/><path d=\"M8.5 16c1-1 2.2-1.5 3.5-1.5s2.5.5 3.5 1.5\"/><path d=\"M9.5 12h.01M14.5 12h.01\"/>", "note": "<path d=\"M6 3h9l4 4v14H6z\"/><path d=\"M14 3v5h5M9 13h7M9 17h5\"/>", "chevl": "<path d=\"M15 5l-7 7 7 7\"/>", "chevr": "<path d=\"M9 5l7 7-7 7\"/>", "expand": "<path d=\"M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5\"/>", "reset": "<path d=\"M3 12a9 9 0 1 0 3-6.7L3 8\"/><path d=\"M3 3v5h5\"/>", "tag": "<path d=\"M3 12V4h8l9 9-8 8z\"/><path d=\"M7.5 8h.01\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>"};
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24">${IC[n]}</svg>`;
 const TABS=['home','cal','up','rep','more'];
 const ICONS={rep:'<path d="M5 20V10M12 20V4M19 20v-7"/>',more:'<circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/>',home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',up:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'};
@@ -863,7 +866,7 @@ TABS.forEach(z=>$('#v-'+z).classList.toggle('hid',tab!==z));
 $('#v-'+k).querySelectorAll('.tl,.stl').forEach(tlSettle);if(k==='home')hlGo(hlI,false);sfSync()}
 function applyStatic(){
 const r=document.documentElement;r.dataset.theme=S.set.theme;r.lang=S.set.lang;
-document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+document.querySelectorAll('[data-i]').forEach(e=>{e.textContent=t(e.dataset.i);if(e.dataset.ic)e.innerHTML=ic(e.dataset.ic)+'<span>'+esc(e.textContent)+'</span>'});
 document.querySelectorAll('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));
 $('#user').classList.toggle('ph',!S.set.name);$('#user').innerHTML=S.set.name?ic('user')+'<span>'+esc(S.set.name)+'</span>':esc(t('userPh'));
 $('#lg').textContent=S.set.lang==='bn'?'English':'বাংলা';$('#th').innerHTML=ic(S.set.theme==='dark'?'moon':'sun')+' '+t(S.set.theme==='dark'?'thD':'thL');
@@ -955,8 +958,7 @@ if(window.ResizeObserver)new ResizeObserver(()=>chGo(chIdx,false)).observe(c)})(
 function renderCal(){
 const loc=t('loc'),ch=$('#chips'),inner=document.createElement('div');inner.className='chin';ch.innerHTML='';
 S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=sel===a.id?null:a.id;render()};inner.appendChild(b)});
-{const b=document.createElement('button');b.className='chip add';b.setAttribute('aria-label','Add habit');b.innerHTML=ic('plus');b.onclick=()=>{openForm('habit');$('#seg').classList.add('hid')};inner.appendChild(b)}
-ch.style.display='';ch.appendChild(inner);chGo(chIdx,false);
+ch.style.display=S.acts.length?'':'none';ch.appendChild(inner);chGo(chIdx,false);
 const a=act();let h='';
 if(a){const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
 h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span><em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
@@ -1025,7 +1027,7 @@ $('#cl').onclick=()=>$('#sheet').classList.remove('show');
 const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else S.marks[a.id][k]=1;save();$('#sheet').classList.remove('show');render()}}
 bindTasks(p,()=>{showDay(k,fm);render()});
 const ed=$('#ed');if(ed)ed.onclick=()=>{openForm('habit',a);backDay=k};
-const del=$('#del');if(del)del.onclick=()=>{if(!confirm(t('confirmDel',a.name)))return;cancelMany(actIds(a));delete S.marks[a.id];S.acts=S.acts.filter(z=>z!==a);sel=S.acts[0]?S.acts[0].id:null;save();$('#sheet').classList.remove('show');render()}}
+const del=$('#del');if(del)del.onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:esc(t('confirmDel',a.name)),ok:t('bkOkB'),cancel:t('cancelT')}))return;cancelMany(actIds(a));delete S.marks[a.id];S.acts=S.acts.filter(z=>z!==a);sel=S.acts[0]?S.acts[0].id:null;save();$('#sheet').classList.remove('show');render()}}
 
 ['sheet','ssheet','bsheet','rsheet','stsheet','csheet'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id===id)e.target.classList.remove('show')});
 $('#fcl').onclick=closeEdit;
@@ -1063,12 +1065,12 @@ else if(e.actionId==='no'){render()}}));
 
 const dump=()=>JSON.stringify({app:'taskflow',v:1,at:new Date().toISOString(),data:Object.assign({},S,{lock:undefined})});
 async function clearAllN(){await safe(async()=>{const p=await LN.getPending();if(p.notifications.length)await LN.cancel(p)})}
-function dlg(o){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ${o.kind||''}">${ic(o.kind==='bad'?'x':o.kind==='ask'?'reset':'check')}</div><b>${o.title}</b><p>${o.text}</p><div class="dbt">${o.cancel?`<button class="dc">${o.cancel}</button>`:''}<button class="dok">${o.ok}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dok').onclick=()=>done(true);const c=w.querySelector('.dc');if(c)c.onclick=()=>done(false)})}
+function dlg(o){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ${o.kind||''}">${ic(o.kind==='bad'?'x':o.kind==='warn'?'warn':o.kind==='export'?'export':o.kind==='import'?'import':o.kind==='ask'?'reset':'check')}</div><b>${o.title}</b><p>${o.text}</p><div class="dbt">${o.cancel?`<button class="dc">${o.cancel}</button>`:''}<button class="dok${o.kind==='import'?' wi':''}">${o.kind==='import'?ic('import'):''}${o.kind==='import'?'<span>'+o.ok+'</span>':o.ok}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dok').onclick=()=>done(true);const c=w.querySelector('.dc');if(c)c.onclick=()=>done(false)})}
 const bkBadD=()=>dlg({kind:'bad',title:t('bkBadT'),text:t('bkBad'),ok:t('bkOkB')});
 const MAXB=10*1024*1024;
 async function doImport(txt){if(txt.length>MAXB){await dlg({kind:'bad',title:t('bkBadT'),text:t('imBig'),ok:t('bkOkB')});return}let o;try{o=JSON.parse(txt)}catch(e){await bkBadD();return}
 const d=o&&o.data?o.data:o;if(!d||!Array.isArray(d.acts)||!Array.isArray(d.todos)||!d.marks||typeof d.marks!=='object'){await bkBadD();return}
-if(!await dlg({kind:'ask',title:t('bkQT'),text:t('bkQ'),ok:t('bkImB'),cancel:t('cancelT')}))return;
+if(!await dlg({kind:'import',title:t('bkQT'),text:t('bkQ'),ok:t('bkImB'),cancel:t('cancelT')}))return;
 const ol=S.lock;S=d;if(ol)S.lock=ol;else delete S.lock;S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];migMood();S.nid=Math.max(S.nid||1,...[...S.acts,...S.todos].map(z=>(z.nid||0)+1));
 sel=S.acts[0]?S.acts[0].id:null;save();$('#bsheet').classList.remove('show');render();
 if(LN){await clearAllN();await regActions();await rescheduleAll()}await dlg({title:t('bkDoneT'),text:t('bkDoneD',d.acts.length,d.todos.length),ok:t('bkOkB')})}
@@ -1080,7 +1082,7 @@ $('#stim').onclick=()=>{$('#stsheet').classList.remove('show');$('#bin').click()
 ($('#stalt')||{}).onclick=()=>{$('#stsheet').classList.remove('show');$('#btx').value='';$('#bsheet').classList.add('show')};
 $('#bcl').onclick=()=>$('#bsheet').classList.remove('show');
 const CP=window.Capacitor&&Capacitor.Plugins||{};
-function exChoose(){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic ask">${ic('reset')}</div><b>${t('exQT')}</b><p>${t('exQ')}</p><div class="dbt"><button class="dc">${t('exShare')}</button><button class="dok">${t('exSave')}</button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dc').onclick=()=>done('share');w.querySelector('.dok').onclick=()=>done('save');w.onclick=e=>{if(e.target===w)done(null)}})}
+function exChoose(){return new Promise(res=>{const w=document.createElement('div');w.className='dlg';w.innerHTML=`<div class="dbox"><div class="dic export">${ic('export')}</div><b>${t('exQT')}</b><p>${t('exQ')}</p><div class="dbt"><button class="dc wi">${ic('share')}<span>${t('exShare')}</span></button><button class="dok wi">${ic('save')}<span>${t('exSave')}</span></button></div></div>`;document.body.appendChild(w);const done=v=>{w.remove();res(v)};w.querySelector('.dc').onclick=()=>done('share');w.querySelector('.dok').onclick=()=>done('save');w.onclick=e=>{if(e.target===w)done(null)}})}
 const exErr=m=>dlg({kind:'bad',title:t('exBadT'),text:m||t('exBadD'),ok:t('bkOkB')});
 const exOk=extra=>dlg({title:t('exDoneT'),text:t('exDoneD',S.acts.length,S.todos.length)+(extra?'\n'+extra:''),ok:t('bkOkB')});
 async function exShare(json,fn){
@@ -1103,7 +1105,7 @@ const c=await exChoose();if(!c)return;
 try{if(c==='share'){if(!await exShare(json,fn))return;await exOk()}
 else{const p=await exSave(json,fn);await exOk(p?t('exSavedAt',p):'')}}
 catch(e){await exErr()}};
-$('#bcp').onclick=async()=>{try{await navigator.clipboard.writeText(dump());alert(t('bkCopied'))}catch(e){$('#btx').value=dump();$('#btx').select()}};
+$('#bcp').onclick=async()=>{try{await navigator.clipboard.writeText(dump());await dlg({title:t('bkCopT'),text:t('bkCopied'),ok:t('bkOkB')})}catch(e){$('#btx').value=dump();$('#btx').select()}};
 $('#bfile').onclick=()=>$('#bin').click();
 $('#bin').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(f.size>MAXB){await dlg({kind:'bad',title:t('bkBadT'),text:t('imBig'),ok:t('bkOkB')});return}const r=new FileReader();r.onload=()=>doImport(r.result);r.readAsText(f)};
 $('#bpaste').onclick=()=>doImport($('#btx').value.trim());
@@ -1275,7 +1277,7 @@ const hh=Math.min(23,Math.max(0,parseInt($('#rh').value)||0)),mm=Math.min(59,Mat
 const v={name,im,every:Math.max(1,Math.round(im/60)),from:$('#rf').value||'08:00',to:$('#rt').value||'22:00',on:true};let x;
 if(remEditing){x=S.rems.find(z=>z.id===remEditing);Object.assign(x,v)}else{x=Object.assign({id:Date.now(),nid:S.nid++},v);S.rems.push(x)}
 save();$('#rsheet').classList.remove('show');await schedRem(x);render()};
-$('#rdel').onclick=()=>{if(!confirm(t('remDelQ')))return;const x=S.rems.find(z=>z.id===remEditing);if(!x)return;cancelMany(remIds(x));S.rems=S.rems.filter(z=>z!==x);save();$('#rsheet').classList.remove('show');render()};
+$('#rdel').onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:t('remDelQ'),ok:t('bkOkB'),cancel:t('cancelT')}))return;const x=S.rems.find(z=>z.id===remEditing);if(!x)return;cancelMany(remIds(x));S.rems=S.rems.filter(z=>z!==x);save();$('#rsheet').classList.remove('show');render()};
 
 // ---- Screen lock: off / fingerprint / PIN / pattern ----
 Object.assign(IC,{unlock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/>',hash:'<path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/>',pattern:'<circle cx="6" cy="6" r="1.7"/><circle cx="18" cy="6" r="1.7"/><circle cx="6" cy="18" r="1.7"/><circle cx="18" cy="18" r="1.7"/><path d="M7.5 6h9M17 7.5L7 16.5M7.5 18h9"/>'});
