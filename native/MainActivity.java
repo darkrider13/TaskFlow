@@ -9,6 +9,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(FullscreenModePlugin.class);
         registerPlugin(BiometricAuthPlugin.class);
+        registerPlugin(PendingActionsPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
