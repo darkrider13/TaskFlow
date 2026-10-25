@@ -24,6 +24,14 @@ jobs:
       - name: Add notification and alarm permissions
         run: |
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
+      - name: Fullscreen plugin (hide status bar, auto rotate only in focus full screen)
+        run: |
+          J=android/app/src/main/java/com/habit/tracker
+          mkdir -p $J
+          cp native/FullscreenModePlugin.java $J/FullscreenModePlugin.java
+          cp native/MainActivity.java $J/MainActivity.java
+          sed -i '0,/android:name="\.MainActivity"/s//android:name=".MainActivity" android:screenOrientation="portrait"/' android/app/src/main/AndroidManifest.xml
+          grep -n "screenOrientation" android/app/src/main/AndroidManifest.xml
       - name: Add storage permissions (for saving backups on Android 9 and below)
         run: |
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
