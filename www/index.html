@@ -64,7 +64,7 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
 .pl{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;margin:10px 0 5px}
 .pl em{font-style:normal;font-weight:700}
-.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.mnav{display:flex;align-items:center;justify-content:center;min-height:40px;margin-bottom:6px}
 .mnav button{background:none;border:0;font-size:24px;padding:6px 14px;color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .wd{text-align:center;font-size:12px;color:var(--muted);padding:4px 0}
@@ -414,7 +414,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <section id="v-up" class="hid"><div class="seg" id="utabs"></div><div class="sw"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="text" id="sq" data-p="searchPh" style="width:100%;padding-left:38px"></div><div id="ucats"></div><div id="ulist"></div></section>
 <section id="v-cal" class="hid"><div class="cw">
 <div class="hchips" id="chips"></div><div id="info"></div>
-<div class="mnav"><button id="prev"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><strong id="mname"></strong><button id="next"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+<div class="mnav"><strong id="mname"></strong></div>
 <div class="grid" id="grid"></div></div>
 <div id="cx"></div>
 </section>
@@ -1061,8 +1061,13 @@ $('#user').onclick=()=>{$('#un').value=S.set.name;$('#ssheet').classList.add('sh
 $('#usave').onclick=()=>{S.set.name=$('#un').value.trim();save();$('#ssheet').classList.remove('show');render()};
 $('#th').onclick=()=>{S.set.theme=S.set.theme==='dark'?'light':'dark';save();render()};
 $('#lg').onclick=()=>{S.set.lang=S.set.lang==='bn'?'en':'bn';save();render();regActions();rescheduleAll()};
-$('#prev').onclick=()=>{vm--;if(vm<0){vm=11;vy--}render()};
-$('#next').onclick=()=>{vm++;if(vm>11){vm=0;vy++}render()};
+{const g=$('#grid');g.style.touchAction='pan-y';let sx=0,sy=0,st=0,ok=false;
+g.addEventListener('touchstart',e=>{if(e.touches.length!==1){ok=false;return}sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();ok=true},{passive:true});
+g.addEventListener('touchend',e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+if(Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.4||Date.now()-st>800)return;
+const nx=dx<0;if(nx){vm++;if(vm>11){vm=0;vy++}}else{vm--;if(vm<0){vm=11;vy--}}render();
+const ng=$('#grid');if(ng&&ng.animate)ng.animate([{transform:'translateX('+(nx?36:-36)+'px)',opacity:.2},{transform:'none',opacity:1}],{duration:200,easing:'ease-out'})},{passive:true});
+g.addEventListener('touchcancel',()=>{ok=false},{passive:true})}
 function setStrict(){$('#stb').textContent=t(strict?'strX':'strF');$('#dwrap').classList.toggle('hid',!strict)}
 $('#stb').onclick=()=>{strict=strict?0:1;setStrict()};
 function buildWd(){const w=$('#wdp');w.innerHTML=t('wds').map((n,i)=>`<button data-d="${i}" class="${wsel.includes(i)?'on':''}">${n}</button>`).join('');
