@@ -244,6 +244,7 @@ input[type=time]::-webkit-calendar-picker-indicator{display:none}
 #fsr{margin:0;width:46px;height:46px;flex:none;padding:0;display:flex;align-items:center;justify-content:center;border-radius:14px;border:0;background:none;box-shadow:none;color:#F4F4F5;font-size:14px}
 #fscreen:not(.hid){display:flex}
 /* portrait phone: turn the focus screen sideways at once (used when the browser will not lock the orientation) */
+#fscreen.wait>*{visibility:hidden}
 #fscreen.rot{inset:auto;top:0;left:0;width:100vh;height:100vw;transform-origin:0 0;transform:translateX(100vw) rotate(90deg)}
 #fscreen .x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 16px);right:16px;width:44px;height:44px;background:transparent;border:0;box-shadow:none;color:#F4F4F5}
 #fscreen .x .ic{width:26px;height:26px}
@@ -1193,19 +1194,22 @@ setInterval(()=>{if(ft.run&&Date.now()>=ft.end)ftFinish();else ftDraw()},500);
 
 let fsLock=null;
 const FSM=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.FullscreenMode;
-function fsOrient(){const f=$('#fscreen');f.classList.toggle('rot',!f.classList.contains('hid')&&innerHeight>innerWidth)}
+function fsOrient(){const f=$('#fscreen');if(f.classList.contains('wait'))return;f.classList.toggle('rot',!f.classList.contains('hid')&&innerHeight>innerWidth)}
 window.addEventListener('resize',fsOrient);window.addEventListener('orientationchange',fsOrient);
 /* the focus screen is landscape only: if the phone turns back to portrait, lock again / keep it rotated */
 const fsRelock=()=>{fsOrient();const f=$('#fscreen');if(f.classList.contains('hid'))return;try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};
 try{screen.orientation&&screen.orientation.addEventListener('change',fsRelock)}catch(e){}
 document.addEventListener('fullscreenchange',fsRelock);document.addEventListener('visibilitychange',()=>{if(!document.hidden)fsRelock()});
-async function openFs(){$('#fscreen').classList.remove('hid');fsOrient();ftDraw();
+async function openFs(){const f=$('#fscreen'),was=innerHeight>innerWidth;f.classList.remove('hid');
+/* portrait: keep the content hidden while the phone really turns, so it shows up already landscape (no rotate-twice) */
+if(was)f.classList.add('wait');ftDraw();
 try{if(FSM())await FSM().enter();else{const e=document.documentElement;if(e.requestFullscreen)await e.requestFullscreen()}}catch(e){}
-try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape')}catch(e){}
-fsOrient();
+let ok=false;try{if(screen.orientation&&screen.orientation.lock){await screen.orientation.lock('landscape');ok=true}}catch(e){}
+if(was&&ok){const t0=Date.now();while(innerHeight>innerWidth&&Date.now()-t0<700)await new Promise(r=>setTimeout(r,25))}
+f.classList.remove('wait');fsOrient();
 try{if(navigator.wakeLock)fsLock=await navigator.wakeLock.request('screen')}catch(e){}}
 $('#fscreen').addEventListener('pointerdown',e=>{if(e.target.closest('#fsx,#ftime2,#fsr'))return;$('#fscreen').classList.toggle('showx')});
-function closeFs(){$('#fscreen').classList.remove('showx');$('#fscreen').classList.add('hid');
+function closeFs(){$('#fscreen').classList.remove('wait');$('#fscreen').classList.remove('showx');$('#fscreen').classList.add('hid');
 try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch(e){}
 fsOrient();
 try{FSM()&&FSM().exit()}catch(e){}
@@ -1226,17 +1230,7 @@ const ez=bz(.4,0,.2,1);
 const play=(fn,t0,dur)=>{if(anim)anim.cancel();const N=28,kf=[];
 for(let k=0;k<=N;k++){const o=k/N,t=t0+(1-t0)*o;kf.push({offset:o,transform:'scale('+fn(t)+')'})}
 try{anim=row.animate(kf,{duration:dur,easing:'linear'})}catch(e){anim=null}};
-const run=()=>{if(fsEl.classList.contains('hid')){prev=null;return}
-const w=innerWidth,h=innerHeight;
-if(prev&&(prev[0]>prev[1])!==(w>h)){
-const R=fsF(prev[0],prev[1])/fsF(w,h);
-if(R<1){/* portrait -> landscape: grow */
-play(t=>R+(1-R)*ez(t),0,D)}
-else if(R>1){/* landscape -> portrait: shrink from a bigger-than-portrait size down to the portrait size.
-   Two keyframes + a native easing curve, so the browser interpolates it smoothly on the GPU (no hand-made steps). */
-if(anim)anim.cancel();
-{const s0=Math.min(R,1.4);try{anim=row.animate([{transform:'scale3d('+s0+','+s0+',1)'},{transform:'scale3d(1,1,1)'}],{duration:800,easing:'cubic-bezier(.4,0,.2,1)'})}catch(e){anim=null}}}}
-prev=[w,h]};
+const run=()=>{/* no grow/shrink effect when the screen turns: it goes straight to landscape */if(anim){try{anim.cancel()}catch(e){}anim=null}prev=fsEl.classList.contains('hid')?null:[innerWidth,innerHeight]};
 new ResizeObserver(run).observe(fsEl);window.addEventListener('orientationchange',()=>setTimeout(run,0))}
 const MOODS=['laugh','smile','neutral','sad','angry'];
 const OLDM={'\u{1F60A}':'laugh','\u{1F642}':'smile','\u{1F610}':'neutral','\u{1F614}':'sad','\u{1F621}':'angry'};
