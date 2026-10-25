@@ -134,7 +134,6 @@ public class NotifActionReceiver extends BroadcastReceiver {
         }
 
         int small = c.getResources().getIdentifier("ic_stat_icon", "drawable", c.getPackageName());
-        int large = c.getResources().getIdentifier("ic_large_icon", "drawable", c.getPackageName());
         Intent open = c.getPackageManager().getLaunchIntentForPackage(c.getPackageName());
         PendingIntent openPi = PendingIntent.getActivity(c, snoozeId, open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -147,7 +146,6 @@ public class NotifActionReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(openPi);
-        if (large != 0) b.setLargeIcon(BitmapFactory.decodeResource(c.getResources(), large));
         b.addAction(0, titles.optString("yes", "Yes"), actionPi(c, snoozeId, base, "yes", src));
         b.addAction(0, titles.optString("no", "No"), actionPi(c, snoozeId, base, "no", src));
         if ("TODO".equals(o.optString("actionTypeId"))) {
