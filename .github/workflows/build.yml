@@ -101,8 +101,8 @@ jobs:
       - name: Sharp launch screen icon (Android 12 and above)
         run: |
           R=android/app/src/main/res
-          mkdir -p $R/drawable-nodpi $R/values-v31
-          cp assets/splash-icon.png $R/drawable-nodpi/splash_icon.png
+          mkdir -p $R/drawable $R/values-v31
+          cp native/splash_icon.xml $R/drawable/splash_icon.xml
           cp native/splash-styles-v31.xml $R/values-v31/styles.xml
           grep -rn "NoActionBarLaunch" android/app/src/main/AndroidManifest.xml
       - run: npx cap sync android
