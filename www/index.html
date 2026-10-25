@@ -134,7 +134,7 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .moods button{font-size:20px;background:none;border:1px solid var(--edge);border-radius:12px;padding:5px 10px;opacity:.45}
 .moods button.on{opacity:1;background:var(--glass2)}
 .bdgs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.bdg{padding:12px 8px;border-radius:16px;border:1px solid var(--edge);background:var(--glass);opacity:.45;text-align:center}
+.bdg{padding:12px 8px;border-radius:16px;border:1px solid var(--edge);background:var(--glass);opacity:1;text-align:center}
 .bdg.on{opacity:1;background:var(--glass2);border-color:var(--bc);box-shadow:0 0 16px var(--bc)}
 .bdg i{font-style:normal;font-size:26px;display:block}.bdg b{font-size:13.5px;display:block;margin:4px 0 2px}.bdg small{color:var(--muted);font-size:12px}
 .big2{font-size:34px;font-weight:700}
@@ -185,12 +185,12 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 #gear{color:var(--muted)}#gear .ic{width:20px;height:20px}
 .mnav .ic{width:24px;height:24px}
 .moods button{color:var(--muted)}.moods button.on{color:var(--ink)}.moods .ic{width:24px;height:24px}
-.bdg i{width:46px;height:46px;border-radius:50%;background:var(--glass2);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;color:var(--muted);font-size:22px}
+.bdg i{width:46px;height:46px;border-radius:50%;background:var(--glass2);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;color:var(--ink);font-size:22px}
 .bdg.on i{color:var(--bc);box-shadow:inset 0 0 0 2px var(--bc)}.bdg.on small{color:var(--bc)}.bdg.on .bar i{width:100%;height:100%;margin:0;border-radius:6px;background:var(--bc);box-shadow:none}
 .sw{position:relative;margin-bottom:10px}
 .sw .ic{position:absolute;left:12px;top:50%;margin-top:-.575em;color:var(--muted);pointer-events:none}
 .row .pri{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex:1;min-width:0}
-#rp button,#ct button,#stp button{padding:0;font-size:12px;border-radius:9px;white-space:nowrap;min-width:0;line-height:1.3;height:34px}
+#rp button,#ct button{padding:0;font-size:12px;border-radius:9px;white-space:nowrap;min-width:0;line-height:1.3;height:34px}
 input[type=text]{height:34px;padding:0 10px;font-size:13px;border-radius:9px}
 .row>button{height:34px;padding:0 14px;font-size:13px;border-radius:9px}
 .seg button{height:34px;padding:0 6px;font-size:13px;border-radius:9px}
@@ -433,8 +433,8 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="row"><label data-i="askTime"></label><input type="time" id="at" value="21:00"></div>
 <div class="row"><label data-i="gmL"></label><input type="number" id="gm" min="0" max="31" value="00"></div>
 <div class="row"><label data-i="gtL"></label><input type="number" id="gt" min="0" value="00"></div>
-<div class="row"><label data-i="strL"></label><div class="pri" id="stp" style="grid-template-columns:repeat(2,1fr)"><button data-v="0" data-i="strF"></button><button data-v="1" data-i="strX"></button></div></div>
-<div id="dwrap"><div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div><p class="hint" data-i="daysHint" style="margin:6px 2px 0"></p></div></div>
+<div class="row"><label data-i="strL"></label><button type="button" class="tpb dpb" id="stb"></button></div>
+<div id="dwrap"><div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div></div></div>
 <div class="row" id="fsvrow"><button style="flex:1" id="fsave" data-i="save"></button></div>
 </div></div>
 <div id="onb" class="hid"><div class="obh"><small data-i="obHi"></small><b>TaskFlow</b><span data-i="obSub"></span></div>
@@ -505,7 +505,7 @@ badgesT:'Milestones (all time)',bStreak:n=>`${n}-day streak`,bTotal:n=>`${n} tic
 focusT:'Focus timer',fFocus:'Focus',fShort:'Break',fLong:'Long break',fStart:'Start',fPause:'Pause',fResume:'Resume',fReset:'Reset',fToday:n=>`Session completed: ${n}`,fDoneT:'Focus session done!',fDoneB:'Time for a short break.',fBrkT:'Break over',fBrkB:'Ready for the next session?',
 diaryT:'Diary',diaryPh:'Write about your day',diaryPast:'Earlier entries',
 dLeft:'in {n} days',catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write a category name',cStudy:'Study',cWork:'Work',cPers:'Personal',subPh:'Write checklist items, one per line',searchPh:'Search tasks',noRes:'No matching tasks.',mvT:'→ Today',mvM:'→ Tomorrow',mvAll:'Move all to today',
-repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',strL:'Schedule',strF:'Flexible',strX:'Fixed days',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
+repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',strL:'Schedule',strF:'Every day',strX:'Fixed days',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
 wds:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],onDays:(d,x)=>`${d} at ${x}`,snooze:'Remind in 10 min',doneA:'Done',yesA:'Yes',noA:'No',
 bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore it on a new phone.',bkEx:'Save backup file',bkCp:'Copy backup as text',bkImT:'Restore',bkFile:'Choose backup file',bkPh:'Or paste backup text here',bkPaste:'Restore from text',
 bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
@@ -530,7 +530,7 @@ badgesT:'মাইলস্টোন (সর্বকালের)',bStreak:n=>`
 focusT:'ফোকাস টাইমার',fFocus:'ফোকাস',fShort:'বিরতি',fLong:'দীর্ঘ বিরতি',fStart:'শুরু করুন',fPause:'থামান',fResume:'চালিয়ে যান',fReset:'রিসেট',fToday:n=>`সেশন সম্পন্ন: ${n}`,fDoneT:'ফোকাস শেষ!',fDoneB:'এবার একটু বিরতি নিন।',fBrkT:'বিরতি শেষ',fBrkB:'পরের সেশন শুরু করবেন?',
 diaryT:'ডায়েরি',diaryPh:'আজকের দিনের কথা লিখুন',diaryPast:'আগের লেখা',
 dLeft:'{n} দিন বাদে',catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'নতুন ক্যাটাগরি',catNamePh:'ক্যাটাগরির নাম লিখুন',cStudy:'পড়াশোনা',cWork:'কাজ',cPers:'ব্যক্তিগত',subPh:'ছোট তালিকা লিখুন, প্রতি লাইনে একটি',searchPh:'করণীয় খুঁজুন',noRes:'কিছু পাওয়া যায়নি।',mvT:'→ আজ',mvM:'→ আগামীকাল',mvAll:'সবগুলো আজকে সরান',
-repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',strL:'নিয়ম',strF:'নমনীয়',strX:'নির্দিষ্ট বার',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
+repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',strL:'নিয়ম',strF:'প্রতিদিন',strX:'নির্দিষ্ট বার',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
 wds:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],onDays:(d,x)=>`${d} — ${x}-এ`,snooze:'১০ মিনিট পরে',doneA:'সম্পন্ন',yesA:'হ্যাঁ',noA:'না',
 bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেটা ফাইলে সংরক্ষণ করুন, নতুন ফোনে ফিরিয়ে আনতে পারবেন।',bkEx:'ব্যাকআপ ফাইল সংরক্ষণ',bkCp:'ব্যাকআপ লেখা আকারে কপি',bkImT:'ফিরিয়ে আনুন',bkFile:'ব্যাকআপ ফাইল বাছুন',bkPh:'অথবা ব্যাকআপের লেখা এখানে পেস্ট করুন',bkPaste:'লেখা থেকে ফিরিয়ে আনুন',
 bkBad:'এটি সঠিক TaskFlow ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
@@ -1057,8 +1057,8 @@ $('#th').onclick=()=>{S.set.theme=S.set.theme==='dark'?'light':'dark';save();ren
 $('#lg').onclick=()=>{S.set.lang=S.set.lang==='bn'?'en':'bn';save();render();regActions();rescheduleAll()};
 $('#prev').onclick=()=>{vm--;if(vm<0){vm=11;vy--}render()};
 $('#next').onclick=()=>{vm++;if(vm>11){vm=0;vy++}render()};
-function setStrict(){$('#stp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.v===strict));$('#dwrap').classList.toggle('hid',!strict)}
-$('#stp').querySelectorAll('button').forEach(b=>b.onclick=()=>{strict=+b.dataset.v;setStrict()});
+function setStrict(){$('#stb').textContent=t(strict?'strX':'strF');$('#dwrap').classList.toggle('hid',!strict)}
+$('#stb').onclick=()=>{strict=strict?0:1;setStrict()};
 function buildWd(){const w=$('#wdp');w.innerHTML=t('wds').map((n,i)=>`<button data-d="${i}" class="${wsel.includes(i)?'on':''}">${n}</button>`).join('');
 w.querySelectorAll('button').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;wsel=wsel.includes(d)?wsel.filter(z=>z!==d):[...wsel,d];b.classList.toggle('on')})}
 $('#rp').querySelectorAll('button').forEach(b=>b.onclick=()=>{rep=b.dataset.v;$('#rp').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))});
