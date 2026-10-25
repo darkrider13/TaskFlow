@@ -31,6 +31,8 @@ jobs:
           cp native/FullscreenModePlugin.java $J/FullscreenModePlugin.java
           cp native/BiometricAuthPlugin.java $J/BiometricAuthPlugin.java
           cp native/MainActivity.java $J/MainActivity.java
+          cp native/NotifActionReceiver.java $J/NotifActionReceiver.java
+          cp native/PendingActionsPlugin.java $J/PendingActionsPlugin.java
           sed -i '0,/android:name="\.MainActivity"/s//android:name=".MainActivity" android:screenOrientation="portrait"/' android/app/src/main/AndroidManifest.xml
           grep -n "screenOrientation" android/app/src/main/AndroidManifest.xml
       - name: Fingerprint support (biometric library and permission)
@@ -91,6 +93,11 @@ jobs:
           else
             convert -size 96x96 xc:none -fill white -draw 'circle 48,48 48,8' $D/ic_stat_icon.png
           fi
+      - name: Notification buttons work silently (Yes / No / Snooze without opening the app)
+        run: |
+          python3 native/patch_notifications.py
+          sed -i 's#</application>#    <receiver android:name="com.habit.tracker.NotifActionReceiver" android:exported="false"/>\n    </application>#' android/app/src/main/AndroidManifest.xml
+          grep -n "NotifActionReceiver" android/app/src/main/AndroidManifest.xml
       - run: npx cap sync android
       - run: |
           cd android
