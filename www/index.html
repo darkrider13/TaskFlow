@@ -57,7 +57,7 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .chip.on{color:var(--tink);font-weight:700;border-color:transparent}
 .chip.add{border-style:dashed;color:var(--muted)}
 .card{padding:14px;margin-bottom:12px}
-.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;text-align:center}
+.mini{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;text-align:center}
 .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
 .pl{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;margin:10px 0 5px}
 .pl em{font-style:normal;font-weight:700}
@@ -184,7 +184,7 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .sw{position:relative;margin-bottom:10px}
 .sw .ic{position:absolute;left:12px;top:50%;margin-top:-.575em;color:var(--muted);pointer-events:none}
 .row .pri{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex:1;min-width:0}
-#pr button,#rp button,#ct button{padding:0;font-size:12px;border-radius:9px;white-space:nowrap;min-width:0;line-height:1.3;height:34px}
+#pr button,#rp button,#ct button,#stp button{padding:0;font-size:12px;border-radius:9px;white-space:nowrap;min-width:0;line-height:1.3;height:34px}
 input[type=text]{height:34px;padding:0 10px;font-size:13px;border-radius:9px}
 .row>button{height:34px;padding:0 14px;font-size:13px;border-radius:9px}
 .seg button{height:34px;padding:0 6px;font-size:13px;border-radius:9px}
@@ -417,7 +417,8 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="row"><label data-i="askTime"></label><input type="time" id="at" value="21:00"></div>
 <div class="row"><label data-i="gmL"></label><input type="number" id="gm" min="0" max="31" value="00"></div>
 <div class="row"><label data-i="gtL"></label><input type="number" id="gt" min="0" value="00"></div>
-<div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div><p class="hint" data-i="daysHint" style="margin:6px 2px 0"></p></div>
+<div class="row"><label data-i="strL"></label><div class="pri" id="stp" style="grid-template-columns:repeat(2,1fr)"><button data-v="0" data-i="strF"></button><button data-v="1" data-i="strX"></button></div></div>
+<div id="dwrap"><div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div><p class="hint" data-i="daysHint" style="margin:6px 2px 0"></p></div></div>
 <div class="row" id="fsvrow"><button style="flex:1" id="fsave" data-i="save"></button></div>
 </div></div>
 <div id="onb" class="hid"><div class="obh"><small data-i="obHi"></small><b>TaskFlow</b><span data-i="obSub"></span></div>
@@ -476,7 +477,7 @@ did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo
 edit:'Edit & goals',del:'Delete',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
 newT:'Add new',editT:'Edit habit',editTk:'Edit task',namePh:'Write a name for your habit',askTime:'Ask me every day at',
 gmL:'Monthly goal',gtL:'Overall goal',save:'Save',
-notifT:'Did you do it today?',notifB:n=>`${n} — tap Yes and it's ticked in your calendar`,todoNotifT:'Reminder',
+notifT:'Did you do it today?',notifB:n=>`${n}, did you do it?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
 tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',noHabH:'No habits left for today.',dailyR:'Daily reminders',noDailyR:'No daily reminders yet.',
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
 segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
@@ -488,7 +489,7 @@ badgesT:'Milestones (all time)',bStreak:n=>`${n}-day streak`,bTotal:n=>`${n} tic
 focusT:'Focus timer',fFocus:'Focus',fShort:'Break',fLong:'Long break',fStart:'Start',fPause:'Pause',fResume:'Resume',fReset:'Reset',fToday:n=>`Session completed: ${n}`,fDoneT:'Focus session done!',fDoneB:'Time for a short break.',fBrkT:'Break over',fBrkB:'Ready for the next session?',
 diaryT:'Diary',diaryPh:'Write about your day',diaryPast:'Earlier entries',
 catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write a category name',cStudy:'Study',cWork:'Work',cPers:'Personal',subPh:'Write checklist items, one per line',searchPh:'Search tasks',noRes:'No matching tasks.',mvT:'→ Today',mvM:'→ Tomorrow',mvAll:'Move all to today',
-repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
+repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',strL:'Schedule',strF:'Flexible',strX:'Fixed days',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
 wds:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],onDays:(d,x)=>`${d} at ${x}`,snooze:'Remind in 10 min',doneA:'Done',yesA:'Yes',noA:'No',
 bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore it on a new phone.',bkEx:'Save backup file',bkCp:'Copy backup as text',bkImT:'Restore',bkFile:'Choose backup file',bkPh:'Or paste backup text here',bkPaste:'Restore from text',
 bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
@@ -501,7 +502,7 @@ did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'�
 edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
 newT:'নতুন যোগ করুন',editT:'অভ্যাস সম্পাদনা',editTk:'করণীয় সম্পাদনা',namePh:'অভ্যাসের একটি নাম লিখুন',askTime:'প্রতিদিন মনে করানোর সময়',
 gmL:'মাসিক লক্ষ্য',gtL:'সব মিলিয়ে লক্ষ্য',save:'সংরক্ষণ করুন',
-notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`${n} — করে থাকলে "হ্যাঁ" চাপুন, ক্যালেন্ডারে টিক পড়ে যাবে`,todoNotifT:'মনে করিয়ে দিচ্ছি',
+notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`${n}, কাজটি করেছেন কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
 tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',noHabH:'আজকের জন্য আর কোনো অভ্যাস বাকি নেই।',dailyR:'প্রতিদিনের মনে করানো',noDailyR:'এখনো কোনো প্রতিদিনের মনে করানো নেই।',
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
 segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময়',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
@@ -513,7 +514,7 @@ badgesT:'মাইলস্টোন (সর্বকালের)',bStreak:n=>`
 focusT:'ফোকাস টাইমার',fFocus:'ফোকাস',fShort:'বিরতি',fLong:'দীর্ঘ বিরতি',fStart:'শুরু করুন',fPause:'থামান',fResume:'চালিয়ে যান',fReset:'রিসেট',fToday:n=>`সেশন সম্পন্ন: ${n}`,fDoneT:'ফোকাস শেষ!',fDoneB:'এবার একটু বিরতি নিন।',fBrkT:'বিরতি শেষ',fBrkB:'পরের সেশন শুরু করবেন?',
 diaryT:'ডায়েরি',diaryPh:'আজকের দিনের কথা লিখুন',diaryPast:'আগের লেখা',
 catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'নতুন ক্যাটাগরি',catNamePh:'ক্যাটাগরির নাম লিখুন',cStudy:'পড়াশোনা',cWork:'কাজ',cPers:'ব্যক্তিগত',subPh:'ছোট তালিকা লিখুন, প্রতি লাইনে একটি',searchPh:'করণীয় খুঁজুন',noRes:'কিছু পাওয়া যায়নি।',mvT:'→ আজ',mvM:'→ আগামীকাল',mvAll:'সবগুলো আজকে সরান',
-repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
+repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',strL:'নিয়ম',strF:'নমনীয়',strX:'নির্দিষ্ট বার',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
 wds:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],onDays:(d,x)=>`${d} — ${x}-এ`,snooze:'১০ মিনিট পরে',doneA:'সম্পন্ন',yesA:'হ্যাঁ',noA:'না',
 bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেটা ফাইলে সংরক্ষণ করুন, নতুন ফোনে ফিরিয়ে আনতে পারবেন।',bkEx:'ব্যাকআপ ফাইল সংরক্ষণ',bkCp:'ব্যাকআপ লেখা আকারে কপি',bkImT:'ফিরিয়ে আনুন',bkFile:'ব্যাকআপ ফাইল বাছুন',bkPh:'অথবা ব্যাকআপের লেখা এখানে পেস্ট করুন',bkPaste:'লেখা থেকে ফিরিয়ে আনুন',
 bkBad:'এটি সঠিক TaskFlow ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
@@ -535,7 +536,7 @@ let tmrKey=(()=>{const tm=new Date(now);tm.setDate(tm.getDate()+1);return dk(tm)
 /* Day rollover: if the app stays open past midnight, move 'today' forward and redraw everything */
 function dayRoll(){try{const n=new Date(),k=dk(n);if(k===todayKey)return;now=n;todayKey=k;const t2=new Date(n);t2.setDate(t2.getDate()+1);tmrKey=dk(t2);vy=n.getFullYear();vm=n.getMonth();pickKey=null;render()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)dayRoll()});window.addEventListener('focus',dayRoll);setInterval(dayRoll,30000);
-let vy=now.getFullYear(),vm=now.getMonth(),sel=null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],cat='';
+let vy=now.getFullYear(),vm=now.getMonth(),sel=null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],strict=0,cat='';
 const act=()=>S.acts.find(a=>a.id===sel);
 const esc=x=>{const d=document.createElement('div');d.textContent=x;return d.innerHTML};
 const SB_PFX=/^\s*[0-9\u09E6-\u09EF]+\s*[.)]\s?/,sbStrip=z=>String(z).replace(SB_PFX,'');
@@ -773,7 +774,7 @@ const base={title:t('notifT'),body:t('notifB',a.name),largeIcon:'ic_large_icon',
 const list=(a.days&&a.days.length)?a.days.map(d=>({...base,id:1000000+a.nid*10+d,schedule:{on:{weekday:d+1,hour:h,minute:m},allowWhileIdle:true}})):[{...base,id:a.nid,schedule:{on:{hour:h,minute:m},allowWhileIdle:true}}];
 await safe(()=>LN.schedule({notifications:list}))}
 async function schedTodo(x){if(!LN)return;await cancelN(x.nid);const at=new Date(x.date+'T'+(x.time||'09:00'));if(!x.time||at<=new Date()||x.done)return;
-await safe(()=>LN.schedule({notifications:[{id:x.nid,title:t('todoNotifT'),body:x.text,largeIcon:'ic_large_icon',actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
+await safe(()=>LN.schedule({notifications:[{id:x.nid,title:t('todoNotifT'),body:t('todoNotifB',x.text),largeIcon:'ic_large_icon',actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
 async function rescheduleAll(){for(const a of S.acts)await schedAct(a);for(const x of S.todos)await schedTodo(x);for(const r of S.rems)await schedRem(r)}
 
 function isSched(a,d){return !a.days||!a.days.length||a.days.includes(d.getDay())}
@@ -889,7 +890,7 @@ const ha=S.acts.filter(a=>isSched(a,now)&&!(S.marks[a.id]||{})[todayKey]);
 const rdT=homeTab==='hab'&&td.length>dn?'<i class="rd"></i>':'',rdH=homeTab==='task'&&ha.length?'<i class="rd"></i>':'';
 const htabs=`<div class="seg" id="htabs"><button data-ht="task" class="${homeTab==='task'?'on':''}">${t('segTask')}${rdT}</button><button data-ht="hab" class="${homeTab==='hab'?'on':''}">${t('segHabit')}${rdH}</button></div>`;
 h+=htabs;if(homeTab==='hab')h+=!ha.length?`<div class="g empty">${t('noHabH')}</div>`:ha.map(a=>{const on=(S.marks[a.id]||{})[todayKey],s=stats(a,now.getFullYear(),now.getMonth());
-return `<div class="g hab" style="--ac:${a.color}"><div class="hi" data-o="${a.id}"><b>${esc(a.name)}</b><small>${ic('flame')} ${bn(s.streak)}${a.goalM?' · '+t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
+return `<div class="g hab" style="--ac:${a.color}"><div class="hi" data-o="${a.id}"><b>${esc(a.name)}</b><small>${a.goalM?t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
 if(homeTab==='task')h+=!td.length?`<div class="g empty">${t('noToday').replace('+','<span class="fabi">+</span>')}</div>`:catChips()+(fl(td).length?`<div class="hl" id="hl"><div class="hlin">${fl(td).map(x=>taskHtml(x,{cx:1})).join('')}</div></div>`:`<div class="g empty">${t('noRes')}</div>`);
 const r=$('#v-home'),emptyAll=false;
 if(emptyAll)h=`<div class="g hero"><small>${fdate(todayKey,{weekday:'long',day:'numeric',month:'long'})}</small></div><div class="es">${ic('check')}<b>${t('noToday').replace('+','<span class="fabi">+</span>')}</b></div>`;
@@ -945,7 +946,7 @@ S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(
 ch.style.display='';ch.appendChild(inner);chGo(chIdx,false);
 const a=act();let h='';
 if(a){const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
-h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b style="color:var(--streak)">${bn(s.streak)}</b><span>${t('streak')}</span></div><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span><em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
+h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span><em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
 if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(s.total),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
 else h='';
 $('#info').innerHTML=h;
@@ -985,13 +986,13 @@ let backDay=null;
 function closeEdit(){$('#fsheet').classList.remove('show');if(backDay){const k=backDay;backDay=null;showDay(k)}}
 function openForm(kind,a,tx){backDay=null;formBack();fillForm(kind,a,tx);$('#sheet').classList.remove('show');$('#fsheet').classList.add('show')}
 function fillForm(kind,a,tx,dkey){
-fm=kind;editing=a?a.id:null;edTodo=tx||null;pri=tx?(tx.pri||0):0;rep=tx?(tx.rep||'none'):'none';cat=tx?(tx.cat||''):'';wsel=a&&a.days?a.days.slice():[];
+fm=kind;editing=a?a.id:null;edTodo=tx||null;pri=tx?(tx.pri||0):0;rep=tx?(tx.rep||'none'):'none';cat=tx?(tx.cat||''):'';wsel=a&&a.days?a.days.slice():[];strict=wsel.length?1:0;
 $('#ftitle').textContent=t(a?'editT':tx?'editTk':'newT');
 $('#seg').classList.toggle('hid',!!(a||tx));
 $('#f-task').classList.toggle('hid',kind!=='task');$('#f-habit').classList.toggle('hid',kind!=='habit');
 $('#seg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===kind));
 $('#pr').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==pri));
-$('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();
+$('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();setStrict();
 buildCt();$('#sb').value=tx?(tx.sub||[]).map((z,i)=>bn(i+1)+'. '+z.t).join('\n'):'';
 $('#tx').value=tx?tx.text:'';$('#td').value=tx?tx.date:(dkey||todayKey);$('#tmv').value=tx&&tx.time?tx.time:'00:00';
 $('#an').value=a?a.name:'';$('#at').value=a?a.time:'21:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';
@@ -1026,7 +1027,7 @@ else if(fm==='task'){const text=$('#tx').value.trim();if(!text)return;
 const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:false}))};
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name)return;
-const vals={name,time:$('#at').value||'21:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:wsel.length===7?[]:wsel.slice().sort((p,q)=>p-q)};
+const vals={name,time:$('#at').value||'21:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
 else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
 sel=a.id;save();await askPerm();await schedAct(a)}
@@ -1037,6 +1038,8 @@ $('#th').onclick=()=>{S.set.theme=S.set.theme==='dark'?'light':'dark';save();ren
 $('#lg').onclick=()=>{S.set.lang=S.set.lang==='bn'?'en':'bn';save();render();regActions();rescheduleAll()};
 $('#prev').onclick=()=>{vm--;if(vm<0){vm=11;vy--}render()};
 $('#next').onclick=()=>{vm++;if(vm>11){vm=0;vy++}render()};
+function setStrict(){$('#stp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.v===strict));$('#dwrap').classList.toggle('hid',!strict)}
+$('#stp').querySelectorAll('button').forEach(b=>b.onclick=()=>{strict=+b.dataset.v;setStrict()});
 function buildWd(){const w=$('#wdp');w.innerHTML=t('wds').map((n,i)=>`<button data-d="${i}" class="${wsel.includes(i)?'on':''}">${n}</button>`).join('');
 w.querySelectorAll('button').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;wsel=wsel.includes(d)?wsel.filter(z=>z!==d):[...wsel,d];b.classList.toggle('on')})}
 $('#rp').querySelectorAll('button').forEach(b=>b.onclick=()=>{rep=b.dataset.v;$('#rp').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))});
@@ -1111,9 +1114,8 @@ let rmode='w',ddate=todayKey;
 
 function longest(a){const marks=S.marks[a.id]||{},ks=Object.keys(marks).concat([a.start||todayKey]).sort(),c=dparse(ks[0]),end=dparse(todayKey);let cur=0,best=0,g=0;
 while(c<=end&&g++<4000){const k=dk(c);if(marks[k]){cur++;if(cur>best)best=cur}else if(isSched(a,c)&&k!==todayKey)cur=0;c.setDate(c.getDate()+1)}return best}
-function badgeList(){const best=Math.max(0,...S.acts.map(longest)),tot=S.acts.reduce((p,a)=>p+Object.keys(S.marks[a.id]||{}).length,0),td=S.todos.filter(x=>x.done).length,o=[];
+function badgeList(){const tot=S.acts.reduce((p,a)=>p+Object.keys(S.marks[a.id]||{}).length,0),td=S.todos.filter(x=>x.done).length,o=[];
 const BC={s7:'#FF8000',s30:'#FF0000',s100:'#FF0080',s365:'#8000FF',t10:'#00FFFF',t50:'#0080FF',t100:'#00FF80',t500:'#FFB800',k10:'#80FF00',k50:'#FF00FF',k100:'#FFB800'};
-[7,30,100,365].forEach(n=>o.push({id:'s'+n,ic:'flame',txt:t('bStreak',n),cur:best,n}));
 [10,50,100,500].forEach(n=>o.push({id:'t'+n,ic:'award',txt:t('bTotal',n),cur:tot,n}));
 [10,50,100].forEach(n=>o.push({id:'k'+n,ic:'checkc',txt:t('bTask',n),cur:td,n}));o.forEach(b=>b.c=BC[b.id]||'#fff');return o}
 function checkBadges(){const earned=badgeList().filter(b=>b.cur>=b.n);
@@ -1190,10 +1192,10 @@ if(prev&&(prev[0]>prev[1])!==(w>h)){
 const R=fsF(prev[0],prev[1])/fsF(w,h);
 if(R<1){/* portrait -> landscape: grow */
 play(t=>R+(1-R)*ez(t),0,D)}
-else if(R>1){/* landscape -> portrait: the same curve in reverse, starting where it first fits the screen */
-const rc=Math.min(R,(w*.94)/row.offsetWidth,(h*.62)/row.offsetHeight),rr=t=>1+(R-1)*ez(1-t);
-let lo=0,hi=1;if(rr(0)>rc){for(let k=0;k<30;k++){const m=(lo+hi)/2;if(rr(m)>rc)lo=m;else hi=m}}else hi=0;
-play(rr,hi,Math.max(150,D*(1-hi)))}}
+else if(R>1){/* landscape -> portrait: shrink from a bigger-than-portrait size down to the portrait size.
+   Two keyframes + a native easing curve, so the browser interpolates it smoothly on the GPU (no hand-made steps). */
+if(anim)anim.cancel();
+{const s0=Math.min(R,1.4);try{anim=row.animate([{transform:'scale3d('+s0+','+s0+',1)'},{transform:'scale3d(1,1,1)'}],{duration:800,easing:'cubic-bezier(.4,0,.2,1)'})}catch(e){anim=null}}}}
 prev=[w,h]};
 new ResizeObserver(run).observe(fsEl);window.addEventListener('orientationchange',()=>setTimeout(run,0))}
 const MOODS=['laugh','smile','neutral','sad','angry'];
