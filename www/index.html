@@ -243,12 +243,15 @@ input[type=time]::-webkit-calendar-picker-indicator{display:none}
 #fsrow{display:flex;align-items:center;justify-content:center;gap:14px;transform-origin:50% 50%;will-change:transform}
 #fsr{margin:0;width:46px;height:46px;flex:none;padding:0;display:flex;align-items:center;justify-content:center;border-radius:14px;border:0;background:none;box-shadow:none;color:#F4F4F5;font-size:14px}
 #fscreen:not(.hid){display:flex}
+/* portrait phone: turn the focus screen sideways at once (used when the browser will not lock the orientation) */
+#fscreen.rot{inset:auto;top:0;left:0;width:100vh;height:100vw;transform-origin:0 0;transform:translateX(100vw) rotate(90deg)}
 #fscreen .x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 16px);right:16px;width:44px;height:44px;background:transparent;border:0;box-shadow:none;color:#F4F4F5}
 #fscreen .x .ic{width:26px;height:26px}
 #fscreen .x{opacity:0;pointer-events:none;transition:opacity .25s}
 #fscreen.showx .x{opacity:1;pointer-events:auto}
 #ftime2{font-size:min(26vw,180px);line-height:1.2;font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 20px}
 @media (orientation:landscape){#ftime2{font-size:min(52vh,28vw)}#fscnt{margin-top:min(2vh,12px)}}
+#fscreen.rot #ftime2{font-size:min(52vw,28vh)}#fscreen.rot #fscnt{margin-top:min(2vw,12px)}
 body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 128px);z-index:3;pointer-events:none;background-color:var(--bgc);background-image:var(--bgi);background-attachment:fixed;-webkit-mask-image:linear-gradient(to top,#000 0,#000 calc(env(safe-area-inset-bottom,0px) + 74px),transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 calc(env(safe-area-inset-bottom,0px) + 74px),transparent 100%)}
 body.fe::after{opacity:0;transition:opacity .25s ease}
 .cxbox{position:relative;padding:4px;margin:0 -4px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -1190,11 +1193,21 @@ setInterval(()=>{if(ft.run&&Date.now()>=ft.end)ftFinish();else ftDraw()},500);
 
 let fsLock=null;
 const FSM=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.FullscreenMode;
-async function openFs(){$('#fscreen').classList.remove('hid');ftDraw();
+function fsOrient(){const f=$('#fscreen');f.classList.toggle('rot',!f.classList.contains('hid')&&innerHeight>innerWidth)}
+window.addEventListener('resize',fsOrient);window.addEventListener('orientationchange',fsOrient);
+/* the focus screen is landscape only: if the phone turns back to portrait, lock again / keep it rotated */
+const fsRelock=()=>{fsOrient();const f=$('#fscreen');if(f.classList.contains('hid'))return;try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};
+try{screen.orientation&&screen.orientation.addEventListener('change',fsRelock)}catch(e){}
+document.addEventListener('fullscreenchange',fsRelock);document.addEventListener('visibilitychange',()=>{if(!document.hidden)fsRelock()});
+async function openFs(){$('#fscreen').classList.remove('hid');fsOrient();ftDraw();
 try{if(FSM())await FSM().enter();else{const e=document.documentElement;if(e.requestFullscreen)await e.requestFullscreen()}}catch(e){}
+try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape')}catch(e){}
+fsOrient();
 try{if(navigator.wakeLock)fsLock=await navigator.wakeLock.request('screen')}catch(e){}}
 $('#fscreen').addEventListener('pointerdown',e=>{if(e.target.closest('#fsx,#ftime2,#fsr'))return;$('#fscreen').classList.toggle('showx')});
 function closeFs(){$('#fscreen').classList.remove('showx');$('#fscreen').classList.add('hid');
+try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch(e){}
+fsOrient();
 try{FSM()&&FSM().exit()}catch(e){}
 try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}
 try{if(fsLock){fsLock.release();fsLock=null}}catch(e){}}
