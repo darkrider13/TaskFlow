@@ -792,11 +792,11 @@ const actIds=a=>[a.nid,...[0,1,2,3,4,5,6].map(d=>1000000+a.nid*10+d)];
 async function regActions(){if(!LN)return;const Y={id:'yes',title:t('yesA')},N={id:'no',title:t('noA')};
 await safe(()=>LN.registerActionTypes({types:[{id:'ACT',actions:[Y,N]},{id:'TODO',actions:[Y,N,{id:'snooze',title:t('snooze')}]}]}));const pa=PA();if(pa)await safe(()=>pa.setTitles({yes:t('yesA'),no:t('noA'),snooze:t('snooze')}))}
 async function schedAct(a){if(!LN)return;await cancelMany(actIds(a));const [h,m]=a.time.split(':').map(Number);
-const base={title:t('notifT'),body:t('notifB',a.name),largeIcon:'ic_large_icon',actionTypeId:'ACT',extra:{kind:'habit',id:a.id}};
+const base={title:t('notifT'),body:t('notifB',a.name),actionTypeId:'ACT',extra:{kind:'habit',id:a.id}};
 const list=(a.days&&a.days.length)?a.days.map(d=>({...base,id:1000000+a.nid*10+d,schedule:{on:{weekday:d+1,hour:h,minute:m},allowWhileIdle:true}})):[{...base,id:a.nid,schedule:{on:{hour:h,minute:m},allowWhileIdle:true}}];
 await safe(()=>LN.schedule({notifications:list}))}
 async function schedTodo(x){if(!LN)return;await cancelN(x.nid);const at=new Date(x.date+'T'+(x.time||'09:00'));if(!x.time||at<=new Date()||x.done)return;
-await safe(()=>LN.schedule({notifications:[{id:x.nid,title:t('todoNotifT'),body:t('todoNotifB',x.text),largeIcon:'ic_large_icon',actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
+await safe(()=>LN.schedule({notifications:[{id:x.nid,title:t('todoNotifT'),body:t('todoNotifB',x.text),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
 function PA(){return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PendingActions}
 let draining=0;
 async function drainPending(){const p=PA();if(!p||draining)return;draining=1;try{const r=await safe(()=>p.drain());const it=(r&&r.items)||[];let ch=0;
@@ -1071,7 +1071,7 @@ $('#rp').querySelectorAll('button').forEach(b=>b.onclick=()=>{rep=b.dataset.v;$(
 
 if(LN)safe(()=>LN.addListener('localNotificationActionPerformed',e=>{
 const ex=e.notification.extra||{},a=S.acts.find(z=>z.id===ex.id),x=S.todos.find(z=>z.id===ex.id),o=ex.kind==='habit'?a:x;if(!o)return;
-if(e.actionId==='snooze'){safe(()=>LN.schedule({notifications:[{id:2000000+o.nid,title:e.notification.title,body:e.notification.body,largeIcon:'ic_large_icon',actionTypeId:e.notification.actionTypeId,extra:ex,schedule:{at:new Date(Date.now()+600000),allowWhileIdle:true}}]}))}
+if(e.actionId==='snooze'){safe(()=>LN.schedule({notifications:[{id:2000000+o.nid,title:e.notification.title,body:e.notification.body,actionTypeId:e.notification.actionTypeId,extra:ex,schedule:{at:new Date(Date.now()+600000),allowWhileIdle:true}}]}))}
 else if(e.actionId==='yes'||e.actionId==='done'){if(ex.kind==='habit'){S.marks[a.id]=S.marks[a.id]||{};S.marks[a.id][dk(new Date())]=1;save()}else setDone(x,true);render()}
 else if(e.actionId==='no'){render()}}));
 
@@ -1189,7 +1189,7 @@ const r=$('#v-rep'),ci=h.indexOf('</div>')+6;r.innerHTML=h.slice(0,ci)+'<div cla
 
 const FM={focus:25,short:5,long:15},ft={mode:'focus',left:1500,end:0,run:false,n:0},FNID=3000001;
 async function ftNotif(on){if(!LN)return;await cancelN(FNID);if(!on)return;await askPerm();const f=ft.mode==='focus';
-await safe(()=>LN.schedule({notifications:[{id:FNID,title:t(f?'fDoneT':'fBrkT'),body:t(f?'fDoneB':'fBrkB'),largeIcon:'ic_large_icon',schedule:{at:new Date(ft.end),allowWhileIdle:true}}]}))}
+await safe(()=>LN.schedule({notifications:[{id:FNID,title:t(f?'fDoneT':'fBrkT'),body:t(f?'fDoneB':'fBrkB'),schedule:{at:new Date(ft.end),allowWhileIdle:true}}]}))}
 function ftDraw(){const e=$('#ftime');if(!e)return;const tot=ft.tot||FM[ft.mode]*60,r=ft.run?Math.max(0,Math.ceil((ft.end-Date.now())/1000)):ft.left;
 e.textContent=dig(pad(Math.floor(r/60))+':'+pad(r%60));const f2=$('#ftime2');if(f2){f2.textContent=e.textContent;f2.style.opacity=ft.run?1:.45}const fc=$('#fscnt');if(fc)fc.textContent=t('fToday',bn(S.focus[todayKey]||0));$('#fbar').style.width=(100-pct(r,tot))+'%';$('#fgo').textContent=ft.run?t('fPause'):(ft.left<tot?t('fResume'):t('fStart'))}
 function ftToggle(){if(ft.run){ft.left=Math.max(1,Math.ceil((ft.end-Date.now())/1000));ft.run=false;ftNotif(false)}else{ft.end=Date.now()+ft.left*1000;ft.run=true;ftNotif(true)}ftDraw()}
@@ -1273,7 +1273,7 @@ const remLbl=m=>{const h=Math.floor(m/60),n=m%60,b=S.set.lang==='bn',a=[];if(h)a
 const remSlots=x=>{const [fh,fm]=x.from.split(':').map(Number),[th,tm]=x.to.split(':').map(Number),a=fh*60+fm,b=th*60+tm,o=[];for(let m=a;m<=Math.max(a,b)&&o.length<150;m+=remInt(x))o.push(m);return o};
 const remIds=x=>[...Array.from({length:24},(_,i)=>4000000+x.nid*30+i),...Array.from({length:150},(_,i)=>5000000+x.nid*200+i)];
 async function schedRem(x){if(!LN)return;await cancelMany(remIds(x));if(!x.on)return;await askPerm();
-await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:t('todoNotifT'),body:x.name,largeIcon:'ic_large_icon',schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
+await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:t('todoNotifT'),body:x.name,schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
 function remHtml(){let h=`<h3>${t('remT')}</h3>`;
 h+=S.rems.map(r=>`<div class="g hab" data-rm="${r.id}" style="--ac:#0000FF"><div class="hi"><b>${ic('clock')} ${esc(r.name)}</b><small>${t('remInfo',remLbl(remInt(r)),r.from,r.to)}</small></div><input type="checkbox" data-ron="${r.id}" ${r.on?'checked':''}></div>`).join('');
 return h+`<button class="chip add" id="radd" style="margin-top:4px">${t('remAdd')}</button>`}
