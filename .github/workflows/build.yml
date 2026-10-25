@@ -29,9 +29,15 @@ jobs:
           J=android/app/src/main/java/com/habit/tracker
           mkdir -p $J
           cp native/FullscreenModePlugin.java $J/FullscreenModePlugin.java
+          cp native/BiometricAuthPlugin.java $J/BiometricAuthPlugin.java
           cp native/MainActivity.java $J/MainActivity.java
           sed -i '0,/android:name="\.MainActivity"/s//android:name=".MainActivity" android:screenOrientation="portrait"/' android/app/src/main/AndroidManifest.xml
           grep -n "screenOrientation" android/app/src/main/AndroidManifest.xml
+      - name: Fingerprint support (biometric library and permission)
+        run: |
+          sed -i '/^dependencies {/a\    implementation "androidx.biometric:biometric:1.1.0"' android/app/build.gradle
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
+          grep -n "biometric" android/app/build.gradle
       - name: Add storage permissions (for saving backups on Android 9 and below)
         run: |
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
