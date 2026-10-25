@@ -147,6 +147,21 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .lerr{height:20px;color:var(--cross);font-size:13.5px;margin-bottom:10px}
 .lpad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .lpad button{height:62px;border-radius:18px;border:1px solid var(--edge);background:var(--glass);color:var(--ink);font-size:24px}
+.lpt{position:relative;width:270px;height:270px;margin:0 auto;touch-action:none;user-select:none;-webkit-user-select:none;color:var(--ink)}
+.lpt svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lpt i{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2px solid var(--ink);opacity:.55;transition:transform .12s,opacity .12s}
+.lpt i.on{background:var(--ink);opacity:1;transform:scale(1.3)}
+.lpt.bad{color:var(--cross)}.lpt.bad i.on{background:var(--cross);border-color:var(--cross)}
+.lfp{margin:18px auto 0;display:flex;align-items:center;gap:8px;padding:12px 22px;border-radius:18px;border:1px solid var(--edge);background:var(--glass);color:var(--ink);font:inherit;font-size:15px;font-weight:600}.lfp .ic{width:26px;height:26px}
+.lkd{width:100%;max-width:380px;border-radius:30px;padding:24px 18px 18px;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);color:var(--ink)}
+.lkd h2{display:flex;align-items:center;gap:12px;font-size:22px;margin:0 0 8px;padding:0 6px}.lkd h2 .ic{width:22px;height:22px;color:var(--ink)}
+.lkd p{margin:0 0 16px;padding:0 6px;color:var(--muted);font-size:14px;line-height:1.4}
+.lko{display:flex;align-items:center;gap:16px;width:100%;height:auto;padding:16px 14px;margin:0 0 10px;border-radius:20px;border:2px solid transparent;background:var(--glass);color:var(--ink);font:inherit;font-size:17px;font-weight:700;text-align:left}
+.lko .ic{width:24px;height:24px;flex:none;color:var(--ink)}.lko span{flex:1}
+.lko.sel{border-color:var(--ink);background:var(--glass2)}
+.lkc{width:100%;height:50px;margin-top:6px;border-radius:18px;border:1px solid var(--edge);background:var(--glass);color:var(--ink);font:inherit;font-size:16px;font-weight:700}
+.lkrow{display:flex;align-items:center;gap:14px;width:100%;height:auto;padding:4px 2px;margin:0;border:0;background:none;color:var(--ink);font:inherit;text-align:left}
+.lkrow>span{flex:1}.lkrow small{display:block;color:var(--muted);font-size:12.5px}.lkrow b{font-size:13.5px}.lkrow .ic{width:22px;height:22px;flex:none}
 .ovl{display:flex;align-items:center;justify-content:space-between;width:100%;padding:13px 14px;margin-bottom:12px;border:0;font:inherit;font-size:15px;font-weight:600;color:#ff0000;text-align:left}.ovl .ic{width:20px;height:20px}
 .dlg{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--shade);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .dbox{width:100%;max-width:340px;border-radius:22px;padding:26px 20px 20px;text-align:center;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);color:var(--ink)}
@@ -217,14 +232,15 @@ input[type=time]::-webkit-calendar-picker-indicator{display:none}
 #fscnt{margin-top:22px;padding:7px 16px;border:0;background:none;color:rgba(255,255,255,.85);font-size:22px;font-weight:800}
 #fscreen{position:fixed;inset:0;z-index:60;background:#000;color:#F4F4F5;align-items:center;justify-content:center;flex-direction:column}
 #fsrow #ftime2{padding:10px 0}
-#fsrow{display:flex;align-items:center;justify-content:center;gap:14px}
+#fsrow{display:flex;align-items:center;justify-content:center;gap:14px;transform-origin:50% 50%;will-change:transform}
 #fsr{margin:0;width:46px;height:46px;flex:none;padding:0;display:flex;align-items:center;justify-content:center;border-radius:14px;border:0;background:none;box-shadow:none;color:#F4F4F5;font-size:14px}
 #fscreen:not(.hid){display:flex}
 #fscreen .x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 16px);right:16px;width:44px;height:44px;background:transparent;border:0;box-shadow:none;color:#F4F4F5}
 #fscreen .x .ic{width:26px;height:26px}
 #fscreen .x{opacity:0;pointer-events:none;transition:opacity .25s}
 #fscreen.showx .x{opacity:1;pointer-events:auto}
-#ftime2{font-size:min(26vw,180px);font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 20px}
+#ftime2{font-size:min(26vw,180px);line-height:1.2;font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 20px}
+@media (orientation:landscape){#ftime2{font-size:min(52vh,28vw)}#fscnt{margin-top:min(2vh,12px)}}
 body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 128px);z-index:3;pointer-events:none;background-color:var(--bgc);background-image:var(--bgi);background-attachment:fixed;-webkit-mask-image:linear-gradient(to top,#000 0,#000 calc(env(safe-area-inset-bottom,0px) + 74px),transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 calc(env(safe-area-inset-bottom,0px) + 74px),transparent 100%)}
 body.fe::after{opacity:0;transition:opacity .25s ease}
 .cxbox{position:relative;padding:4px;margin:0 -4px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -381,7 +397,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 </section>
 <section id="v-rep" class="hid"></section>
 <section id="v-more" class="hid"></section>
-<div id="lock" class="hid"><div class="lbox"><div class="lt" id="lt"></div><div class="ldots" id="ld"></div><div class="lerr" id="le"></div><div class="lpad" id="lp"></div></div><button class="lx" id="lcx" type="button" aria-label="Cancel"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+<div id="lock" class="hid"><div class="lbox"><div class="lt" id="lt"></div><div class="ldots" id="ld"></div><div class="lerr" id="le"></div><div class="lpad" id="lp"></div><div class="lpt" id="lpt"></div><button class="lfp" id="lb" type="button"></button></div><button class="lx" id="lcx" type="button" aria-label="Cancel"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div id="fscreen" class="hid"><button class="x" id="fsx" aria-label="Close"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div id="fsrow"><div id="ftime2"></div><button id="fsr" aria-label="Reset"></button></div><div id="fscnt"></div></div>
 <div class="toast" id="toast"></div>
 <nav class="g navb" id="navb"></nav>
@@ -406,7 +422,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 </div></div>
 <div id="onb" class="hid"><div class="obh"><small data-i="obHi"></small><b>TaskFlow</b><span data-i="obSub"></span></div>
 <div class="obc"><h2 data-i="obProf"></h2><div class="obr"><div class="oba"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0z"/></svg></div><input type="text" id="obn" maxlength="40" autocomplete="off" data-p="nameTitle"></div></div>
-<div class="obg"><button id="obgo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#FF0000" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="start"></span></button></div></div>
+<div class="obg"><button id="obgo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#000" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="start"></span></button></div></div>
 <div class="sheet" id="ssheet"><div class="panel">
 <div class="ph"><h2 data-i="nameTitle"></h2><button class="x" id="scl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div class="row"><input type="text" id="un" data-p="userPh2"></div>
@@ -465,7 +481,7 @@ tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'O
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
 segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
 remT:'Interval reminders',remAdd:'+ New reminder',remNamePh:'Write a name for the reminder',remEvery:'Every',remFrom:'From',remTo:'Until',remInfo:(e,f,o)=>`Every ${e} · ${f}–${o}`,remBad:'Set at least 5 minutes',cxHol:'Upcoming holidays',cxEvt:'Upcoming events',cxLeft:n=>`${n} day${+n===1?'':'s'} left`,cxToday:'Today',cxNoH:'No more government holidays in this month.',cxNoE:'No upcoming events. Tap a date in the calendar to add one.',remNew:'New reminder',remEdit:'Edit reminder',remEmpty:'Water, medicine… get a reminder every few hours.',remDelQ:'Delete this reminder?',
-lockH:'App Security',ovN:(b,n)=>`${n} ${n===1?'task is':'tasks are'} overdue`,ftDev:'Developed by MD.INSANUL ISLAM ABIR',ftCopy:'© Copyright MD.INSANUL ISLAM ABIR. All rights reserved.',lockSet:'Turn on PIN lock',lockChg:'Change PIN',lockOff:'Turn off lock',lockBio:'Unlock with fingerprint',lockNoBio:'Fingerprint is not available on this device. Set up a fingerprint in phone settings first.',lockT:'Enter PIN',lockNew:'Choose a 4-digit PIN',lockConfirm:'Confirm PIN',lockBad:'Wrong PIN',lockMis:"PINs don't match, try again",lockOn:'PIN lock is on',lockOffT:'Lock turned off',lockHint:'If you forget the PIN, the only way back is clearing app data. Take a backup first.',cancelT:'Cancel',pickT:'Select time',hrL:'Hour',mnL:'Minute',amL:'AM',pmL:'PM',setB:'Set',dpT:'Select a date',dyL:'Date',dmL:'Month',dyrL:'Year',
+lockH:'App Security',lockTypeT:'Screen lock type',lockTypeD:'Choose how you want to protect the app',lockNone:'Off',lockFp:'Fingerprint',lockPinN:'PIN',lockPatN:'Pattern',lockChgP:'Change pattern',lockPT:'Draw pattern',lockPNew:'Draw a new pattern',lockPConfirm:'Draw the pattern again',lockPBad:'Wrong pattern',lockPShort:'Connect at least 4 dots',lockPMis:"Patterns don't match, try again",lockPOn:'Pattern lock is on',lockFpOn:'Fingerprint lock is on',lockFpT:'Use your fingerprint',lockRetry:'Try again',ovN:(b,n)=>`${n} ${n===1?'task is':'tasks are'} overdue`,ftDev:'Developed by MD.INSANUL ISLAM ABIR',ftCopy:'© Copyright MD.INSANUL ISLAM ABIR. All rights reserved.',lockSet:'Turn on PIN lock',lockChg:'Change PIN',lockOff:'Turn off lock',lockBio:'Unlock with fingerprint',lockNoBio:'Fingerprint is not available on this device. Set up a fingerprint in phone settings first.',lockT:'Enter PIN',lockNew:'Choose a 4-digit PIN',lockConfirm:'Confirm PIN',lockBad:'Wrong PIN',lockMis:"PINs don't match, try again",lockOn:'PIN lock is on',lockOffT:'Lock turned off',lockHint:'If you forget the PIN, the only way back is clearing app data. Take a backup first.',cancelT:'Cancel',pickT:'Select time',hrL:'Hour',mnL:'Minute',amL:'AM',pmL:'PM',setB:'Set',dpT:'Select a date',dyL:'Date',dmL:'Month',dyrL:'Year',
 setT:'Settings',yourName:'Your name',appear:'Appearance',dataT:'Export or import your data',expT:'Export',impT:'Import',altT:'Copy / paste backup as text',thD:'Dark mode',thL:'Light mode',
 tRep:'Report',tMore:'More',rW:'Last 7 days',rM:'This month',rY:'This year',rChartM:'Monthly progress',badgesH:'These count your whole history, not just the period selected above.',rHero:p=>`${p}% of scheduled habit days done`,rTasks:(a,b)=>`Tasks: ${a} of ${b} done`,rChart:'Daily progress',rHab:'By habit',rNone:'Add a habit to see reports.',
 badgesT:'Milestones (all time)',bStreak:n=>`${n}-day streak`,bTotal:n=>`${n} ticks`,bTask:n=>`${n} tasks done`,newBadge:'New badge',
@@ -490,7 +506,7 @@ tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার'
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
 segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময়',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
 remT:'নির্দিষ্ট সময় পরপর মনে করান',remAdd:'+ নতুন রিমাইন্ডার',remNamePh:'রিমাইন্ডারের একটি নাম লিখুন',remEvery:'প্রতি',remFrom:'শুরু',remTo:'শেষ',remInfo:(e,f,o)=>`প্রতি ${dig(e)} · ${dig(f)}–${dig(o)}`,remBad:'কমপক্ষে ৫ মিনিট দিন',cxHol:'আসন্ন ছুটি',cxEvt:'আসন্ন ইভেন্ট',cxLeft:n=>`${n} দিন বাকি`,cxToday:'আজ',cxNoH:'এই মাসে আর কোনো সরকারি ছুটি নেই।',cxNoE:'কোনো আসন্ন ইভেন্ট নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',remNew:'নতুন রিমাইন্ডার',remEdit:'রিমাইন্ডার সম্পাদনা',remEmpty:'পানি, ওষুধ… কয়েক ঘণ্টা পরপর মনে করানোর জন্য যোগ করুন।',remDelQ:'এই রিমাইন্ডার মুছে ফেলবেন?',
-lockH:'অ্যাপ সিকিউরিটি',ovN:b=>`${b}টি কাজ বাকি পড়ে আছে`,ftDev:'মোঃ ইনসানুল ইসলাম আবীর দ্বারা তৈরি',ftCopy:'© কপিরাইট মোঃ ইনসানুল ইসলাম আবীর। সর্বস্বত্ব সংরক্ষিত।',lockSet:'পিন লক চালু করুন',lockChg:'পিন বদলান',lockOff:'লক বন্ধ করুন',lockBio:'আঙুলের ছাপ দিয়ে খুলুন',lockNoBio:'এই ফোনে আঙুলের ছাপ পাওয়া যাচ্ছে না। আগে ফোনের সেটিংসে ফিঙ্গারপ্রিন্ট সেট করুন।',lockT:'পিন দিন',lockNew:'৪ সংখ্যার নতুন পিন দিন',lockConfirm:'আবার পিন দিন',lockBad:'ভুল পিন',lockMis:'দুটি পিন মেলেনি, আবার দিন',lockOn:'পিন লক চালু হয়েছে',lockOffT:'লক বন্ধ হয়েছে',lockHint:'পিন ভুলে গেলে অ্যাপের ডেটা মুছে ফেলা ছাড়া উপায় নেই। আগে ব্যাকআপ নিয়ে রাখুন।',cancelT:'বাতিল',pickT:'সময় নির্বাচন করুন',hrL:'ঘন্টা',mnL:'মিনিট',amL:'এএম',pmL:'পিএম',setB:'সেট করুন',dpT:'একটি তারিখ নির্বাচন করুন',dyL:'তারিখ',dmL:'মাস',dyrL:'বছর',
+lockH:'অ্যাপ সিকিউরিটি',lockTypeT:'স্ক্রিন লক টাইপ',lockTypeD:'অ্যাপ সুরক্ষিত রাখতে যেভাবে চান তা বেছে নিন',lockNone:'বন্ধ',lockFp:'ফিঙ্গারপ্রিন্ট',lockPinN:'পিন',lockPatN:'প্যাটার্ন',lockChgP:'প্যাটার্ন বদলান',lockPT:'প্যাটার্ন আঁকুন',lockPNew:'নতুন প্যাটার্ন আঁকুন',lockPConfirm:'আবার প্যাটার্ন আঁকুন',lockPBad:'ভুল প্যাটার্ন',lockPShort:'কমপক্ষে ৪টি বিন্দু যুক্ত করুন',lockPMis:'দুটি প্যাটার্ন মেলেনি, আবার আঁকুন',lockPOn:'প্যাটার্ন লক চালু হয়েছে',lockFpOn:'ফিঙ্গারপ্রিন্ট লক চালু হয়েছে',lockFpT:'আঙুলের ছাপ দিন',lockRetry:'আবার চেষ্টা করুন',ovN:b=>`${b}টি কাজ বাকি পড়ে আছে`,ftDev:'মোঃ ইনসানুল ইসলাম আবীর দ্বারা তৈরি',ftCopy:'© কপিরাইট মোঃ ইনসানুল ইসলাম আবীর। সর্বস্বত্ব সংরক্ষিত।',lockSet:'পিন লক চালু করুন',lockChg:'পিন বদলান',lockOff:'লক বন্ধ করুন',lockBio:'আঙুলের ছাপ দিয়ে খুলুন',lockNoBio:'এই ফোনে আঙুলের ছাপ পাওয়া যাচ্ছে না। আগে ফোনের সেটিংসে ফিঙ্গারপ্রিন্ট সেট করুন।',lockT:'পিন দিন',lockNew:'৪ সংখ্যার নতুন পিন দিন',lockConfirm:'আবার পিন দিন',lockBad:'ভুল পিন',lockMis:'দুটি পিন মেলেনি, আবার দিন',lockOn:'পিন লক চালু হয়েছে',lockOffT:'লক বন্ধ হয়েছে',lockHint:'পিন ভুলে গেলে অ্যাপের ডেটা মুছে ফেলা ছাড়া উপায় নেই। আগে ব্যাকআপ নিয়ে রাখুন।',cancelT:'বাতিল',pickT:'সময় নির্বাচন করুন',hrL:'ঘন্টা',mnL:'মিনিট',amL:'এএম',pmL:'পিএম',setB:'সেট করুন',dpT:'একটি তারিখ নির্বাচন করুন',dyL:'তারিখ',dmL:'মাস',dyrL:'বছর',
 setT:'সেটিংস',yourName:'আপনার নাম',appear:'চেহারা',dataT:'ডেটা এক্সপোর্ট বা ইমপোর্ট',expT:'এক্সপোর্ট',impT:'ইমপোর্ট',altT:'লেখা আকারে কপি/পেস্ট করুন',thD:'ডার্ক মোড',thL:'লাইট মোড',
 tRep:'রিপোর্ট',tMore:'আরও',rW:'গত ৭ দিন',rM:'এই মাস',rY:'এই বছর',rChartM:'মাসভিত্তিক অগ্রগতি',badgesH:'এগুলো নির্বাচিত সময়ের নয়, আপনার পুরো ইতিহাস থেকে গণনা হয়।',rHero:p=>`নির্ধারিত অভ্যাসের ${p}% সম্পন্ন`,rTasks:(a,b)=>`করণীয়: ${b}টির মধ্যে ${a}টি সম্পন্ন`,rChart:'দিনভিত্তিক অগ্রগতি',rHab:'অভ্যাস অনুযায়ী',rNone:'রিপোর্ট দেখতে একটি অভ্যাস যোগ করুন।',
 badgesT:'মাইলস্টোন (সর্বকালের)',bStreak:n=>`${Number(n).toLocaleString('bn-BD')} দিন টানা`,bTotal:n=>`${Number(n).toLocaleString('bn-BD')}টি টিক`,bTask:n=>`${Number(n).toLocaleString('bn-BD')}টি করণীয় সম্পন্ন`,newBadge:'নতুন ব্যাজ',
@@ -1148,13 +1164,38 @@ const FSM=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.FullscreenM
 async function openFs(){$('#fscreen').classList.remove('hid');ftDraw();
 try{if(FSM())await FSM().enter();else{const e=document.documentElement;if(e.requestFullscreen)await e.requestFullscreen()}}catch(e){}
 try{if(navigator.wakeLock)fsLock=await navigator.wakeLock.request('screen')}catch(e){}}
-$('#fscreen').addEventListener('pointerdown',e=>{if(e.target.closest('#fsx,#ftime2,#fsr'))return;const on=$('#fscreen').classList.toggle('showx');try{FSM()&&FSM().statusBar({show:on})}catch(x){}});
+$('#fscreen').addEventListener('pointerdown',e=>{if(e.target.closest('#fsx,#ftime2,#fsr'))return;$('#fscreen').classList.toggle('showx')});
 function closeFs(){$('#fscreen').classList.remove('showx');$('#fscreen').classList.add('hid');
 try{FSM()&&FSM().exit()}catch(e){}
 try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}
 try{if(fsLock){fsLock.release();fsLock=null}}catch(e){}}
 $('#fsr').innerHTML=ic('reset');$('#fsr').querySelector('svg').style.cssText='width:22px;height:22px';$('#fsx').onclick=closeFs;$('#ftime2').onclick=ftToggle;$('#fsr').onclick=ftReset;
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)closeFs()});
+/* Smooth rotation of the focus clock.
+   Portrait -> landscape grows the clock along one curve. Landscape -> portrait plays the very same curve backwards,
+   so both directions look exactly alike (same curve, same speed at every size). The only part that is skipped is the
+   stretch that would be wider than the portrait screen itself. Done with a GPU transform: no flash, no jump. */
+{const fsEl=$('#fscreen'),row=$('#fsrow');let prev=null,anim=null;const D=800;
+const fsF=(w,h)=>w>h?Math.min(.52*h,.28*w):Math.min(.26*w,180);
+const bz=(x1,y1,x2,y2)=>{const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+const X=t=>((ax*t+bx)*t+cx)*t,Y=t=>((ay*t+by)*t+cy)*t;
+return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let k=0;k<10;k++){const d=(3*ax*t+2*bx)*t+cx,e=X(t)-x;if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t=Math.min(1,Math.max(0,t-e/d))}return Y(t)}};
+const ez=bz(.4,0,.2,1);
+const play=(fn,t0,dur)=>{if(anim)anim.cancel();const N=28,kf=[];
+for(let k=0;k<=N;k++){const o=k/N,t=t0+(1-t0)*o;kf.push({offset:o,transform:'scale('+fn(t)+')'})}
+try{anim=row.animate(kf,{duration:dur,easing:'linear'})}catch(e){anim=null}};
+const run=()=>{if(fsEl.classList.contains('hid')){prev=null;return}
+const w=innerWidth,h=innerHeight;
+if(prev&&(prev[0]>prev[1])!==(w>h)){
+const R=fsF(prev[0],prev[1])/fsF(w,h);
+if(R<1){/* portrait -> landscape: grow */
+play(t=>R+(1-R)*ez(t),0,D)}
+else if(R>1){/* landscape -> portrait: the same curve in reverse, starting where it first fits the screen */
+const rc=Math.min(R,(w*.94)/row.offsetWidth,(h*.62)/row.offsetHeight),rr=t=>1+(R-1)*ez(1-t);
+let lo=0,hi=1;if(rr(0)>rc){for(let k=0;k<30;k++){const m=(lo+hi)/2;if(rr(m)>rc)lo=m;else hi=m}}else hi=0;
+play(rr,hi,Math.max(150,D*(1-hi)))}}
+prev=[w,h]};
+new ResizeObserver(run).observe(fsEl);window.addEventListener('orientationchange',()=>setTimeout(run,0))}
 const MOODS=['laugh','smile','neutral','sad','angry'];
 const OLDM={'\u{1F60A}':'laugh','\u{1F642}':'smile','\u{1F610}':'neutral','\u{1F614}':'sad','\u{1F621}':'angry'};
 function migMood(){Object.values(S.diary).forEach(d=>{if(OLDM[d.mood])d.mood=OLDM[d.mood]})}
@@ -1200,40 +1241,81 @@ if(remEditing){x=S.rems.find(z=>z.id===remEditing);Object.assign(x,v)}else{x=Obj
 save();$('#rsheet').classList.remove('show');await schedRem(x);render()};
 $('#rdel').onclick=()=>{if(!confirm(t('remDelQ')))return;const x=S.rems.find(z=>z.id===remEditing);if(!x)return;cancelMany(remIds(x));S.rems=S.rems.filter(z=>z!==x);save();$('#rsheet').classList.remove('show');render()};
 
-// ---- PIN / fingerprint lock ----
-let bioAv=false,lpin='',lmode='unlock',lnew='',lnext=null,lbusy=false,hiddenAt=0;
+// ---- Screen lock: off / fingerprint / PIN / pattern ----
+Object.assign(IC,{unlock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/>',hash:'<path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/>',pattern:'<circle cx="6" cy="6" r="1.7"/><circle cx="18" cy="6" r="1.7"/><circle cx="6" cy="18" r="1.7"/><circle cx="18" cy="18" r="1.7"/><path d="M7.5 6h9M17 7.5L7 16.5M7.5 18h9"/>'});
+let bioAv=false,bioReady=false,lpin='',lmode='unlock',lty='pin',lnew='',lnext=null,lbusy=false,hiddenAt=0,lastBio=0,lseq=[],patAct=false;
+const lkType=()=>S.lock?(S.lock.type||'pin'):'off';
 const BA=()=>window.Capacitor&&Capacitor.Plugins&&(Capacitor.Plugins.BiometricAuth||Capacitor.Plugins.NativeBiometric);
 async function bioOk(){const p=BA();if(!p)return false;try{if(p.checkBiometry){const r=await p.checkBiometry();return !!r.isAvailable}if(p.isAvailable){const r=await p.isAvailable();return !!r.isAvailable}}catch(e){}return false}
-async function bioAuth(){const p=BA();if(!p)return false;try{if(p.authenticate){await p.authenticate({reason:t('lockBio'),cancelTitle:t('cancelT')});return true}if(p.verifyIdentity){await p.verifyIdentity({reason:t('lockT')});return true}}catch(e){}return false}
+async function bioAuth(){const p=BA();if(!p)return false;try{if(p.authenticate){await p.authenticate({reason:t('lockBio'),cancelTitle:t('cancelT')});return true}if(p.verifyIdentity){await p.verifyIdentity({reason:t('lockT')});return true}}catch(e){}finally{lastBio=Date.now()}return false}
 async function sha(x,salt){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+':'+x));return [...new Uint8Array(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}catch(e){let h=5381;for(const c of salt+x)h=((h<<5)+h+c.charCodeAt(0))>>>0;return 'x'+h}}
-function lockDraw(){const m=lmode;$('#lt').textContent=t(m==='set1'?'lockNew':m==='set2'?'lockConfirm':'lockT');
+/* pattern pad: 3x3 dots, drawn with a finger */
+const PC=[45,135,225];
+function patBuild(){$('#lpt').innerHTML='<svg viewBox="0 0 270 270"><polyline fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/></svg>'+[0,1,2,3,4,5,6,7,8].map(i=>`<i style="left:${PC[i%3]}px;top:${PC[(i/3)|0]}px"></i>`).join('')}
+function patLine(x,y){const pl=$('#lpt').querySelector('polyline');if(!pl)return;pl.setAttribute('points',lseq.map(i=>PC[i%3]+','+PC[(i/3)|0]).join(' ')+(x==null?'':' '+x+','+y))}
+function patReset(){lseq=[];const el=$('#lpt');el.classList.remove('bad');el.querySelectorAll('i.on').forEach(i=>i.classList.remove('on'));patLine()}
+patBuild();
+{const el=$('#lpt');
+const pos=e=>{const r=el.getBoundingClientRect();return [(e.clientX-r.left)*270/r.width,(e.clientY-r.top)*270/r.height]};
+const hit=(x,y)=>{for(let i=0;i<9;i++)if(Math.hypot(x-PC[i%3],y-PC[(i/3)|0])<34)return i;return -1};
+const dot=i=>el.children[i+1].classList.add('on');
+const add=i=>{if(lseq.includes(i))return;
+if(lseq.length){const a=lseq[lseq.length-1],ar=(a/3)|0,ac=a%3,br=(i/3)|0,bc=i%3;
+if(Math.abs(ar-br)%2===0&&Math.abs(ac-bc)%2===0){const m=((ar+br)/2)*3+(ac+bc)/2;if(m!==a&&m!==i&&!lseq.includes(m)){lseq.push(m);dot(m)}}}
+lseq.push(i);dot(i);try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}};
+const mv=e=>{if(!patAct)return;const [x,y]=pos(e),i=hit(x,y);if(i>=0)add(i);patLine(x,y)};
+el.addEventListener('pointerdown',e=>{if(lbusy||lty!=='pat')return;patAct=true;patReset();try{el.setPointerCapture(e.pointerId)}catch(_){}mv(e)});
+el.addEventListener('pointermove',mv);
+const up=()=>{if(!patAct)return;patAct=false;patLine();if(!lseq.length)return;
+if(lseq.length<4)lockErr(t('lockPShort'));else lockSubmit(lseq.join(''),true)};
+el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up)}
+function lockDraw(){const m=lmode,ty=lty,cur=(m==='unlock'||m==='check'),pat=ty==='pat',fp=ty==='bio';
+$('#lt').textContent=fp?t('lockFpT'):pat?t(m==='set1'?'lockPNew':m==='set2'?'lockPConfirm':'lockPT'):t(m==='set1'?'lockNew':m==='set2'?'lockConfirm':'lockT');
+const sd=pat||fp;$('#ld').style.display=sd?'none':'';$('#lp').style.display=sd?'none':'';$('#lpt').style.display=pat?'':'none';
 $('#ld').innerHTML=[0,1,2,3].map(i=>`<i class="${i<lpin.length?'f':''}"></i>`).join('');
-const bb=S.lock&&S.lock.bio&&bioAv&&(m==='unlock'||m==='check');
-$('#lp').innerHTML=['1','2','3','4','5','6','7','8','9',bb?'bio':'','0','bk'].map(k=>k?`<button data-k="${k}">${k==='bk'?ic('back'):k==='bio'?ic('finger'):dig(k)}</button>`:'<span></span>').join('');
+const bb=cur&&S.lock&&S.lock.bio&&bioAv;
+$('#lp').innerHTML=['1','2','3','4','5','6','7','8','9',(!sd&&bb)?'bio':'','0','bk'].map(k=>k?`<button data-k="${k}">${k==='bk'?ic('back'):k==='bio'?ic('finger'):dig(k)}</button>`:'<span></span>').join('');
 $('#lp').querySelectorAll('button').forEach(b=>b.onclick=()=>lockKey(b.dataset.k));
+const showB=fp||(pat&&bb);$('#lb').style.display=showB?'':'none';$('#lb').innerHTML=ic('finger')+(fp?`<span>${t('lockRetry')}</span>`:'');
+if(fp&&cur&&bioReady&&!bioAv)$('#le').textContent=t('lockNoBio');
+if(pat)patReset();
 $('#lcx').classList.toggle('hid',m==='unlock')}
-function showLock(mode,next){lmode=mode;lnext=next||null;lpin='';lnew='';$('#le').textContent='';$('#lock').classList.remove('hid');lockDraw();
-if((mode==='unlock'||mode==='check')&&S.lock&&S.lock.bio&&bioAv)tryBio()}
-function lockOk(){$('#lock').classList.add('hid');if(lnext){const f=lnext;lnext=null;f()}}
-function lockErr(m){$('#le').textContent=m;lpin='';try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}lockDraw()}
-async function tryBio(){if(S.lock&&S.lock.bio&&await bioAuth())lockOk()}
-function lockKey(k){$('#le').textContent='';if(k==='bk')lpin=lpin.slice(0,-1);else if(k==='bio'){tryBio();return}else if(lpin.length<4){lpin+=k;if(lpin.length===4){lockDraw();lockDone();return}}lockDraw()}
-async function lockDone(){if(lbusy)return;lbusy=true;try{
-if(lmode==='unlock'||lmode==='check'){if(await sha(lpin,S.lock.salt)===S.lock.h)lockOk();else lockErr(t('lockBad'))}
-else if(lmode==='set1'){lnew=lpin;lpin='';lmode='set2';lockDraw()}
-else if(lmode==='set2'){if(lpin===lnew){const salt=Math.random().toString(36).slice(2)+Date.now();S.lock={h:await sha(lnew,salt),salt,bio:!!(S.lock&&S.lock.bio)};save();$('#lock').classList.add('hid');toast(t('lockOn'));render()}else{lmode='set1';lockErr(t('lockMis'))}}
+function showLock(mode,next,type){const cur=(mode==='unlock'||mode==='check');lmode=mode;lnext=next||null;lty=cur?lkType():(type||'pin');lpin='';lnew='';$('#le').textContent='';$('#lock').classList.remove('hid');lockDraw();
+if(cur&&S.lock&&(S.lock.type==='bio'||S.lock.bio)&&bioAv)tryBio()}
+function lockOk(){hiddenAt=0;$('#lock').classList.add('hid');if(lnext){const f=lnext;lnext=null;f()}}
+function lockErr(m){$('#le').textContent=m;lpin='';try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}
+if(lty==='pat'&&lseq.length){$('#lpt').classList.add('bad');setTimeout(()=>{if(!patAct)lockDraw()},450)}else lockDraw()}
+async function tryBio(){if(S.lock&&(S.lock.type==='bio'||S.lock.bio)&&await bioAuth())lockOk()}
+function lockKey(k){$('#le').textContent='';if(k==='bk')lpin=lpin.slice(0,-1);else if(k==='bio'){tryBio();return}else if(lpin.length<4){lpin+=k;if(lpin.length===4){lockDraw();lockSubmit(lpin,false);return}}lockDraw()}
+async function lockSubmit(sec,isPat){if(lbusy)return;lbusy=true;try{
+if(lmode==='unlock'||lmode==='check'){if(await sha(sec,S.lock.salt)===S.lock.h)lockOk();else lockErr(t(isPat?'lockPBad':'lockBad'))}
+else if(lmode==='set1'){lnew=sec;lpin='';lmode='set2';lockDraw()}
+else if(lmode==='set2'){if(sec===lnew){const salt=Math.random().toString(36).slice(2)+Date.now();S.lock={type:lty,h:await sha(lnew,salt),salt,bio:!!(S.lock&&S.lock.bio)};save();$('#lock').classList.add('hid');toast(t(isPat?'lockPOn':'lockOn'));render()}else{lmode='set1';lockErr(t(isPat?'lockPMis':'lockMis'))}}
 }finally{lbusy=false}}
 $('#lcx').onclick=()=>{$('#lock').classList.add('hid');lnext=null};
-document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(S.lock&&hiddenAt&&Date.now()-hiddenAt>5000&&$('#lock').classList.contains('hid'))showLock('unlock')});
-function lockHtml(){let h=`<h3>${t('lockH')}</h3><div class="g card">`;
-if(!S.lock)h+=`<button class="big" id="lk-on" style="margin:0">${ic('lock')} ${t('lockSet')}</button>`;
-else{h+=`<div class="row" style="margin-top:0"><button style="flex:1" id="lk-chg">${t('lockChg')}</button><button style="flex:1" id="lk-off">${t('lockOff')}</button></div>`;
-h+=bioAv?`<div class="row"><label>${t('lockBio')}</label><input type="checkbox" id="lk-bio" ${S.lock.bio?'checked':''}></div>`:`<p class="hint" style="margin:10px 0 0">${t('lockNoBio')}</p>`}
+$('#lb').onclick=()=>tryBio();
+document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(S.lock&&hiddenAt&&Date.now()-hiddenAt>5000&&Date.now()-lastBio>2000&&$('#lock').classList.contains('hid'))showLock('unlock')});
+/* the "Screen lock type" list dialog */
+function lockTypeDlg(){const cur=lkType(),w=document.createElement('div');w.className='dlg';
+const opts=[['off','unlock','lockNone'],['bio','finger','lockFp'],['pin','hash','lockPinN'],['pat','pattern','lockPatN']];
+w.innerHTML=`<div class="lkd"><h2>${ic('lock')}<span>${t('lockTypeT')}</span></h2><p>${t('lockTypeD')}</p>${opts.map(o=>`<button type="button" class="lko ${o[0]===cur?'sel':''}" data-ty="${o[0]}">${ic(o[1])}<span>${t(o[2])}</span>${o[0]===cur?ic('check'):''}</button>`).join('')}<button type="button" class="lkc">${t('cancelT')}</button></div>`;
+document.body.appendChild(w);const close=()=>w.remove();
+w.querySelector('.lkc').onclick=close;w.onclick=e=>{if(e.target===w)close()};
+w.querySelectorAll('.lko').forEach(b=>b.onclick=()=>{const ty=b.dataset.ty;close();lockPick(ty)})}
+async function lockPick(ty){const cur=lkType();if(ty===cur)return;
+const apply=async()=>{
+if(ty==='off'){delete S.lock;save();render();toast(t('lockOffT'));return}
+if(ty==='bio'){if(!bioAv){toast(t('lockNoBio'));return}if(!await bioAuth())return;S.lock={type:'bio'};save();render();toast(t('lockFpOn'));return}
+showLock('set1',null,ty)};
+if(cur==='off')apply();else showLock('check',apply)}
+function lockHtml(){const ty=lkType(),nm={off:'lockNone',bio:'lockFp',pin:'lockPinN',pat:'lockPatN'}[ty],icn={off:'unlock',bio:'finger',pin:'hash',pat:'pattern'}[ty];
+let h=`<h3>${t('lockH')}</h3><div class="g card"><button class="lkrow" id="lk-type" type="button">${ic(icn)}<span><small>${t('lockTypeT')}</small><b>${t(nm)}</b></span>${ic('chevr')}</button>`;
+if(ty==='pin'||ty==='pat'){h+=`<div class="row"><button style="flex:1" id="lk-chg">${t(ty==='pin'?'lockChg':'lockChgP')}</button></div>`;
+if(bioAv)h+=`<div class="row"><label>${t('lockBio')}</label><input type="checkbox" id="lk-bio" ${S.lock.bio?'checked':''}></div>`}
 return h+'</div>'}
 function bindLock(r){const g=q=>r.querySelector(q);
-if(g('#lk-on'))g('#lk-on').onclick=()=>showLock('set1');
-if(g('#lk-chg'))g('#lk-chg').onclick=()=>showLock('check',()=>showLock('set1'));
-if(g('#lk-off'))g('#lk-off').onclick=()=>showLock('check',()=>{delete S.lock;save();render();toast(t('lockOffT'))});
+if(g('#lk-type'))g('#lk-type').onclick=lockTypeDlg;
+if(g('#lk-chg'))g('#lk-chg').onclick=()=>{const ty=lkType();showLock('check',()=>showLock('set1',null,ty))};
 if(g('#lk-bio'))g('#lk-bio').onchange=async e=>{if(e.target.checked){if(await bioAuth())S.lock.bio=true;else e.target.checked=false}else S.lock.bio=false;save()}}
 
 /* ---- custom time picker ---- */
@@ -1349,7 +1431,7 @@ $('#obgo').onclick=obDone;$('#obn').onkeydown=e=>{if(e.key==='Enter')obDone()};
 migMood();regActions().then(()=>rescheduleAll());render();if(!S.set.name)$('#onb').classList.remove('hid');
 holSync();gazSync();
 if(S.lock)showLock('unlock');
-bioOk().then(v=>{bioAv=v;renderMore();if(!$('#lock').classList.contains('hid')){lockDraw();if(lmode==='unlock')tryBio()}});
+bioOk().then(v=>{bioAv=v;bioReady=true;renderMore();if(!$('#lock').classList.contains('hid')){lockDraw();if(lmode==='unlock')tryBio()}});
 
 /* Subtask box (#sb): lines are numbered automatically (১. ২. ৩.) and the box scrolls one line at a time (snap) */
 (function(){const ta=document.getElementById('sb');if(!ta)return;const LH0=24,lh=()=>parseFloat(getComputedStyle(ta).lineHeight)||LH0;
