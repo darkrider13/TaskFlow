@@ -40,7 +40,9 @@ h3{font-size:15px;margin:18px 2px 8px;color:var(--muted);font-weight:600}
 .todo.done span{text-decoration:line-through;color:var(--muted)}
 .todo span{flex:1;font-size:15px}
 .todo small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-.todo .dl{flex:none;font-style:normal;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;padding:3px 9px;border-radius:999px;border:1px solid var(--edge);align-self:flex-start;margin-top:1px;line-height:1.4}
+.todo .dl{flex:none;font-style:normal;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;line-height:1.4}
+.todo.hs .dl{align-self:center}
+.todo.cx.open .dl{align-self:flex-start;margin-top:2px}
 .todo button{background:none;border:0;font-size:17px;color:var(--cross)}
 .todo button[data-e]{color:var(--muted);padding:6px;display:flex;align-items:center;justify-content:center}
 .todo button[data-e] .ic{width:20px;height:20px}
@@ -233,6 +235,8 @@ input[type=time]::-webkit-calendar-picker-indicator{display:none}
 .frow{display:flex;gap:8px;justify-content:center;margin-top:2px}
 .fpill{height:34px;padding:0 16px;border-radius:17px;border:1px solid var(--edge);background:var(--glass2);color:var(--ink);font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .fpill.info{color:var(--muted);background:var(--glass)}
+:root:not([data-theme=light]) .fpill.fsn{color:#fff}
+:root[data-theme=light] .fpill.fsn{color:#000}
 #fscnt{margin-top:22px;padding:7px 16px;border:0;background:none;color:rgba(255,255,255,.85);font-size:22px;font-weight:800}
 #fscreen{position:fixed;inset:0;z-index:60;background:#000;color:#F4F4F5;align-items:center;justify-content:center;flex-direction:column}
 #fsrow #ftime2{padding:10px 0}
