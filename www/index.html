@@ -36,10 +36,11 @@ h3{font-size:15px;margin:18px 2px 8px;color:var(--muted);font-weight:600}
 .chk{width:40px;height:40px;border-radius:50%;border:2px solid var(--edge);background:none;color:transparent;font-size:18px}
 .chk.on{background:transparent;border-color:var(--mono);color:var(--mono);box-shadow:0 0 14px rgba(255,255,255,.25)}
 .todo{display:flex;align-items:center;gap:10px;padding:11px 12px;margin-bottom:8px;border-radius:14px}
-.todo.p1{border-left:4px solid #FFFF00}.todo.p2{border-left:4px solid #FF0000}
+
 .todo.done span{text-decoration:line-through;color:var(--muted)}
 .todo span{flex:1;font-size:15px}
 .todo small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.todo .dl{flex:none;font-style:normal;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;padding:3px 9px;border-radius:999px;border:1px solid var(--edge);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 .todo button{background:none;border:0;font-size:17px;color:var(--cross)}
 .todo button[data-e]{color:var(--muted);padding:6px;display:flex;align-items:center;justify-content:center}
 .todo button[data-e] .ic{width:20px;height:20px}
@@ -184,7 +185,7 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .sw{position:relative;margin-bottom:10px}
 .sw .ic{position:absolute;left:12px;top:50%;margin-top:-.575em;color:var(--muted);pointer-events:none}
 .row .pri{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex:1;min-width:0}
-#pr button,#rp button,#ct button,#stp button{padding:0;font-size:12px;border-radius:9px;white-space:nowrap;min-width:0;line-height:1.3;height:34px}
+#rp button,#ct button,#stp button{padding:0;font-size:12px;border-radius:9px;white-space:nowrap;min-width:0;line-height:1.3;height:34px}
 input[type=text]{height:34px;padding:0 10px;font-size:13px;border-radius:9px}
 .row>button{height:34px;padding:0 14px;font-size:13px;border-radius:9px}
 .seg button{height:34px;padding:0 6px;font-size:13px;border-radius:9px}
@@ -194,7 +195,10 @@ input[type=text]{height:34px;padding:0 10px;font-size:13px;border-radius:9px}
 .row:has(.pri)>label{flex:none;width:76px;font-size:13px}
 input[type=date],input[type=time],input[type=number]{padding:0 10px;font-size:13px;border-radius:9px;height:34px;width:120px;min-width:120px;max-width:120px;flex:none;box-sizing:border-box}
 input[type=number]{width:120px}
-#pr button:first-child{grid-column:2}
+#rp{flex:none;width:140px;margin-left:auto;grid-template-columns:repeat(2,1fr)}
+#ct{flex:none;box-sizing:content-box;width:140px;padding:8px 2px;margin:-8px -2px -8px auto;display:block;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+#ct .ctin{display:flex;gap:5px;width:100%;will-change:transform}
+#ct button{flex:0 0 calc((100% - 5px)/2)}
 input[type=time]::-webkit-calendar-picker-indicator{display:none}
 #v-cal:not(.hid){display:flex;flex-direction:column}
 #v-cal .cw{margin:0}
@@ -378,6 +382,8 @@ body.fe::after{opacity:1!important}
 .tl>:last-child,.stl>:last-child{margin-bottom:0}
 #sb{box-sizing:border-box;height:auto;min-height:0;flex:none;padding:0 11px;line-height:24px;resize:none;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
 #sb::-webkit-scrollbar{display:none}
+#sb::placeholder{text-align:center;line-height:96px}
+#sb:placeholder-shown{text-align:center}
 .hl .sl,.hl .stl{touch-action:pan-y}
 #cx .tl,#cx .tl.sfs,#cx .tl.sfu,#cx .tl.sfd{-webkit-mask-image:none!important;mask-image:none!important}
 body.fb::after{opacity:0!important;transition:opacity .2s!important}
@@ -409,8 +415,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div id="f-task"><div class="row"><input type="text" id="tx" data-p="taskPh"></div>
 <div class="row"><label data-i="dateL"></label><input type="date" id="td"></div>
 <div class="row"><label data-i="timeL"></label><input type="time" id="tmv"></div>
-<div class="row"><label data-i="priL"></label><div class="pri" id="pr"><button data-v="0" data-i="p0"></button><button data-v="1" data-i="p1"></button><button data-v="2" data-i="p2"></button></div></div>
-<div class="row"><label data-i="repL"></label><div class="pri" id="rp"><button data-v="none" data-i="r0"></button><button data-v="daily" data-i="r1"></button><button data-v="weekly" data-i="r2"></button><button data-v="monthly" data-i="r3"></button></div></div>
+<div class="row"><label data-i="repL"></label><div class="pri" id="rp"><button data-v="none" data-i="r0"></button><button data-v="daily" data-i="r1"></button></div></div>
 <div class="row"><label data-i="catL"></label><div class="pri" id="ct"><button data-v="" data-i="cNone"></button><button data-v="study" data-i="cStudy"></button><button data-v="work" data-i="cWork"></button><button data-v="personal" data-i="cPers"></button></div></div>
 <textarea id="sb" rows="4" data-p="subPh"></textarea></div>
 <div id="f-habit"><div class="row"><input type="text" id="an" data-p="namePh"></div>
@@ -488,7 +493,7 @@ tRep:'Report',tMore:'More',rW:'Last 7 days',rM:'This month',rY:'This year',rChar
 badgesT:'Milestones (all time)',bStreak:n=>`${n}-day streak`,bTotal:n=>`${n} ticks`,bTask:n=>`${n} tasks done`,newBadge:'New badge',
 focusT:'Focus timer',fFocus:'Focus',fShort:'Break',fLong:'Long break',fStart:'Start',fPause:'Pause',fResume:'Resume',fReset:'Reset',fToday:n=>`Session completed: ${n}`,fDoneT:'Focus session done!',fDoneB:'Time for a short break.',fBrkT:'Break over',fBrkB:'Ready for the next session?',
 diaryT:'Diary',diaryPh:'Write about your day',diaryPast:'Earlier entries',
-catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write a category name',cStudy:'Study',cWork:'Work',cPers:'Personal',subPh:'Write checklist items, one per line',searchPh:'Search tasks',noRes:'No matching tasks.',mvT:'→ Today',mvM:'→ Tomorrow',mvAll:'Move all to today',
+dLeft:'in {n} days',catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write a category name',cStudy:'Study',cWork:'Work',cPers:'Personal',subPh:'Write checklist items, one per line',searchPh:'Search tasks',noRes:'No matching tasks.',mvT:'→ Today',mvM:'→ Tomorrow',mvAll:'Move all to today',
 repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',strL:'Schedule',strF:'Flexible',strX:'Fixed days',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
 wds:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],onDays:(d,x)=>`${d} at ${x}`,snooze:'Remind in 10 min',doneA:'Done',yesA:'Yes',noA:'No',
 bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore it on a new phone.',bkEx:'Save backup file',bkCp:'Copy backup as text',bkImT:'Restore',bkFile:'Choose backup file',bkPh:'Or paste backup text here',bkPaste:'Restore from text',
@@ -513,7 +518,7 @@ tRep:'রিপোর্ট',tMore:'আরও',rW:'গত ৭ দিন',rM:'এ
 badgesT:'মাইলস্টোন (সর্বকালের)',bStreak:n=>`${Number(n).toLocaleString('bn-BD')} দিন টানা`,bTotal:n=>`${Number(n).toLocaleString('bn-BD')}টি টিক`,bTask:n=>`${Number(n).toLocaleString('bn-BD')}টি করণীয় সম্পন্ন`,newBadge:'নতুন ব্যাজ',
 focusT:'ফোকাস টাইমার',fFocus:'ফোকাস',fShort:'বিরতি',fLong:'দীর্ঘ বিরতি',fStart:'শুরু করুন',fPause:'থামান',fResume:'চালিয়ে যান',fReset:'রিসেট',fToday:n=>`সেশন সম্পন্ন: ${n}`,fDoneT:'ফোকাস শেষ!',fDoneB:'এবার একটু বিরতি নিন।',fBrkT:'বিরতি শেষ',fBrkB:'পরের সেশন শুরু করবেন?',
 diaryT:'ডায়েরি',diaryPh:'আজকের দিনের কথা লিখুন',diaryPast:'আগের লেখা',
-catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'নতুন ক্যাটাগরি',catNamePh:'ক্যাটাগরির নাম লিখুন',cStudy:'পড়াশোনা',cWork:'কাজ',cPers:'ব্যক্তিগত',subPh:'ছোট তালিকা লিখুন, প্রতি লাইনে একটি',searchPh:'করণীয় খুঁজুন',noRes:'কিছু পাওয়া যায়নি।',mvT:'→ আজ',mvM:'→ আগামীকাল',mvAll:'সবগুলো আজকে সরান',
+dLeft:'{n} দিন বাদে',catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'নতুন ক্যাটাগরি',catNamePh:'ক্যাটাগরির নাম লিখুন',cStudy:'পড়াশোনা',cWork:'কাজ',cPers:'ব্যক্তিগত',subPh:'ছোট তালিকা লিখুন, প্রতি লাইনে একটি',searchPh:'করণীয় খুঁজুন',noRes:'কিছু পাওয়া যায়নি।',mvT:'→ আজ',mvM:'→ আগামীকাল',mvAll:'সবগুলো আজকে সরান',
 repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',strL:'নিয়ম',strF:'নমনীয়',strX:'নির্দিষ্ট বার',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
 wds:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],onDays:(d,x)=>`${d} — ${x}-এ`,snooze:'১০ মিনিট পরে',doneA:'সম্পন্ন',yesA:'হ্যাঁ',noA:'না',
 bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেটা ফাইলে সংরক্ষণ করুন, নতুন ফোনে ফিরিয়ে আনতে পারবেন।',bkEx:'ব্যাকআপ ফাইল সংরক্ষণ',bkCp:'ব্যাকআপ লেখা আকারে কপি',bkImT:'ফিরিয়ে আনুন',bkFile:'ব্যাকআপ ফাইল বাছুন',bkPh:'অথবা ব্যাকআপের লেখা এখানে পেস্ট করুন',bkPaste:'লেখা থেকে ফিরিয়ে আনুন',
@@ -812,7 +817,7 @@ const meta=[o.date?fdate(x.date,{day:'numeric',month:'short'}):'',x.cat&&catOk(x
 const subs=sb.map((z,i)=>`<label class="sub"><input type="checkbox" data-s="${x.id}:${i}" ${z.d?'checked':''}>${esc(z.t)}</label>`).join('');
 const mv=o.ovr?`<div class="mv"><button data-mv="${x.id}:0">${t('mvT')}</button><button data-mv="${x.id}:1">${t('mvM')}</button></div>`:'';
 const cx=o.cx&&sb.length;
-return `<div class="g todo p${x.pri||0} ${x.done?'done':''}${sb.length?' hs':''}${cx?' cx'+(openT.has(x.id)?' open':''):''}" data-id="${x.id}"><input type="checkbox" data-c="${x.id}" ${x.done?'checked':''}><span>${esc(x.text)}${meta?`<small>${meta}</small>`:''}${sb.length?(cx?`<div class="sl"><div class="stl" data-k="s${x.id}">${subs}</div></div>`:`<div class="stl" data-k="s${x.id}">${subs}</div>`):''}${mv}</span><button data-e="${x.id}" aria-label="Edit">${ic('edit')}</button></div>`};
+return `<div class="g todo p${x.pri||0} ${x.done?'done':''}${sb.length?' hs':''}${cx?' cx'+(openT.has(x.id)?' open':''):''}" data-id="${x.id}"><input type="checkbox" data-c="${x.id}" ${x.done?'checked':''}><span>${esc(x.text)}${meta?`<small>${meta}</small>`:''}${sb.length?(cx?`<div class="sl"><div class="stl" data-k="s${x.id}">${subs}</div></div>`:`<div class="stl" data-k="s${x.id}">${subs}</div>`):''}${mv}</span>${o.left?(()=>{const dd=Math.round((new Date(x.date+'T00:00:00')-new Date(todayKey+'T00:00:00'))/864e5);return `<em class="dl">${dd<=0?t('today'):dd===1?t('tmr'):t('dLeft').replace('{n}',bn(dd))}</em>`})():''}<button data-e="${x.id}" aria-label="Edit">${ic('edit')}</button></div>`};
 function swipeDel(row,after){
 if(row._sw)return;row._sw=1;const cb=row.querySelector('[data-c]');if(!cb)return;
 let sx=0,sy=0,dx=0,id=null,lock=0,t0=0;
@@ -920,7 +925,7 @@ const pend=fl(S.todos.filter(x=>!x.done||x.date>=todayKey)).sort((a,b)=>(a.date+
 const over=pend.filter(x=>x.date<todayKey),rest=pend.filter(x=>x.date>=todayKey);
 if(over.length)h+=`<div class="over"><h3>${t('over')} (${bn(over.length)})</h3><div style="padding:4px;margin:0 -4px">${over.map(x=>taskHtml(x,{ovr:1,cx:1})).join('')}</div></div>`;
 const gr={};rest.forEach(x=>(gr[x.date]=gr[x.date]||[]).push(x));
-{const dgs=Object.keys(gr).map(k=>`<div class="dg"><h3>${k===todayKey?t('today'):k===tmrKey?t('tmr'):fdate(k,{weekday:'short',day:'numeric',month:'short'})}</h3>`+`<div style="padding:4px;margin:0 -4px">${gr[k].map(x=>taskHtml(x,{cx:1})).join('')}</div>`+`</div>`).join('');if(dgs)h+=`<div>${dgs}</div>`}
+{const dgs=Object.keys(gr).map(k=>`<div class="dg"><h3>${k===todayKey?t('today'):k===tmrKey?t('tmr'):fdate(k,{weekday:'short',day:'numeric',month:'short'})}</h3>`+`<div style="padding:4px;margin:0 -4px">${gr[k].map(x=>taskHtml(x,{cx:1,left:1})).join('')}</div>`+`</div>`).join('');if(dgs)h+=`<div>${dgs}</div>`}
 if(!pend.length)h+=`<div class="es">${ic('clock')}<b>${t('noUp')}</b></div>`}
 const r=$('#ulist'),st=r.scrollTop;$('#v-up').classList.toggle('emp',h.includes('class="es"'));r.innerHTML=h;r.scrollTop=st;bindTasks(r,render)}
 
@@ -991,7 +996,6 @@ $('#ftitle').textContent=t(a?'editT':tx?'editTk':'newT');
 $('#seg').classList.toggle('hid',!!(a||tx));
 $('#f-task').classList.toggle('hid',kind!=='task');$('#f-habit').classList.toggle('hid',kind!=='habit');
 $('#seg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===kind));
-$('#pr').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==pri));
 $('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();setStrict();
 buildCt();$('#sb').value=tx?(tx.sub||[]).map((z,i)=>bn(i+1)+'. '+z.t).join('\n'):'';
 $('#tx').value=tx?tx.text:'';$('#td').value=tx?tx.date:(dkey||todayKey);$('#tmv').value=tx&&tx.time?tx.time:'00:00';
@@ -1020,7 +1024,6 @@ $('#fcl').onclick=closeEdit;
 $('#fsheet').onclick=e=>{if(e.target.id==='fsheet')closeEdit()};
 $('#scl').onclick=()=>$('#ssheet').classList.remove('show');
 $('#seg').querySelectorAll('button').forEach(b=>b.onclick=()=>inl?fillForm(b.dataset.k,null,null,inl):openForm(b.dataset.k));
-$('#pr').querySelectorAll('button').forEach(b=>b.onclick=()=>{pri=+b.dataset.v;$('#pr').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))});
 $('#fsave').onclick=async()=>{
 if(fm==='task'&&edTodo){const text=$('#tx').value.trim();if(!text)return;const x=edTodo,old=x.sub||[];x.text=text;x.date=$('#td').value||todayKey;x.time=$('#tmv').value==='00:00'?'':$('#tmv').value;x.pri=pri;x.rep=rep;x.cat=cat;x.sub=$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:!!(old.find(o=>o.t===z)||{}).d}));save();await askPerm();await schedTodo(x)}
 else if(fm==='task'){const text=$('#tx').value.trim();if(!text)return;
@@ -1104,8 +1107,28 @@ function drawCats(){$('#clist').innerHTML=(S.cats||[]).map(c=>`<div class="g hab
 $('#clist').querySelectorAll('[data-dc]').forEach(b=>b.onclick=()=>{const k=b.dataset.dc;S.cats=S.cats.filter(c=>c.k!==k);if(fcat===k)fcat='';save();drawCats();render()})}
 $('#ccl').onclick=()=>$('#csheet').classList.remove('show');
 $('#csave').onclick=()=>{const n=$('#cn').value.trim();if(!n)return;S.cats=S.cats||[];S.cats.push({k:'c'+Date.now(),n});save();$('#cn').value='';drawCats();render()};
-function buildCt(){const ks=[['',t('cNone')],...catAll().map(k=>[k,catLbl(k)])];$('#ct').innerHTML=ks.map(([k,n])=>`<button data-v="${k}">${esc(n)}</button>`).join('');
-$('#ct').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.v===cat);b.onclick=()=>{cat=b.dataset.v;$('#ct').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))}})}
+function buildCt(){const ks=[['',t('cNone')],...catAll().map(k=>[k,catLbl(k)])];$('#ct').innerHTML='<div class="ctin">'+ks.map(([k,n])=>`<button data-v="${k}">${esc(n)}</button>`).join('')+'</div>';
+$('#ct').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.v===cat);b.onclick=()=>{cat=b.dataset.v;$('#ct').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))}});
+ctIdx=0;ctGo(0,false);setTimeout(()=>{const bs=[...$('#ct').querySelectorAll('button')],i=bs.findIndex(z=>z.classList.contains('on'));if(i>0)ctGo(Math.floor(i/2)*2,false)},80)}
+/* Category row (#ct): drag to slide, snaps two buttons at a time (same feel as the home chips) */
+let ctIdx=0;
+const ctIn=()=>{const c=document.getElementById('ct');return c&&c.firstElementChild};
+const ctStep=()=>{const w=ctIn();return w&&w.children.length>1?w.children[1].offsetLeft-w.children[0].offsetLeft:0};
+const ctMax=()=>{const w=ctIn();return w?Math.max(0,w.children.length-2):0};
+function ctGo(i,anim){const w=ctIn();if(!w)return;i=Math.max(0,Math.min(ctMax(),i));ctIdx=i;const x=-i*ctStep();w.style.transition=anim?'transform .42s cubic-bezier(.22,.9,.28,1)':'none';w.style.transform='translate3d('+x+'px,0,0)'}
+(function(){const c=document.getElementById('ct');if(!c)return;let id=null,x0=0,y0=0,base=0,cur=0,drag=0,v=0,lx=0,lt=0,raf=0;
+const paint=()=>{raf=0;const w=ctIn();if(w)w.style.transform='translate3d('+cur+'px,0,0)'};
+/* edge resistance: past the first/last page the row follows the finger at a fraction, like a rubber band */
+const rb=(x,mn,mx)=>x>mx?mx+(x-mx)*.28:x<mn?mn+(x-mn)*.28:x;
+c.addEventListener('pointerdown',e=>{if(e.button>0)return;const w=ctIn();if(!w)return;id=e.pointerId;x0=lx=e.clientX;y0=e.clientY;drag=0;v=0;lt=performance.now();
+const m=new DOMMatrixReadOnly(getComputedStyle(w).transform);base=m.m41;cur=base;w.style.transition='none';w.style.transform='translate3d('+base+'px,0,0)'});
+c.addEventListener('pointermove',e=>{if(e.pointerId!==id)return;const dx=e.clientX-x0;
+if(!drag){if(Math.abs(dx)>5&&Math.abs(dx)>Math.abs(e.clientY-y0)){drag=1;x0=e.clientX;lx=e.clientX;try{c.setPointerCapture(id)}catch(_){}}else return}
+const n=performance.now();v=.8*v+.2*((e.clientX-lx)/Math.max(1,n-lt));lx=e.clientX;lt=n;
+cur=rb(base+(e.clientX-x0),-ctMax()*ctStep(),0);if(!raf)raf=requestAnimationFrame(paint)});
+const end=e=>{if(e.pointerId!==id)return;id=null;if(!drag)return;drag=0;if(raf){cancelAnimationFrame(raf);raf=0}c._d=1;setTimeout(()=>c._d=0,60);if(performance.now()-lt>80)v=0;const st=ctStep()||1;let i=Math.round(-(cur+v*220)/st);i=Math.round(i/2)*2;ctGo(i,true)};
+c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);
+c.addEventListener('click',e=>{if(c._d){e.stopPropagation();e.preventDefault()}},true)})();
 
 const dig=x=>S.set.lang==='bn'?String(x).replace(/\d/g,c=>'০১২৩৪৫৬৭৮৯'[c]):String(x);
 const dparse=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
