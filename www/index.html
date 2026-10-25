@@ -79,6 +79,12 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .day.tick{background:var(--tc);color:var(--tink);font-weight:700;border-color:transparent;box-shadow:0 0 14px var(--tc)}
 .day.cross{color:var(--muted)}
 .day .m{position:absolute;top:2px;right:5px;font-size:12px;font-weight:700}
+.day .hm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.day .hm .ic{width:34px;height:34px;stroke-width:2.6}.day.htick .hm{color:rgba(0,255,0,.65)}.day.hx .hm{color:rgba(255,0,0,.65)}
+.seg.hid{display:none}
+#htabs{margin:10px 0 12px}
+#htabs .rd{display:inline-block;width:6px;height:6px;border-radius:50%;background:#FF0000;margin-left:6px;vertical-align:middle;position:relative;top:-1px}
+.hchips{flex:none;overflow:hidden;padding-bottom:10px;touch-action:pan-y;user-select:none;-webkit-user-select:none}.hchips .chin{display:flex;gap:6px;will-change:transform}.hchips .chip{flex:0 0 calc((100% - 24px)/5);display:block;height:28px;text-align:center;padding:0 4px;line-height:26px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hchips .chip.add{padding:0}.hchips .chip .ic{width:14px;height:14px;vertical-align:middle}
+.hrow{display:flex;align-items:center;gap:8px;margin-bottom:12px}.hrow .big{flex:1 1 auto;min-width:0;width:auto;margin:0;height:40px;padding:0 10px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hrow .ib{flex:none;width:44px;height:40px;padding:0;margin:0;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--edge);color:var(--ink)}.hrow .ib .ic{width:20px;height:20px}.hrow .ib.red{color:var(--cross);border-color:rgba(255,0,0,.35);background:rgba(255,0,0,.1)}.hrow .ib:active{transform:scale(.94)}
 .day .dot{position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--mono)}
 .hint{font-size:10.5px;line-height:1.4;color:var(--muted);margin:12px 2px}
 .navb{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;padding:4px;border-radius:22px;z-index:5}
@@ -153,7 +159,7 @@ textarea{width:100%;min-height:80px;margin-top:8px;padding:11px;border-radius:12
 .dbt{display:flex;gap:10px;justify-content:center}
 .dbt button{flex:1;max-width:150px;height:46px;border-radius:14px;border:0;font-size:16px;font-weight:700;font-family:inherit}
 .dok{background:#FF0000;color:#fff}.dc{background:var(--glass2);color:var(--ink)}
-.foot{margin-top:18px;text-align:center;padding:12px 12px 10px}.foot b{display:block;font-size:12.5px;color:var(--muted)}.foot small{display:block;font-size:10px;font-weight:600;color:var(--muted)}.fi{display:flex;justify-content:center;gap:8px;align-items:center;margin:6px 6px 4px}.fi a{color:var(--ink);width:38px;height:38px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}.fi .ic{width:22px;height:22px}.fi .ic.f{fill:currentColor;stroke:none}
+.foot{margin-top:18px;text-align:center;padding:12px 12px 10px}.foot b{display:block;font-size:12.5px;color:var(--muted)}.foot small{display:block;font-size:10px;font-weight:600;color:var(--muted)}.fi{display:flex;justify-content:center;gap:8px;align-items:center;margin:6px 6px 4px}.fi a{color:var(--ink);width:38px;height:38px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}.fi a,.fi a:hover,.fi a:active,.fi a:focus,.fi a:focus-visible{background:none!important;outline:none;box-shadow:none;transition:none;opacity:1;transform:none;text-decoration:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.fi .ic{width:22px;height:22px}.fi .ic.f{fill:currentColor;stroke:none}
 .ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
 #gear{color:var(--muted)}#gear .ic{width:20px;height:20px}
 .mnav .ic{width:24px;height:24px}
@@ -179,7 +185,7 @@ input[type=time]::-webkit-calendar-picker-indicator{display:none}
 #v-cal .cw{margin:0}
 #v-up{overflow:hidden;padding-bottom:0}
 #v-up:not(.hid){display:flex;flex-direction:column}
-#v-up .sw,#v-up #ucats{flex:none}
+#v-up .sw,#v-up #ucats,#v-up #utabs{flex:none}
 #v-up #ulist{flex:1;min-height:0;overflow-y:auto;margin:0 -14px;padding:0 14px calc(env(safe-area-inset-bottom,0px) + 134px);overscroll-behavior:contain;scrollbar-width:none}
 #v-up #ulist::-webkit-scrollbar{display:none}
 #v-rep{overflow:hidden;padding-bottom:0}
@@ -366,9 +372,9 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <body>
 <div class="top"><div><button class="user" id="user"></button></div><div class="tools"><button class="tbtn" id="gear" aria-label="Settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div></div>
 <section id="v-home"></section>
-<section id="v-up" class="hid"><div class="sw"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="text" id="sq" data-p="searchPh" style="width:100%;padding-left:38px"></div><div id="ucats"></div><div id="ulist"></div></section>
+<section id="v-up" class="hid"><div class="seg" id="utabs"></div><div class="sw"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="text" id="sq" data-p="searchPh" style="width:100%;padding-left:38px"></div><div id="ucats"></div><div id="ulist"></div></section>
 <section id="v-cal" class="hid"><div class="cw">
-<div class="chips" id="chips"></div><div id="info"></div>
+<div class="hchips" id="chips"></div><div id="info"></div>
 <div class="mnav"><button id="prev"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><strong id="mname"></strong><button id="next"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
 <div class="grid" id="grid"></div></div>
 <div id="cx"></div>
@@ -453,11 +459,11 @@ hint:'Tap any date to see its tick and tasks.',empty:'Tap "+ New habit" to start
 did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo:'Add',
 edit:'Edit & goals',del:'Delete',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
 newT:'Add new',editT:'Edit habit',editTk:'Edit task',namePh:'Write a name for your habit',askTime:'Ask me every day at',
-gmL:'Monthly goal (days)',gtL:'Overall goal (days, optional)',save:'Save',
+gmL:'Monthly goal',gtL:'Overall goal',save:'Save',
 notifT:'Did you do it today?',notifB:n=>`${n} — tap Yes and it's ticked in your calendar`,todoNotifT:'Reminder',
-tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',dailyR:'Daily reminders',
+tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',noHabH:'No habits left for today.',dailyR:'Daily reminders',noDailyR:'No daily reminders yet.',
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
-segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time (optional)',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
+segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
 remT:'Interval reminders',remAdd:'+ New reminder',remNamePh:'Write a name for the reminder',remEvery:'Every',remFrom:'From',remTo:'Until',remInfo:(e,f,o)=>`Every ${e} · ${f}–${o}`,remBad:'Set at least 5 minutes',cxHol:'Upcoming holidays',cxEvt:'Upcoming events',cxLeft:n=>`${n} day${+n===1?'':'s'} left`,cxToday:'Today',cxNoH:'No more government holidays in this month.',cxNoE:'No upcoming events. Tap a date in the calendar to add one.',remNew:'New reminder',remEdit:'Edit reminder',remEmpty:'Water, medicine… get a reminder every few hours.',remDelQ:'Delete this reminder?',
 lockH:'App Security',ovN:(b,n)=>`${n} ${n===1?'task is':'tasks are'} overdue`,ftDev:'Developed by MD.INSANUL ISLAM ABIR',ftCopy:'© Copyright MD.INSANUL ISLAM ABIR. All rights reserved.',lockSet:'Turn on PIN lock',lockChg:'Change PIN',lockOff:'Turn off lock',lockBio:'Unlock with fingerprint',lockNoBio:'Fingerprint is not available on this device. Set up a fingerprint in phone settings first.',lockT:'Enter PIN',lockNew:'Choose a 4-digit PIN',lockConfirm:'Confirm PIN',lockBad:'Wrong PIN',lockMis:"PINs don't match, try again",lockOn:'PIN lock is on',lockOffT:'Lock turned off',lockHint:'If you forget the PIN, the only way back is clearing app data. Take a backup first.',cancelT:'Cancel',pickT:'Select time',hrL:'Hour',mnL:'Minute',amL:'AM',pmL:'PM',setB:'Set',dpT:'Select a date',dyL:'Date',dmL:'Month',dyrL:'Year',
 setT:'Settings',yourName:'Your name',appear:'Appearance',dataT:'Export or import your data',expT:'Export',impT:'Import',altT:'Copy / paste backup as text',thD:'Dark mode',thL:'Light mode',
@@ -478,11 +484,11 @@ hint:'যেকোনো তারিখে ট্যাপ করলে সে�
 did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'করণীয় বা রিমাইন্ডার লিখুন',addTodo:'যোগ করুন',
 edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
 newT:'নতুন যোগ করুন',editT:'অভ্যাস সম্পাদনা',editTk:'করণীয় সম্পাদনা',namePh:'অভ্যাসের একটি নাম লিখুন',askTime:'প্রতিদিন মনে করানোর সময়',
-gmL:'মাসিক লক্ষ্য (দিন)',gtL:'সব মিলিয়ে লক্ষ্য (দিন, ঐচ্ছিক)',save:'সংরক্ষণ করুন',
+gmL:'মাসিক লক্ষ্য',gtL:'সব মিলিয়ে লক্ষ্য',save:'সংরক্ষণ করুন',
 notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`${n} — করে থাকলে "হ্যাঁ" চাপুন, ক্যালেন্ডারে টিক পড়ে যাবে`,todoNotifT:'মনে করিয়ে দিচ্ছি',
-tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',dailyR:'প্রতিদিনের মনে করানো',
+tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',noHabH:'আজকের জন্য আর কোনো অভ্যাস বাকি নেই।',dailyR:'প্রতিদিনের মনে করানো',noDailyR:'এখনো কোনো প্রতিদিনের মনে করানো নেই।',
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
-segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময় (ঐচ্ছিক)',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
+segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময়',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
 remT:'নির্দিষ্ট সময় পরপর মনে করান',remAdd:'+ নতুন রিমাইন্ডার',remNamePh:'রিমাইন্ডারের একটি নাম লিখুন',remEvery:'প্রতি',remFrom:'শুরু',remTo:'শেষ',remInfo:(e,f,o)=>`প্রতি ${dig(e)} · ${dig(f)}–${dig(o)}`,remBad:'কমপক্ষে ৫ মিনিট দিন',cxHol:'আসন্ন ছুটি',cxEvt:'আসন্ন ইভেন্ট',cxLeft:n=>`${n} দিন বাকি`,cxToday:'আজ',cxNoH:'এই মাসে আর কোনো সরকারি ছুটি নেই।',cxNoE:'কোনো আসন্ন ইভেন্ট নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',remNew:'নতুন রিমাইন্ডার',remEdit:'রিমাইন্ডার সম্পাদনা',remEmpty:'পানি, ওষুধ… কয়েক ঘণ্টা পরপর মনে করানোর জন্য যোগ করুন।',remDelQ:'এই রিমাইন্ডার মুছে ফেলবেন?',
 lockH:'অ্যাপ সিকিউরিটি',ovN:b=>`${b}টি কাজ বাকি পড়ে আছে`,ftDev:'মোঃ ইনসানুল ইসলাম আবীর দ্বারা তৈরি',ftCopy:'© কপিরাইট মোঃ ইনসানুল ইসলাম আবীর। সর্বস্বত্ব সংরক্ষিত।',lockSet:'পিন লক চালু করুন',lockChg:'পিন বদলান',lockOff:'লক বন্ধ করুন',lockBio:'আঙুলের ছাপ দিয়ে খুলুন',lockNoBio:'এই ফোনে আঙুলের ছাপ পাওয়া যাচ্ছে না। আগে ফোনের সেটিংসে ফিঙ্গারপ্রিন্ট সেট করুন।',lockT:'পিন দিন',lockNew:'৪ সংখ্যার নতুন পিন দিন',lockConfirm:'আবার পিন দিন',lockBad:'ভুল পিন',lockMis:'দুটি পিন মেলেনি, আবার দিন',lockOn:'পিন লক চালু হয়েছে',lockOffT:'লক বন্ধ হয়েছে',lockHint:'পিন ভুলে গেলে অ্যাপের ডেটা মুছে ফেলা ছাড়া উপায় নেই। আগে ব্যাকআপ নিয়ে রাখুন।',cancelT:'বাতিল',pickT:'সময় নির্বাচন করুন',hrL:'ঘন্টা',mnL:'মিনিট',amL:'এএম',pmL:'পিএম',setB:'সেট করুন',dpT:'একটি তারিখ নির্বাচন করুন',dyL:'তারিখ',dmL:'মাস',dyrL:'বছর',
 setT:'সেটিংস',yourName:'আপনার নাম',appear:'চেহারা',dataT:'ডেটা এক্সপোর্ট বা ইমপোর্ট',expT:'এক্সপোর্ট',impT:'ইমপোর্ট',altT:'লেখা আকারে কপি/পেস্ট করুন',thD:'ডার্ক মোড',thL:'লাইট মোড',
@@ -497,11 +503,13 @@ bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেট�
 bkBad:'এটি সঠিক TaskFlow ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
 wd:['র','সো','ম','বু','বৃ','শু','শ'],loc:'bn-BD'}
 };
-const COLORS=['#00FFFF','#0000FF','#8000FF','#FF8000','#FF0080','#00FF00'];
+const COLORS=['#00FFFF','#0000FF','#8000FF','#FF8000','#FF0080','#00FF00','#FF00FF','#0080FF','#80FF00','#00FF80','#FFC000','#FF5070'];
+function pickColor(used){for(const c of COLORS)if(!used.has(c.toUpperCase()))return c;for(let i=0;;i++){const c='hsl('+Math.round((i*137.5+20)%360)+',100%,55%)';if(!used.has(c.toUpperCase()))return c}}
 const pad=n=>String(n).padStart(2,'0'),key=(y,m,d)=>y+'-'+pad(m+1)+'-'+pad(d),$=s=>document.querySelector(s);
 let S;try{S=JSON.parse(localStorage.getItem('hb')||'null')}catch(e){}
 S=S||{acts:[],marks:{},todos:[],nid:1};
 {const CM={'#14B8A6':'#00FFFF','#3B82F6':'#0000FF','#8B5CF6':'#8000FF','#F97316':'#FF8000','#EC4899':'#FF0080','#84CC16':'#00FF00'};(S.acts||[]).forEach(x=>{const m=CM[String(x.color).toUpperCase()];if(m)x.color=m})}
+{const used=new Set();(S.acts||[]).forEach(x=>{let c=String(x.color||'').toUpperCase();if(!c||used.has(c)){x.color=pickColor(used);c=x.color.toUpperCase()}used.add(c)})}
 S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];
 const save=()=>{try{localStorage.setItem('hb',JSON.stringify(S))}catch(e){}};
 const t=(k,...a)=>{const v=L[S.set.lang][k];return typeof v==='function'?v(...a):v};
@@ -814,7 +822,7 @@ const ma=r.querySelector('[data-mvall]');if(ma)ma.onclick=()=>{fl(S.todos.filter
 r.querySelectorAll('[data-fc]').forEach(c=>c.onclick=()=>{const sl=c.parentElement.scrollLeft;fcat=c.dataset.fc;render();document.querySelectorAll('.chips.snap').forEach(e=>e.scrollLeft=sl)});
 r.querySelectorAll('[data-addcat]').forEach(c=>c.onclick=openCat)}
 
-const IC={"gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z\"/>", "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21a8 8 0 0 1 16 0\"/>", "flame": "<path d=\"M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>", "repeat": "<path d=\"M17 2l4 4-4 4\"/><path d=\"M3 11V9a3 3 0 0 1 3-3h15\"/><path d=\"M7 22l-4-4 4-4\"/><path d=\"M21 13v2a3 3 0 0 1-3 3H3\"/>", "checksq": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><path d=\"M8 12l3 3 5-6\"/>", "book": "<path d=\"M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z\"/><path d=\"M5 17a3 3 0 0 1 3-3h11\"/>", "briefcase": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18\"/>", "home": "<path d=\"M3 11l9-8 9 8v10h-6v-6H9v6H3z\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-4-4\"/>", "moon": "<path d=\"M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/>", "finger": "<path d=\"M12 11v3a6 6 0 0 1-1 3\"/><path d=\"M8 11a4 4 0 0 1 8 0v2a10 10 0 0 1-2 6\"/><path d=\"M5 12a7 7 0 0 1 14 0v1a14 14 0 0 1-1 5\"/><path d=\"M8.5 20a14 14 0 0 0 1-5v-4\"/>", "x": "<path d=\"M6 6l12 12M18 6L6 18\"/>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>", "back": "<path d=\"M21 5H9l-6 7 6 7h12z\"/><path d=\"M13 9l4 6M17 9l-4 6\"/>", "edit": "<path d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"M13.5 6.5l4 4\"/>", "award": "<circle cx=\"12\" cy=\"9\" r=\"6\"/><path d=\"M8.5 14L7 22l5-3 5 3-1.5-8\"/>", "checkc": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12.5l3 3 5-6\"/>", "timer": "<circle cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4l2 2M9 2h6\"/>", "laugh": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 13h8a4 4 0 0 1-8 0z\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "smile": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 14.5c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "neutral": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 15h7\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "sad": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 16c1-1.2 2.2-1.8 3.5-1.8s2.5.6 3.5 1.8\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "angry": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 8.5l2.5 1.2M16 8.5l-2.5 1.2\"/><path d=\"M8.5 16c1-1 2.2-1.5 3.5-1.5s2.5.5 3.5 1.5\"/><path d=\"M9.5 12h.01M14.5 12h.01\"/>", "note": "<path d=\"M6 3h9l4 4v14H6z\"/><path d=\"M14 3v5h5M9 13h7M9 17h5\"/>", "chevl": "<path d=\"M15 5l-7 7 7 7\"/>", "chevr": "<path d=\"M9 5l7 7-7 7\"/>", "expand": "<path d=\"M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5\"/>", "reset": "<path d=\"M3 12a9 9 0 1 0 3-6.7L3 8\"/><path d=\"M3 3v5h5\"/>", "tag": "<path d=\"M3 12V4h8l9 9-8 8z\"/><path d=\"M7.5 8h.01\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>"};
+const IC={"trash": "<path d=\"M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z\"/>", "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21a8 8 0 0 1 16 0\"/>", "flame": "<path d=\"M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>", "repeat": "<path d=\"M17 2l4 4-4 4\"/><path d=\"M3 11V9a3 3 0 0 1 3-3h15\"/><path d=\"M7 22l-4-4 4-4\"/><path d=\"M21 13v2a3 3 0 0 1-3 3H3\"/>", "checksq": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><path d=\"M8 12l3 3 5-6\"/>", "book": "<path d=\"M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z\"/><path d=\"M5 17a3 3 0 0 1 3-3h11\"/>", "briefcase": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18\"/>", "home": "<path d=\"M3 11l9-8 9 8v10h-6v-6H9v6H3z\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-4-4\"/>", "moon": "<path d=\"M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/>", "finger": "<path d=\"M12 11v3a6 6 0 0 1-1 3\"/><path d=\"M8 11a4 4 0 0 1 8 0v2a10 10 0 0 1-2 6\"/><path d=\"M5 12a7 7 0 0 1 14 0v1a14 14 0 0 1-1 5\"/><path d=\"M8.5 20a14 14 0 0 0 1-5v-4\"/>", "x": "<path d=\"M6 6l12 12M18 6L6 18\"/>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>", "back": "<path d=\"M21 5H9l-6 7 6 7h12z\"/><path d=\"M13 9l4 6M17 9l-4 6\"/>", "edit": "<path d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"M13.5 6.5l4 4\"/>", "award": "<circle cx=\"12\" cy=\"9\" r=\"6\"/><path d=\"M8.5 14L7 22l5-3 5 3-1.5-8\"/>", "checkc": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12.5l3 3 5-6\"/>", "timer": "<circle cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4l2 2M9 2h6\"/>", "laugh": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 13h8a4 4 0 0 1-8 0z\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "smile": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 14.5c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "neutral": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 15h7\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "sad": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8.5 16c1-1.2 2.2-1.8 3.5-1.8s2.5.6 3.5 1.8\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/>", "angry": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 8.5l2.5 1.2M16 8.5l-2.5 1.2\"/><path d=\"M8.5 16c1-1 2.2-1.5 3.5-1.5s2.5.5 3.5 1.5\"/><path d=\"M9.5 12h.01M14.5 12h.01\"/>", "note": "<path d=\"M6 3h9l4 4v14H6z\"/><path d=\"M14 3v5h5M9 13h7M9 17h5\"/>", "chevl": "<path d=\"M15 5l-7 7 7 7\"/>", "chevr": "<path d=\"M9 5l7 7-7 7\"/>", "expand": "<path d=\"M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5\"/>", "reset": "<path d=\"M3 12a9 9 0 1 0 3-6.7L3 8\"/><path d=\"M3 3v5h5\"/>", "tag": "<path d=\"M3 12V4h8l9 9-8 8z\"/><path d=\"M7.5 8h.01\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>"};
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24">${IC[n]}</svg>`;
 const TABS=['home','cal','up','rep','more'];
 const ICONS={rep:'<path d="M5 20V10M12 20V4M19 20v-7"/>',more:'<circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/>',home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',up:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'};
@@ -857,23 +865,34 @@ l.addEventListener('wheel',e=>{const sec=l.closest('section');if(sec&&(e.deltaY>
 const hlRO=new ResizeObserver(()=>hlGo(hlI,false));
 function hlSetup(){const l=hlEl();if(!l){hlI=0;return}hlBind(l);hlRO.disconnect();hlRO.observe(l.firstElementChild);hlGo(hlI,false)}
 window.addEventListener('resize',()=>hlGo(hlI,false));
+let homeTab='task';
 function renderHome(){
 const td=S.todos.filter(x=>x.date===todayKey),dn=td.filter(x=>x.done).length;
 let h=`<div class="g hero"><small>${fdate(todayKey,{weekday:'long',day:'numeric',month:'long'})}</small><b${td.length?'':' class="hn"'}>${td.length?t('tasksDone',bn(dn),bn(td.length)):t('noToday').replace('+','<span class="fabi">+</span>')}</b><div class="bar"><i style="width:${pct(dn,td.length)}%"></i></div></div>`;
-const ha=S.acts.filter(a=>isSched(a,now)||(S.marks[a.id]||{})[todayKey]);
-if(ha.length)h+=`<h3>${t('habitsT')}</h3>`+ha.map(a=>{const on=(S.marks[a.id]||{})[todayKey],s=stats(a,now.getFullYear(),now.getMonth());
+const ha=S.acts.filter(a=>isSched(a,now)&&!(S.marks[a.id]||{})[todayKey]);
+const rdT=homeTab==='hab'&&td.length>dn?'<i class="rd"></i>':'',rdH=homeTab==='task'&&ha.length?'<i class="rd"></i>':'';
+const htabs=`<div class="seg" id="htabs"><button data-ht="task" class="${homeTab==='task'?'on':''}">${t('segTask')}${rdT}</button><button data-ht="hab" class="${homeTab==='hab'?'on':''}">${t('segHabit')}${rdH}</button></div>`;
+h+=htabs;if(homeTab==='hab')h+=!ha.length?`<div class="g empty">${t('noHabH')}</div>`:ha.map(a=>{const on=(S.marks[a.id]||{})[todayKey],s=stats(a,now.getFullYear(),now.getMonth());
 return `<div class="g hab" style="--ac:${a.color}"><div class="hi" data-o="${a.id}"><b>${esc(a.name)}</b><small>${ic('flame')} ${bn(s.streak)}${a.goalM?' · '+t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
-if(td.length)h+=`<h3>${t('today')}</h3>`+catChips()+(fl(td).length?`<div class="hl" id="hl"><div class="hlin">${fl(td).map(x=>taskHtml(x,{cx:1})).join('')}</div></div>`:`<div class="g empty">${t('noRes')}</div>`);
-const r=$('#v-home'),emptyAll=!td.length&&!ha.length;
+if(homeTab==='task')h+=!td.length?`<div class="g empty">${t('noToday').replace('+','<span class="fabi">+</span>')}</div>`:catChips()+(fl(td).length?`<div class="hl" id="hl"><div class="hlin">${fl(td).map(x=>taskHtml(x,{cx:1})).join('')}</div></div>`:`<div class="g empty">${t('noRes')}</div>`);
+const r=$('#v-home'),emptyAll=false;
 if(emptyAll)h=`<div class="g hero"><small>${fdate(todayKey,{weekday:'long',day:'numeric',month:'long'})}</small></div><div class="es">${ic('check')}<b>${t('noToday').replace('+','<span class="fabi">+</span>')}</b></div>`;
 const ov=fl(S.todos.filter(x=>!x.done&&x.date<todayKey)).sort((a,b)=>a.date>b.date?1:-1);
 if(ov.length)h=`<button class="g ovl" data-goup><span>${t('ovN',bn(ov.length),ov.length)}</span>${ic('chevr')}</button>`+h;
 HN=ov.length?5:6;r.classList.toggle('emp',emptyAll&&!ov.length);r.innerHTML=h;bindTasks(r,render);hlSetup();
+r.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{homeTab=b.dataset.ht;renderHome()});
 const go=r.querySelector('[data-goup]');if(go)go.onclick=()=>{tab='up';render();const u=$('#ulist');if(u)u.scrollTop=0};
 r.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{const id=b.dataset.h;S.marks[id]=S.marks[id]||{};if(S.marks[id][todayKey])delete S.marks[id][todayKey];else S.marks[id][todayKey]=1;save();render()});
 r.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{sel=+b.dataset.o;tab='cal';render()})}
 
+let upTab='task';
 function renderUp(){
+const ut=$('#utabs');ut.innerHTML=`<button data-ut="task" class="${upTab==='task'?'on':''}">${t('segTask')}</button><button data-ut="rem" class="${upTab==='rem'?'on':''}">${t('dailyR')}</button>`;
+ut.querySelectorAll('[data-ut]').forEach(b=>b.onclick=()=>{upTab=b.dataset.ut;renderUp();$('#ulist').scrollTop=0});
+const isT=upTab==='task';$('#v-up .sw').style.display=isT?'':'none';$('#ucats').style.display=isT?'':'none';
+if(!isT){const h=S.acts.length?S.acts.map(a=>`<div class="g hab" data-ra="${a.id}" style="--ac:${a.color};cursor:pointer"><div class="hi"><b>${esc(a.name)}</b><small>${ic('clock')} ${evLabel(a)}</small></div></div>`).join(''):`<div class="g empty">${t('noDailyR')}</div>`;
+const r=$('#ulist');$('#v-up').classList.remove('emp');r.innerHTML=h;
+r.querySelectorAll('[data-ra]').forEach(c=>c.onclick=()=>{const a=S.acts.find(z=>z.id===+c.dataset.ra);if(a)openForm('habit',a)});return}
 const q=($('#sq').value||'').trim().toLowerCase();
 $('#ucats').innerHTML=catChips();bindTasks($('#ucats'),render);
 let h='';
@@ -885,15 +904,29 @@ const over=pend.filter(x=>x.date<todayKey),rest=pend.filter(x=>x.date>=todayKey)
 if(over.length)h+=`<div class="over"><h3>${t('over')} (${bn(over.length)})</h3><div style="padding:4px;margin:0 -4px">${over.map(x=>taskHtml(x,{ovr:1,cx:1})).join('')}</div></div>`;
 const gr={};rest.forEach(x=>(gr[x.date]=gr[x.date]||[]).push(x));
 {const dgs=Object.keys(gr).map(k=>`<div class="dg"><h3>${k===todayKey?t('today'):k===tmrKey?t('tmr'):fdate(k,{weekday:'short',day:'numeric',month:'short'})}</h3>`+`<div style="padding:4px;margin:0 -4px">${gr[k].map(x=>taskHtml(x,{cx:1})).join('')}</div>`+`</div>`).join('');if(dgs)h+=`<div>${dgs}</div>`}
-if(!pend.length&&!S.acts.length)h+=`<div class="es">${ic('clock')}<b>${t('noUp')}</b></div>`;
-else if(!pend.length)h+=`<div class="g empty" style="font-size:17px;padding:22px 18px">${t('noUp')}</div>`;
-if(S.acts.length)h+=`<h3>${t('dailyR')}</h3>`+S.acts.map(a=>`<div class="g hab" style="--ac:${a.color}"><div class="hi"><b>${esc(a.name)}</b><small>${ic('clock')} ${evLabel(a)}</small></div></div>`).join('')}
+if(!pend.length)h+=`<div class="es">${ic('clock')}<b>${t('noUp')}</b></div>`}
 const r=$('#ulist'),st=r.scrollTop;$('#v-up').classList.toggle('emp',h.includes('class="es"'));r.innerHTML=h;r.scrollTop=st;bindTasks(r,render)}
 
+let chIdx=0;
+const chIn=()=>{const c=document.getElementById('chips');return c&&c.firstElementChild};
+const chStep=()=>{const w=chIn();return w&&w.children.length>1?w.children[1].offsetLeft-w.children[0].offsetLeft:0};
+const chMax=()=>{const w=chIn();return w?Math.max(0,w.children.length-5):0};
+function chGo(i,anim){const w=chIn();if(!w)return;i=Math.max(0,Math.min(chMax(),i));chIdx=i;w.style.transition=anim?'transform .28s cubic-bezier(.2,.8,.2,1)':'none';w.style.transform='translateX('+(-i*chStep())+'px)'}
+(function(){const c=document.getElementById('chips');if(!c)return;let id=null,x0=0,y0=0,base=0,cur=0,drag=0,v=0,lx=0,lt=0;
+c.addEventListener('pointerdown',e=>{if(e.button>0)return;const w=chIn();if(!w)return;id=e.pointerId;x0=lx=e.clientX;y0=e.clientY;drag=0;v=0;lt=Date.now();base=-chIdx*chStep();cur=base});
+c.addEventListener('pointermove',e=>{if(e.pointerId!==id)return;const dx=e.clientX-x0;
+if(!drag){if(Math.abs(dx)>6&&Math.abs(dx)>Math.abs(e.clientY-y0)){drag=1;try{c.setPointerCapture(id)}catch(_){}const w=chIn();if(w)w.style.transition='none'}else return}
+const w=chIn();if(!w)return;const n=Date.now();v=.7*v+.3*((e.clientX-lx)/Math.max(1,n-lt));lx=e.clientX;lt=n;
+cur=Math.max(-chMax()*chStep(),Math.min(0,base+dx));w.style.transform='translateX('+cur+'px)'});
+const end=e=>{if(e.pointerId!==id)return;id=null;if(!drag)return;drag=0;c._d=1;setTimeout(()=>c._d=0,60);if(Date.now()-lt>80)v=0;const st=chStep()||1;chGo(Math.round(-(cur+v*140)/st),true)};
+c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);
+c.addEventListener('click',e=>{if(c._d){e.stopPropagation();e.preventDefault()}},true);
+if(window.ResizeObserver)new ResizeObserver(()=>chGo(chIdx,false)).observe(c)})();
 function renderCal(){
-const loc=t('loc'),ch=$('#chips');ch.innerHTML='';
-S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=sel===a.id?null:a.id;render()};ch.appendChild(b)});
-ch.style.display=S.acts.length?'':'none';
+const loc=t('loc'),ch=$('#chips'),inner=document.createElement('div');inner.className='chin';ch.innerHTML='';
+S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=sel===a.id?null:a.id;render()};inner.appendChild(b)});
+{const b=document.createElement('button');b.className='chip add';b.setAttribute('aria-label','Add habit');b.innerHTML=ic('plus');b.onclick=()=>{openForm('habit');$('#seg').classList.add('hid')};inner.appendChild(b)}
+ch.style.display='';ch.appendChild(inner);chGo(chIdx,false);
 const a=act();let h='';
 if(a){const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
 h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b style="color:var(--streak)">${bn(s.streak)}</b><span>${t('streak')}</span></div><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span><em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
@@ -907,16 +940,16 @@ const first=new Date(vy,vm,1).getDay(),last=new Date(vy,vm+1,0).getDate();
 for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day e';g.appendChild(e)}
 const marks=a?S.marks[a.id]||{}:{};
 for(let d=1;d<=last;d++){const k=key(vy,vm,d),b=document.createElement('button');
-let cls='day'+(k===todayKey?' today':'')+(k===pickKey?' pick':'')+(a?'':(h=>h.g.length?' hol':h.o.length?' hol2':'')(holInfo(k))),inner=bn(d),shown=false;
+let cls='day'+(k===todayKey?' today':'')+(k===pickKey?' pick':'')+((h=>h.g.length?' hol':h.o.length?' hol2':'')(holInfo(k))),inner=bn(d),shown=false;
 const dt=a?[]:S.todos.filter(x=>x.date===k),all=dt.length>0&&dt.every(x=>x.done);if(dt.length&&!all)cls+=' ev';
-if(a){if(marks[k]){cls+=' tick';b.style.setProperty('--tc',a.color);inner+='<span class="m">'+ic('check')+'</span>';shown=true}
+if(a){if(marks[k]){cls+=' htick';inner+='<span class="hm">'+ic('check')+'</span>';shown=true}
 else if(!isSched(a,new Date(vy,vm,d))){cls+=' off'}
-else if(k>=a.start&&k<todayKey){cls+=' cross';inner+='<span class="m">'+ic('x')+'</span>';shown=true}}
+else if(k>=a.start&&k<todayKey){cls+=' hx';inner+='<span class="hm">'+ic('x')+'</span>';shown=true}}
 if(all){if(!shown){cls+=' tick';b.style.setProperty('--tc','var(--mono)')}}else if(dt.length)inner+='<i class="dot"></i>';
 b.className=cls;b.innerHTML=inner;b.onclick=()=>{pickKey=k;renderCal();S.todos.forEach(x=>{if(x.date===k)openT.delete(x.id)});showDay(k)};g.appendChild(b)}}
 
 let cxTab='hol',pickKey=null;
-function renderCx(){const el=$('#cx');if(!el)return;
+function renderCx(){const el=$('#cx');if(!el)return;if(act()){el.innerHTML='';el.style.display='none';return}el.style.display='';
 const hol=cxTab==='hol',tabs=`<div class="ctabs"><button class="chip${hol?' on':''}" data-cx="hol">${t('cxHol')}</button><button class="chip${hol?'':' on'}" data-cx="evt">${t('cxEvt')}</button></div>`;
 const left=k=>{const n=Math.round((dparse(k)-dparse(todayKey))/864e5);return n<=0?t('cxToday'):t('cxLeft',bn(n))};
 const wd2=w=>{if(!/[\u0980-\u09FF]/.test(w)||w==='মঙ্গল')return w;const u=w.match(/[\u0985-\u0994\u0995-\u09B9\u09CE\u09DC-\u09DF][\u09BC]?(?:\u09CD[\u0995-\u09B9\u09DC-\u09DF][\u09BC]?)*[\u09BE-\u09CC\u09D7\u0981-\u0983]*/g);return u&&u.length>2?u.slice(0,2).join(''):w};
@@ -932,7 +965,9 @@ function render(){applyStatic();renderHome();renderUp();renderCal();renderCx();r
 
 let inl=null;const FP=['#seg','#f-task','#f-habit','#fsvrow'];
 function formBack(){if(!inl)return;const p=$('#fpanel');FP.forEach(s=>p.appendChild($(s)));inl=null}
-function openForm(kind,a,tx){formBack();fillForm(kind,a,tx);$('#sheet').classList.remove('show');$('#fsheet').classList.add('show')}
+let backDay=null;
+function closeEdit(){$('#fsheet').classList.remove('show');if(backDay){const k=backDay;backDay=null;showDay(k)}}
+function openForm(kind,a,tx){backDay=null;formBack();fillForm(kind,a,tx);$('#sheet').classList.remove('show');$('#fsheet').classList.add('show')}
 function fillForm(kind,a,tx,dkey){
 fm=kind;editing=a?a.id:null;edTodo=tx||null;pri=tx?(tx.pri||0):0;rep=tx?(tx.rep||'none'):'none';cat=tx?(tx.cat||''):'';wsel=a&&a.days?a.days.slice():[];
 $('#ftitle').textContent=t(a?'editT':tx?'editTk':'newT');
@@ -952,20 +987,20 @@ formBack();
 const a=act(),p=$('#panel'),_st=($('#tl')||{}).scrollTop||0;
 let h=`<div class="ph"><h2>${fdate(k,{weekday:'long',day:'numeric',month:'long'})}</h2><button class="x" id="cl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
 {const hi=holInfo(k);if(hi.g.length)h+=`<div class="holn">${hi.gx.map(esc).join('<br>')}</div>`;if(hi.o.length)h+=`<div class="holn o">${hi.o.map(esc).join('<br>')}</div>`}
-if(a){const on=(S.marks[a.id]||{})[k];h+=`<button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button>`}
-const _tl=S.todos.filter(x=>x.date===k).map(x=>taskHtml(x,{cx:1})).join('');h+=_tl?`<div class="tl" data-n="2">${_tl}</div>`:'';
-if(a)h+=`<button class="link" id="ed">${ic('edit')} ${t('edit')}</button><button class="link red" id="del">${t('del')}</button>`;
-h+=`<div id="dadd" style="margin-top:14px"></div>`;
+if(a){const on=(S.marks[a.id]||{})[k];h+=`<div class="hrow"><button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button><button class="ib" id="ed" aria-label="${t('edit')}">${ic('edit')}</button><button class="ib red" id="del" aria-label="${t('del')}">${ic('trash')}</button></div>`}
+const _tl=a?'':S.todos.filter(x=>x.date===k).map(x=>taskHtml(x,{cx:1})).join('');h+=_tl?`<div class="tl" data-n="2">${_tl}</div>`:'';
+if(!a)h+=`<div id="dadd" style="margin-top:14px"></div>`;
 p.innerHTML=h;$('#sheet').classList.add('show');
-{const d=$('#dadd');FP.forEach(s=>d.appendChild($(s)));inl=k;fillForm(kind||'task',null,null,k)}
+if(!a){const d=$('#dadd');FP.forEach(s=>d.appendChild($(s)));inl=k;fillForm(kind||'task',null,null,k)}
 $('#cl').onclick=()=>$('#sheet').classList.remove('show');
 const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else S.marks[a.id][k]=1;save();$('#sheet').classList.remove('show');render()}}
 bindTasks(p,()=>{showDay(k,fm);render()});
-const ed=$('#ed');if(ed)ed.onclick=()=>openForm('habit',a);
+const ed=$('#ed');if(ed)ed.onclick=()=>{openForm('habit',a);backDay=k};
 const del=$('#del');if(del)del.onclick=()=>{if(!confirm(t('confirmDel',a.name)))return;cancelMany(actIds(a));delete S.marks[a.id];S.acts=S.acts.filter(z=>z!==a);sel=S.acts[0]?S.acts[0].id:null;save();$('#sheet').classList.remove('show');render()}}
 
-['sheet','fsheet','ssheet','bsheet','rsheet','stsheet','csheet'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id===id)e.target.classList.remove('show')});
-$('#fcl').onclick=()=>$('#fsheet').classList.remove('show');
+['sheet','ssheet','bsheet','rsheet','stsheet','csheet'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id===id)e.target.classList.remove('show')});
+$('#fcl').onclick=closeEdit;
+$('#fsheet').onclick=e=>{if(e.target.id==='fsheet')closeEdit()};
 $('#scl').onclick=()=>$('#ssheet').classList.remove('show');
 $('#seg').querySelectorAll('button').forEach(b=>b.onclick=()=>inl?fillForm(b.dataset.k,null,null,inl):openForm(b.dataset.k));
 $('#pr').querySelectorAll('button').forEach(b=>b.onclick=()=>{pri=+b.dataset.v;$('#pr').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))});
@@ -977,7 +1012,7 @@ S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name)return;
 const vals={name,time:$('#at').value||'21:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:wsel.length===7?[]:wsel.slice().sort((p,q)=>p-q)};
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
-else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:COLORS[S.acts.length%COLORS.length]},vals);S.acts.push(a)}
+else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
 sel=a.id;save();await askPerm();await schedAct(a)}
 $('#fsheet').classList.remove('show');if(inl){const k=inl,kd=fm;render();showDay(k,kd)}else render()};
 $('#user').onclick=()=>{$('#un').value=S.set.name;$('#ssheet').classList.add('show')};
@@ -1124,7 +1159,7 @@ const MOODS=['laugh','smile','neutral','sad','angry'];
 const OLDM={'\u{1F60A}':'laugh','\u{1F642}':'smile','\u{1F610}':'neutral','\u{1F614}':'sad','\u{1F621}':'angry'};
 function migMood(){Object.values(S.diary).forEach(d=>{if(OLDM[d.mood])d.mood=OLDM[d.mood]})}
 // Social links: put your URLs here
-const FOOT_LINKS={fb:'',wa:'',ig:'',tg:''};
+const FOOT_LINKS={fb:'https://www.facebook.com/insanul.islam.abirr',wa:'https://wa.me/insanul.islam.abir',ig:'https://www.instagram.com/md.insanulislam',tg:'https://t.me/insanul13'};
 const FOOT_IC={fb:'<svg class="ic f" viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V9a1 1 0 0 1 1-1z"/></svg>',
 wa:'<svg class="ic" viewBox="0 0 24 24"><path d="M3 21L4.2 16.5A9 9 0 1 1 7.5 19.8Z"/><g transform="translate(7.2 7.2) scale(.4)" fill="currentColor" stroke="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></g></svg>',
 ig:'<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>',
