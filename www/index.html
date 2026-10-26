@@ -442,6 +442,14 @@ body.nofd .navb{background:linear-gradient(var(--glass),var(--glass)),var(--bgc)
 #sb::-webkit-scrollbar{display:none}
 #sb::placeholder{text-align:center;line-height:96px}
 #sb:placeholder-shown{text-align:center}
+/* subtask box: finished lines get an underline under their text (drawn in a mirror layer behind the transparent textarea) */
+#sbw{position:relative;margin-top:14px;border-radius:12px;flex:none}
+:root:not([data-theme=light]) #sbw{background:#000}
+:root[data-theme=light] #sbw{background:#fff}
+#sbw #sb{display:block;margin-top:0!important;position:relative;z-index:1;background:transparent!important}
+#sbm{position:absolute;inset:0;overflow:hidden;border:1px solid transparent;border-radius:12px;pointer-events:none;z-index:0;box-sizing:border-box;padding:0 11px}
+#sbmi{white-space:pre-wrap;overflow-wrap:break-word;word-wrap:break-word;color:transparent;width:100%}
+#sbmi u{text-decoration:underline;text-decoration-color:rgba(128,128,128,.8);text-decoration-thickness:1px;text-underline-offset:4px}
 .hl .sl,.hl .stl{touch-action:pan-y}
 #cx .tl,#cx .tl.sfs,#cx .tl.sfu,#cx .tl.sfd{-webkit-mask-image:none!important;mask-image:none!important}
 body.fb::after{opacity:0!important;transition:opacity .2s!important}
@@ -481,7 +489,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="row"><label data-i="timeL"></label><input type="time" id="tmv"></div>
 <div class="row"><label data-i="repL"></label><div class="pri" id="rp"><button data-v="none" data-i="r0"></button><button data-v="daily" data-i="r1"></button></div></div>
 <div class="row"><label data-i="catL"></label><div class="pri" id="ct"><button data-v="" data-i="cNone"></button><button data-v="study" data-i="cStudy"></button><button data-v="work" data-i="cWork"></button><button data-v="personal" data-i="cPers"></button></div></div>
-<textarea id="sb" rows="4" data-p="subPh"></textarea></div>
+<div id="sbw"><div id="sbm" aria-hidden="true"><div id="sbmi"></div></div><textarea id="sb" rows="4" data-p="subPh"></textarea></div></div>
 <div id="f-habit"><div class="row"><input type="text" id="an" data-p="namePh"></div>
 <div class="row"><label data-i="askTime"></label><input type="time" id="at" value="00:00"></div>
 <div class="row"><label data-i="gmL"></label><input type="text" inputmode="numeric" autocomplete="off" id="gm" value="00"></div>
@@ -965,7 +973,7 @@ const ha=S.acts.filter(a=>isSched(a,now)&&!(S.marks[a.id]||{})[todayKey]);
 const rdT=homeTab==='hab'&&td.length>dn?'<i class="rd"></i>':'',rdH=homeTab==='task'&&ha.length?'<i class="rd"></i>':'';
 const htabs=`<div class="seg" id="htabs"><button data-ht="task" class="${homeTab==='task'?'on':''}">${t('segTask')}${rdT}</button><button data-ht="hab" class="${homeTab==='hab'?'on':''}">${t('segHabit')}${rdH}</button></div>`;
 h+=htabs;if(homeTab==='hab')h+=!ha.length?`<div class="g empty">${t('noHabH')}</div>`:ha.map(a=>{const on=(S.marks[a.id]||{})[todayKey],s=stats(a,now.getFullYear(),now.getMonth());
-return `<div class="g hab" style="--ac:${a.color}"><div class="hi" data-o="${a.id}"><b>${esc(a.name)}</b><small>${a.goalM?t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
+return `<div class="g hab" data-o="${a.id}" style="--ac:${a.color};cursor:pointer"><div class="hi"><b>${esc(a.name)}</b><small>${a.goalM?t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
 if(homeTab==='task')h+=!td.length?`<div class="g empty">${t('noToday').replace('+','<span class="fabi">+</span>')}</div>`:catChips()+(fl(td).length?`<div class="hl" id="hl"><div class="hlin">${fl(td).map(x=>taskHtml(x,{cx:1})).join('')}</div></div>`:`<div class="g empty">${t('noRes')}</div>`);
 const r=$('#v-home'),emptyAll=false;
 if(emptyAll)h=`<div class="g hero"><small>${fdate(todayKey,{weekday:'long',day:'numeric',month:'long'})}</small></div><div class="es">${ic('check')}<b>${t('noToday').replace('+','<span class="fabi">+</span>')}</b></div>`;
@@ -975,7 +983,7 @@ HN=ov.length?5:6;r.classList.toggle('emp',emptyAll&&!ov.length);r.innerHTML=h;bi
 r.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{homeTab=b.dataset.ht;renderHome()});
 const go=r.querySelector('[data-goup]');if(go)go.onclick=()=>{tab='up';render();const u=$('#ulist');if(u)u.scrollTop=0};
 r.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{const id=b.dataset.h;S.marks[id]=S.marks[id]||{};if(S.marks[id][todayKey])delete S.marks[id][todayKey];else S.marks[id][todayKey]=1;save();render()});
-r.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{sel=+b.dataset.o;tab='cal';render()})}
+r.querySelectorAll('[data-o]').forEach(b=>b.onclick=e=>{if(e.target.closest('.chk'))return;const a=S.acts.find(z=>z.id===+b.dataset.o);if(a)openForm('habit',a)})}
 
 let upTab='task';
 function renderUp(){
@@ -1585,5 +1593,16 @@ ta.addEventListener('scroll',()=>{fit();clearTimeout(st);st=setTimeout(()=>{if(!
 ta.addEventListener('touchstart',()=>{fit();down=1},{passive:true});new ResizeObserver(fit).observe(ta);window.addEventListener('resize',fit);
 ['touchend','touchcancel'].forEach(ev=>ta.addEventListener(ev,()=>{down=0;clearTimeout(st);st=setTimeout(snap,140)},{passive:true}));
 ta.addEventListener('wheel',e=>{const mx=ta.scrollHeight-ta.clientHeight,d=e.deltaY>0?1:-1;if((d>0&&ta.scrollTop>=mx-1)||(d<0&&ta.scrollTop<=0))return;e.preventDefault();if(ta._w)return;ta._w=setTimeout(()=>ta._w=0,120);{const LH=lh();ta.scrollTo({top:Math.round(ta.scrollTop/LH)*LH+d*LH,behavior:'smooth'})}},{passive:false});
+/* underline finished lines: mirror layer */
+{const mi=document.getElementById('sbmi'),mm=document.getElementById('sbm');
+const d=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value');
+const eh=z=>z.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sync=()=>{if(!mi)return;const cs=getComputedStyle(ta);mm.style.fontSize=cs.fontSize;mm.style.fontFamily=cs.fontFamily;mm.style.fontWeight=cs.fontWeight;mm.style.letterSpacing=cs.letterSpacing;mm.style.lineHeight=cs.lineHeight;
+const ls=d.get.call(ta).split('\n');
+mi.innerHTML=ls.map((z,i)=>{if(i>=ls.length-1||!sbStrip(z).trim())return eh(z);const pf=(z.match(SB_PFX)||[''])[0],rest=z.slice(pf.length),m=rest.match(/^([\s\S]*?)(\s*)$/);return eh(pf)+'<u>'+eh(m[1])+'</u>'+eh(m[2])}).join('\n');
+mi.style.transform='translateY('+(-ta.scrollTop)+'px)'};
+Object.defineProperty(ta,'value',{get(){return d.get.call(ta)},set(v){d.set.call(ta,v);sync()},configurable:true});
+['input','scroll','focus','blur'].forEach(ev=>ta.addEventListener(ev,sync));
+new ResizeObserver(sync).observe(ta);sync()}
 })();
 </script></body></html>
