@@ -19,7 +19,23 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - run: npm install
+      - name: Cache npm packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package*.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Cache Gradle (downloads and build cache)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('package*.json') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+      - run: npm install --prefer-offline --no-audit --no-fund
       - run: npx cap add android
       - name: Add notification and alarm permissions
         run: |
@@ -43,14 +59,21 @@ jobs:
       - name: Add storage permissions (for saving backups on Android 9 and below)
         run: |
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>\n</manifest>#' android/app/src/main/AndroidManifest.xml
-      - name: Install ImageMagick (for icon and splash conversion)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick
+      - name: Python with Pillow (for icon and splash images, no slow apt download)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet pillow
       - name: Black status bar and black launch screen
         run: |
           sed -i 's/#303F9F/#000000/g; s/#3F51B5/#000000/g' android/app/src/main/res/values/colors.xml || true
-          find android/app/src/main/res -name 'splash.png' -exec sh -c 'convert -size $(identify -format "%wx%h" "$1") xc:black "$1"' _ {} \; || true
+          python3 - <<'PY'
+          import glob
+          from PIL import Image
+          for f in glob.glob('android/app/src/main/res/**/splash.png', recursive=True):
+              w, h = Image.open(f).size
+              Image.new('RGB', (w, h), (0, 0, 0)).save(f)
+          PY
       - name: Black window background (fixes grey side strip in landscape)
         run: |
           S=android/app/src/main/res/values/styles.xml
@@ -73,26 +96,38 @@ jobs:
           fi
       - name: Make sure adaptive icon background exists
         run: |
-          R=android/app/src/main/res
-          for d in "mdpi 108" "hdpi 162" "xhdpi 216" "xxhdpi 324" "xxxhdpi 432"; do
-            set -- $d
-            mkdir -p $R/mipmap-$1
-            [ -f $R/mipmap-$1/ic_launcher_background.png ] || convert -size $2x$2 xc:'#000000' $R/mipmap-$1/ic_launcher_background.png
-          done
+          python3 - <<'PY'
+          import os
+          from PIL import Image
+          R = 'android/app/src/main/res'
+          for d, s in [('mdpi',108),('hdpi',162),('xhdpi',216),('xxhdpi',324),('xxxhdpi',432)]:
+              os.makedirs(f'{R}/mipmap-{d}', exist_ok=True)
+              f = f'{R}/mipmap-{d}/ic_launcher_background.png'
+              if not os.path.exists(f):
+                  Image.new('RGB', (s, s), (0, 0, 0)).save(f)
+          PY
       - name: Notification icons
         run: |
-          D=android/app/src/main/res/drawable
-          mkdir -p $D
-          if [ -f assets/icon-only.png ]; then
-            convert assets/icon-only.png -resize 192x192 $D/ic_large_icon.png
-          else
-            convert -size 192x192 xc:'#000000' $D/ic_large_icon.png
-          fi
-          if [ -f assets/notification-icon.png ]; then
-            convert assets/notification-icon.png -resize 96x96 $D/ic_stat_icon.png
-          else
-            convert -size 96x96 xc:none -fill white -draw 'circle 48,48 48,8' $D/ic_stat_icon.png
-          fi
+          python3 - <<'PY'
+          import os
+          from PIL import Image, ImageDraw
+          D = 'android/app/src/main/res/drawable'
+          os.makedirs(D, exist_ok=True)
+          def fit(src, n):
+              im = Image.open(src).convert('RGBA')
+              k = min(n / im.width, n / im.height)
+              return im.resize((max(1, round(im.width * k)), max(1, round(im.height * k))), Image.LANCZOS)
+          if os.path.exists('assets/icon-only.png'):
+              fit('assets/icon-only.png', 192).save(D + '/ic_large_icon.png')
+          else:
+              Image.new('RGB', (192, 192), (0, 0, 0)).save(D + '/ic_large_icon.png')
+          if os.path.exists('assets/notification-icon.png'):
+              fit('assets/notification-icon.png', 96).save(D + '/ic_stat_icon.png')
+          else:
+              im = Image.new('RGBA', (96, 96), (0, 0, 0, 0))
+              ImageDraw.Draw(im).ellipse((8, 8, 88, 88), fill=(255, 255, 255, 255))
+              im.save(D + '/ic_stat_icon.png')
+          PY
       - name: Notification buttons work silently (Yes / No / Snooze without opening the app)
         run: |
           python3 native/patch_notifications.py
@@ -109,7 +144,7 @@ jobs:
       - run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --build-cache --parallel
       - name: Publish APK to Releases
         env:
           GH_TOKEN: ${{ github.token }}
