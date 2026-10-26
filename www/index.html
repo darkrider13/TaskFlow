@@ -100,6 +100,8 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 body:has(.sheet.show) .fab{visibility:hidden}
 .sheet.show{display:flex}
 .panel{width:100%;border-radius:22px;padding:16px;max-height:88vh;overflow:auto;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);animation:shin .18s ease-out}
+@keyframes impspin{to{transform:rotate(360deg)}}
+.imps{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.18);border-top-color:#fff;animation:impspin .8s linear infinite;margin:0 auto 14px}
 @keyframes shin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 .panel h2{font-size:18px;margin:0}
 .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -557,7 +559,7 @@ dLeft:'in {n} days',catL:'Category',cNone:'None',cAll:'All',catNewT:'New categor
 repL:'Repeat',r0:'None',r1:'Daily',r2:'Weekly',r3:'Monthly',strL:'Schedule',strF:'Every day',strX:'Fixed days',daysL:'Repeat on days',daysHint:'Leave empty for every day. On other days no cross mark is shown and no reminder is sent.',
 wds:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],onDays:(d,x)=>`${d} at ${x}`,snooze:'Remind in 10 min',doneA:'Done',yesA:'Yes',noA:'No',
 bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore it on a new phone.',bkEx:'Save backup file',bkCp:'Copy backup as text',bkImT:'Restore',bkFile:'Choose backup file',bkPh:'Or paste backup text here',bkPaste:'Restore from text',
-bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
+bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',impIng:'Importing…',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
 wd:['S','M','T','W','T','F','S'],loc:'en-US'},
 bn:{userPh:'এখানে ট্যাপ করে আপনার নাম লিখুন',userPh2:'আপনার নাম লিখুন',nameTitle:'আপনার নাম কী?',start:'শুরু করুন',obHi:'স্বাগতম',obSub:'আপনার ড্যাশবোর্ড সাজিয়ে নিন',obProf:'আপনার প্রোফাইল',
 add:'+ নতুন অভ্যাস',streak:'টানা দিন',total:'মোট দিন',left:'এ মাসে বাকি',
@@ -582,7 +584,7 @@ dLeft:'{n} দিন বাদে',catL:'ক্যাটাগরি',cNone:'ন
 repL:'পুনরাবৃত্তি',r0:'নেই',r1:'প্রতিদিন',r2:'সাপ্তাহিক',r3:'মাসিক',strL:'নিয়ম',strF:'প্রতিদিন',strX:'নির্দিষ্ট বার',daysL:'যেসব বারে করবেন',daysHint:'কিছু না বাছলে প্রতিদিন ধরা হবে। বাকি বারে ক্রস চিহ্ন দেখাবে না, রিমাইন্ডারও আসবে না।',
 wds:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],onDays:(d,x)=>`${d} — ${x}-এ`,snooze:'১০ মিনিট পরে',doneA:'সম্পন্ন',yesA:'হ্যাঁ',noA:'না',
 bkT:'ব্যাকআপ ও রিস্টোর',bkHint:'সব ডেটা ফাইলে সংরক্ষণ করুন, নতুন ফোনে ফিরিয়ে আনতে পারবেন।',bkEx:'ব্যাকআপ ফাইল সংরক্ষণ',bkCp:'ব্যাকআপ লেখা আকারে কপি',bkImT:'ফিরিয়ে আনুন',bkFile:'ব্যাকআপ ফাইল বাছুন',bkPh:'অথবা ব্যাকআপের লেখা এখানে পেস্ট করুন',bkPaste:'লেখা থেকে ফিরিয়ে আনুন',
-bkBad:'এটি সঠিক TaskFlow ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
+bkBad:'এটি সঠিক TaskFlow ব্যাকআপ নয়।',bkConf:(a,b)=>`এই ব্যাকআপে ${a}টি অভ্যাস ও ${b}টি করণীয় আছে। বর্তমান সব ডেটা মুছে এটি বসানো হবে। নিশ্চিত?`,bkOk:'ফিরিয়ে আনা হয়েছে!',bkQT:'ব্যাকআপ ইম্পোর্ট',bkQ:'আপনি কি আপনার ব্যাকআপ ফাইলটি ইম্পোর্ট করতে চান?',bkImB:'ইম্পোর্ট',bkOkB:'ঠিক আছে',bkBadT:'ইম্পোর্ট ব্যর্থ হয়েছে',bkDoneT:'ইম্পোর্ট সফল হয়েছে',impIng:'ইম্পোর্ট হচ্ছে…',bkDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় ইম্পোর্ট হয়েছে`,exQT:'ব্যাকআপ এক্সপোর্ট',exQ:'ব্যাকআপ ফাইলটি কীভাবে এক্সপোর্ট করতে চান বেছে নিন (সর্বোচ্চ ১০ এমবি)।',exShare:'শেয়ার',exSave:'সেভ',exDoneT:'এক্সপোর্ট সফল হয়েছে',exDoneD:(a,b)=>`${dig(a)}টি অভ্যাস ও ${dig(b)}টি করণীয় এক্সপোর্ট হয়েছে`,exSavedAt:p=>`${p} এ সেভ হয়েছে`,exBadT:'এক্সপোর্ট ব্যর্থ হয়েছে',exBadD:'ফাইলটি এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।',exBig:'এই ব্যাকআপ ১০ এমবির চেয়ে বড়, তাই এক্সপোর্ট করা যাবে না।',imBig:'এই ফাইল ১০ এমবির চেয়ে বড়, তাই ইম্পোর্ট করা যাবে না।',bkCopied:'কপি হয়েছে! নিরাপদ জায়গায় (নোট, হোয়াটসঅ্যাপ) পেস্ট করে রাখুন।',
 wd:['র','সো','ম','বু','বৃ','শু','শ'],loc:'bn-BD'}
 };
 const COLORS=['#00FFFF','#0000FF','#8000FF','#FF8000','#FF0080','#00FF00','#FF00FF','#0080FF','#80FF00','#00FF80','#FFC000','#FF5070'];
@@ -847,7 +849,7 @@ async function drainPending(){const p=PA();if(!p||draining)return;draining=1;try
 for(const q of it){if(q.kind==='habit'){const a=S.acts.find(z=>z.id===q.id);if(!a||!q.date)continue;S.marks[a.id]=S.marks[a.id]||{};S.marks[a.id][q.date]=1;ch=1}
 else if(q.kind==='todo'){const x=S.todos.find(z=>z.id===q.id);if(x&&!x.done){setDone(x,true);ch=1}}}
 if(ch){save();render()}}finally{draining=0}}
-async function rescheduleAll(){for(const a of S.acts)await schedAct(a);for(const x of S.todos)await schedTodo(x);for(const r of S.rems)await schedRem(r)}
+async function rescheduleAll(){await Promise.all([...S.acts.map(a=>schedAct(a)),...S.todos.map(x=>schedTodo(x)),...S.rems.map(r=>schedRem(r))])}
 
 function isSched(a,d){return !a.days||!a.days.length||a.days.includes(d.getDay())}
 const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).join(', '),a.time):t('every',a.time);
@@ -1135,7 +1137,8 @@ const d=o&&o.data?o.data:o;if(!d||!Array.isArray(d.acts)||!Array.isArray(d.todos
 if(!await dlg({kind:'import',title:t('bkQT'),text:t('bkQ'),ok:t('bkImB'),cancel:t('cancelT')}))return;
 const ol=S.lock;S=d;if(ol)S.lock=ol;else delete S.lock;S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];migMood();S.nid=Math.max(S.nid||1,...[...S.acts,...S.todos].map(z=>(z.nid||0)+1));
 sel=S.acts[0]?S.acts[0].id:null;save();$('#bsheet').classList.remove('show');render();
-if(LN){await clearAllN();await regActions();await rescheduleAll()}await dlg({title:t('bkDoneT'),text:t('bkDoneD',d.acts.length,d.todos.length),ok:t('bkOkB')})}
+/* notification re-scheduling can be slow (hundreds of alarms): show a spinner only if it takes more than 0.25s, then the success popup */
+if(LN){let ld=null;const tm=setTimeout(()=>{ld=document.createElement('div');ld.className='dlg';ld.innerHTML=`<div class="dbox" style="text-align:center"><div class="imps"></div><b>${t('impIng')}</b></div>`;document.body.appendChild(ld)},250);try{await clearAllN();await regActions();await rescheduleAll()}finally{clearTimeout(tm);if(ld)ld.remove()}}await dlg({title:t('bkDoneT'),text:t('bkDoneD',d.acts.length,d.todos.length),ok:t('bkOkB')})}
 $('#gear').onclick=()=>{$('#sn').value=S.set.name;$('#stsheet').classList.add('show')};
 $('#stcl').onclick=()=>$('#stsheet').classList.remove('show');
 $('#stsave').onclick=()=>{S.set.name=$('#sn').value.trim();save();$('#stsheet').classList.remove('show');render()};
