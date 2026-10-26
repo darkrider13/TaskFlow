@@ -396,6 +396,7 @@ input::selection,textarea::selection{background:#fff;color:#000}
 #sb{margin-top:14px}
 .sheet input[type=text]{height:38px;line-height:1.8;font-size:14px;padding:0 12px}
 #dadd #fsave{margin-top:8px}
+.row>input#rh::placeholder,.row>input#rm::placeholder{font-size:9.5px}
 .row>input#rh,.row>input#rm{width:66px;min-width:66px;max-width:66px;height:34px;padding:0 6px;font-size:12.5px;text-align:center;box-sizing:border-box;flex:none}
 .tl>.dg{scroll-snap-align:start;display:flow-root}
 .dg .tl{overscroll-behavior:auto}
@@ -483,8 +484,8 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <textarea id="sb" rows="4" data-p="subPh"></textarea></div>
 <div id="f-habit"><div class="row"><input type="text" id="an" data-p="namePh"></div>
 <div class="row"><label data-i="askTime"></label><input type="time" id="at" value="00:00"></div>
-<div class="row"><label data-i="gmL"></label><input type="number" id="gm" min="0" max="31" value="00"></div>
-<div class="row"><label data-i="gtL"></label><input type="number" id="gt" min="0" value="00"></div>
+<div class="row"><label data-i="gmL"></label><input type="text" inputmode="numeric" autocomplete="off" id="gm" value="00"></div>
+<div class="row"><label data-i="gtL"></label><input type="text" inputmode="numeric" autocomplete="off" id="gt" value="00"></div>
 <div class="row"><label data-i="strL"></label><button type="button" class="tpb dpb" id="stb"></button></div>
 <div id="dwrap"><div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div></div></div>
 <div class="row" id="fsvrow"><button style="flex:1" id="fsave" data-i="save"></button></div>
@@ -528,7 +529,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="sheet" id="rsheet"><div class="panel">
 <div class="ph"><h2 id="rtitle"></h2><button class="x" id="rcl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div class="row"><input type="text" id="rn" data-p="remNamePh"></div>
-<div class="row"><label data-i="remEvery"></label><input type="number" id="rh" min="0" max="23" placeholder="HH" inputmode="numeric"><input type="number" id="rm" min="0" max="59" placeholder="MM" inputmode="numeric"></div>
+<div class="row"><label data-i="remEvery"></label><input type="text" id="rh" data-p="remHr" inputmode="numeric" autocomplete="off"><input type="text" id="rm" data-p="remMin" inputmode="numeric" autocomplete="off"></div>
 <div class="row"><label data-i="remFrom"></label><input type="time" id="rf" value="00:00"></div>
 <div class="row"><label data-i="remTo"></label><input type="time" id="rt" value="23:59"></div>
 <div class="row"><button style="flex:1" id="rsave" data-i="save"></button><button class="hid" id="rdel" data-i="del"></button></div>
@@ -548,7 +549,7 @@ notifT:'Did you do it today?',lbHabit:'Habit',lbTodo:'Task',lbRem:'Reminder',not
 tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',noHabH:'No habits left for today.',dailyR:'Daily reminders',noDailyR:'No daily reminders yet.',
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
 segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
-remT:'Interval reminders',remAdd:'+ New reminder',remNamePh:'Write a name for the reminder',remEvery:'Every',remFrom:'From',remTo:'Until',remInfo:(e,f,o)=>`Every ${e} · ${f}–${o}`,remBad:'Set at least 10 minutes',remMax:x=>`Too many reminders. With this gap, From to Until can be at most ${x}`,cxHol:'Upcoming holidays',cxEvt:'Upcoming events',cxLeft:n=>`${n} day${+n===1?'':'s'} left`,cxToday:'Today',cxNoH:'No more government holidays in this month.',cxNoE:'No upcoming events. Tap a date in the calendar to add one.',remNew:'New reminder',remEdit:'Edit reminder',remEmpty:'Water, medicine… get a reminder every few hours.',remDelQ:'Delete this reminder?',
+remT:'Interval reminders',remAdd:'+ New reminder',remNamePh:'Write a name for the reminder',remEvery:'Every',remFrom:'From',remTo:'Until',remInfo:(e,f,o)=>`Every ${e} · ${f}–${o}`,remBad:'Set at least 10 minutes',remHr:'hour',remMin:'minute',remMax:x=>`Too many reminders. With this gap, From to Until can be at most ${x}`,cxHol:'Upcoming holidays',cxEvt:'Upcoming events',cxLeft:n=>`${n} day${+n===1?'':'s'} left`,cxToday:'Today',cxNoH:'No more government holidays in this month.',cxNoE:'No upcoming events. Tap a date in the calendar to add one.',remNew:'New reminder',remEdit:'Edit reminder',remEmpty:'Water, medicine… get a reminder every few hours.',remDelQ:'Delete this reminder?',
 lockH:'App Security',lockTypeT:'Screen lock type',lockTypeD:'Choose how you want to protect the app',lockNone:'Off',lockFp:'Fingerprint',lockPinN:'PIN',lockPatN:'Pattern',lockChgP:'Change pattern',lockPT:'Draw pattern',lockPNew:'Draw a new pattern',lockPConfirm:'Draw the pattern again',lockPBad:'Wrong pattern',lockPShort:'Connect at least 4 dots',lockPMis:"Patterns don't match, try again",lockPOn:'Pattern lock is on',lockFpOn:'Fingerprint lock is on',lockFpT:'Use your fingerprint',lockRetry:'Try again',ovN:(b,n)=>`${n} ${n===1?'task is':'tasks are'} overdue`,ftDev:'Developed by MD.INSANUL ISLAM ABIR',ftCopy:'© Copyright MD.INSANUL ISLAM ABIR. All rights reserved.',lockSet:'Turn on PIN lock',lockChg:'Change PIN',lockOff:'Turn off lock',lockBio:'Unlock with fingerprint',lockNoBio:'Fingerprint is not available on this device. Set up a fingerprint in phone settings first.',lockT:'Enter PIN',lockNew:'Choose a 4-digit PIN',lockConfirm:'Confirm PIN',lockBad:'Wrong PIN',lockMis:"PINs don't match, try again",lockOn:'PIN lock is on',lockOffT:'Lock turned off',lockHint:'If you forget the PIN, the only way back is clearing app data. Take a backup first.',cancelT:'Cancel',pickT:'Select time',hrL:'Hour',mnL:'Minute',amL:'AM',pmL:'PM',setB:'Set',dpT:'Select a date',dyL:'Date',dmL:'Month',dyrL:'Year',
 setT:'Settings',yourName:'Your name',appear:'Appearance',dataT:'Export or import your data',expT:'Export',impT:'Import',altT:'Copy / paste backup as text',thD:'Dark mode',thL:'Light mode',
 tRep:'Report',tMore:'More',rW:'Last 7 days',rM:'This month',rY:'This year',rChartM:'Monthly progress',badgesH:'These count your whole history, not just the period selected above.',rHero:p=>`${p}% of scheduled habit days done`,rTasks:(a,b)=>`Tasks: ${a} of ${b} done`,rChart:'Daily progress',rHab:'By habit',rNone:'Add a habit to see reports.',
@@ -573,7 +574,7 @@ notifT:'আজকের কাজটি কি করেছেন?',lbHabit:'অ
 tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',noHabH:'আজকের জন্য আর কোনো অভ্যাস বাকি নেই।',dailyR:'প্রতিদিনের মনে করানো',noDailyR:'এখনো কোনো প্রতিদিনের মনে করানো নেই।',
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
 segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময়',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
-remT:'নির্দিষ্ট সময় পরপর মনে করান',remAdd:'+ নতুন রিমাইন্ডার',remNamePh:'রিমাইন্ডারের একটি নাম লিখুন',remEvery:'প্রতি',remFrom:'শুরু',remTo:'শেষ',remInfo:(e,f,o)=>`প্রতি ${dig(e)} · ${dig(f)}–${dig(o)}`,remBad:'কমপক্ষে ১০ মিনিট দিন',remMax:x=>`এই ব্যবধানে শুরু থেকে শেষ সর্বোচ্চ ${dig(x)} হতে পারে`,cxHol:'আসন্ন ছুটি',cxEvt:'আসন্ন ইভেন্ট',cxLeft:n=>`${n} দিন বাকি`,cxToday:'আজ',cxNoH:'এই মাসে আর কোনো সরকারি ছুটি নেই।',cxNoE:'কোনো আসন্ন ইভেন্ট নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',remNew:'নতুন রিমাইন্ডার',remEdit:'রিমাইন্ডার সম্পাদনা',remEmpty:'পানি, ওষুধ… কয়েক ঘণ্টা পরপর মনে করানোর জন্য যোগ করুন।',remDelQ:'এই রিমাইন্ডার মুছে ফেলবেন?',
+remT:'নির্দিষ্ট সময় পরপর মনে করান',remAdd:'+ নতুন রিমাইন্ডার',remNamePh:'রিমাইন্ডারের একটি নাম লিখুন',remEvery:'প্রতি',remFrom:'শুরু',remTo:'শেষ',remInfo:(e,f,o)=>`প্রতি ${dig(e)} · ${dig(f)}–${dig(o)}`,remBad:'কমপক্ষে ১০ মিনিট দিন',remHr:'ঘণ্টা',remMin:'মিনিট',remMax:x=>`এই ব্যবধানে শুরু থেকে শেষ সর্বোচ্চ ${dig(x)} হতে পারে`,cxHol:'আসন্ন ছুটি',cxEvt:'আসন্ন ইভেন্ট',cxLeft:n=>`${n} দিন বাকি`,cxToday:'আজ',cxNoH:'এই মাসে আর কোনো সরকারি ছুটি নেই।',cxNoE:'কোনো আসন্ন ইভেন্ট নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',remNew:'নতুন রিমাইন্ডার',remEdit:'রিমাইন্ডার সম্পাদনা',remEmpty:'পানি, ওষুধ… কয়েক ঘণ্টা পরপর মনে করানোর জন্য যোগ করুন।',remDelQ:'এই রিমাইন্ডার মুছে ফেলবেন?',
 lockH:'অ্যাপ সিকিউরিটি',lockTypeT:'স্ক্রিন লক টাইপ',lockTypeD:'অ্যাপ সুরক্ষিত রাখতে যেভাবে চান তা বেছে নিন',lockNone:'বন্ধ',lockFp:'ফিঙ্গারপ্রিন্ট',lockPinN:'পিন',lockPatN:'প্যাটার্ন',lockChgP:'প্যাটার্ন বদলান',lockPT:'প্যাটার্ন আঁকুন',lockPNew:'নতুন প্যাটার্ন আঁকুন',lockPConfirm:'আবার প্যাটার্ন আঁকুন',lockPBad:'ভুল প্যাটার্ন',lockPShort:'কমপক্ষে ৪টি বিন্দু যুক্ত করুন',lockPMis:'দুটি প্যাটার্ন মেলেনি, আবার আঁকুন',lockPOn:'প্যাটার্ন লক চালু হয়েছে',lockFpOn:'ফিঙ্গারপ্রিন্ট লক চালু হয়েছে',lockFpT:'আঙুলের ছাপ দিন',lockRetry:'আবার চেষ্টা করুন',ovN:b=>`${b}টি কাজ বাকি পড়ে আছে`,ftDev:'মোঃ ইনসানুল ইসলাম আবীর দ্বারা তৈরি',ftCopy:'© কপিরাইট মোঃ ইনসানুল ইসলাম আবীর। সর্বস্বত্ব সংরক্ষিত।',lockSet:'পিন লক চালু করুন',lockChg:'পিন বদলান',lockOff:'লক বন্ধ করুন',lockBio:'আঙুলের ছাপ দিয়ে খুলুন',lockNoBio:'এই ফোনে আঙুলের ছাপ পাওয়া যাচ্ছে না। আগে ফোনের সেটিংসে ফিঙ্গারপ্রিন্ট সেট করুন।',lockT:'পিন দিন',lockNew:'৪ সংখ্যার নতুন পিন দিন',lockConfirm:'আবার পিন দিন',lockBad:'ভুল পিন',lockMis:'দুটি পিন মেলেনি, আবার দিন',lockOn:'পিন লক চালু হয়েছে',lockOffT:'লক বন্ধ হয়েছে',lockHint:'পিন ভুলে গেলে অ্যাপের ডেটা মুছে ফেলা ছাড়া উপায় নেই। আগে ব্যাকআপ নিয়ে রাখুন।',cancelT:'বাতিল',pickT:'সময় নির্বাচন করুন',hrL:'ঘন্টা',mnL:'মিনিট',amL:'এএম',pmL:'পিএম',setB:'সেট করুন',dpT:'একটি তারিখ নির্বাচন করুন',dyL:'তারিখ',dmL:'মাস',dyrL:'বছর',
 setT:'সেটিংস',yourName:'আপনার নাম',appear:'চেহারা',dataT:'ডেটা এক্সপোর্ট বা ইমপোর্ট',expT:'এক্সপোর্ট',impT:'ইমপোর্ট',altT:'লেখা আকারে কপি/পেস্ট করুন',thD:'ডার্ক মোড',thL:'লাইট মোড',
 tRep:'রিপোর্ট',tMore:'আরও',rW:'গত ৭ দিন',rM:'এই মাস',rY:'এই বছর',rChartM:'মাসভিত্তিক অগ্রগতি',badgesH:'এগুলো নির্বাচিত সময়ের নয়, আপনার পুরো ইতিহাস থেকে গণনা হয়।',rHero:p=>`নির্ধারিত অভ্যাসের ${p}% সম্পন্ন`,rTasks:(a,b)=>`করণীয়: ${b}টির মধ্যে ${a}টি সম্পন্ন`,rChart:'দিনভিত্তিক অগ্রগতি',rHab:'অভ্যাস অনুযায়ী',rNone:'রিপোর্ট দেখতে একটি অভ্যাস যোগ করুন।',
@@ -852,7 +853,7 @@ if(ch){save();render()}}finally{draining=0}}
 async function rescheduleAll(){await Promise.all([...S.acts.map(a=>schedAct(a)),...S.todos.map(x=>schedTodo(x)),...S.rems.map(r=>schedRem(r))])}
 
 function isSched(a,d){return !a.days||!a.days.length||a.days.includes(d.getDay())}
-const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).join(', '),a.time):t('every',a.time);
+const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).join(', '),t12(a.time)):t('every',t12(a.time));
 function stats(a,y=vy,m=vm){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
 const total=Object.keys(marks).length,month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
 let streak=0;const c=new Date();
@@ -882,7 +883,7 @@ function moveTask(x,d){x.date=d?tmrKey:todayKey;save();schedTodo(x)}
 const openT=new Set();
 const tlw=(k,h,n)=>`<div style="padding:4px;margin:0 -4px">${h}</div>`;
 const taskHtml=(x,o)=>{o=o&&typeof o==='object'?o:{};const sb=x.sub||[],sd=sb.filter(z=>z.d).length;
-const meta=[o.date?fdate(x.date,{day:'numeric',month:'short'}):'',x.cat&&catOk(x.cat)?ic(catIc(x.cat))+' '+esc(catLbl(x.cat)):'',x.rep&&RK[x.rep]?ic('repeat')+' '+t(RK[x.rep]):'',sb.length?ic('checksq')+' '+bn(sd)+'/'+bn(sb.length):'',x.time||''].filter(Boolean).join(' · ');
+const meta=[o.date?fdate(x.date,{day:'numeric',month:'short'}):'',x.cat&&catOk(x.cat)?ic(catIc(x.cat))+' '+esc(catLbl(x.cat)):'',x.rep&&RK[x.rep]?ic('repeat')+' '+t(RK[x.rep]):'',sb.length?ic('checksq')+' '+bn(sd)+'/'+bn(sb.length):'',t12(x.time)].filter(Boolean).join(' · ');
 const subs=sb.map((z,i)=>`<label class="sub"><input type="checkbox" data-s="${x.id}:${i}" ${z.d?'checked':''}>${esc(z.t)}</label>`).join('');
 const mv=o.ovr?`<div class="mv"><button data-mv="${x.id}:0">${t('mvT')}</button><button data-mv="${x.id}:1">${t('mvM')}</button></div>`:'';
 const cx=o.cx&&sb.length;
@@ -1067,7 +1068,7 @@ $('#seg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.datase
 $('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();setStrict();
 buildCt();$('#sb').value=tx?(tx.sub||[]).map((z,i)=>bn(i+1)+'. '+z.t).join('\n'):'';
 $('#tx').value=tx?tx.text:'';$('#td').value=tx?tx.date:(dkey||todayKey);$('#tmv').value=tx&&tx.time?tx.time:'00:00';
-$('#an').value=a?a.name:'';$('#at').value=a?a.time:'00:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';
+$('#an').value=a?a.name:'';$('#at').value=a?a.time:'00:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';nd();
 }
 
 function tlFit(st){const l=$('#tl');if(!l)return;const it=l.querySelectorAll(':scope>.todo');if(it.length>3){const e=it[2];l.style.maxHeight=(e.offsetTop+e.offsetHeight+4)+'px'}l.scrollTop=st||0}
@@ -1099,7 +1100,7 @@ else if(fm==='task'){const text=$('#tx').value.trim();if(!text){shake($('#tx'));
 const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:false}))};
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name){shake($('#an'));return}
-const vals={name,time:$('#at').value||'00:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
+const vals={name,time:$('#at').value||'00:00',goalM:Math.min(31,Math.max(0,nv($('#gm'))||0)),goalT:nv($('#gt'))||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
 else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
 sel=a.id;save();await askPerm();await schedAct(a)}
@@ -1206,6 +1207,13 @@ c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);
 c.addEventListener('click',e=>{if(c._d){e.stopPropagation();e.preventDefault()}},true)})();
 
 const dig=x=>S.set.lang==='bn'?String(x).replace(/\d/g,c=>'০১২৩৪৫৬৭৮৯'[c]):String(x);
+/* every time shown to the user is 12-hour: 13:00 -> '1:00 PM' (English) / '০১:০০ পিএম' (Bangla) */
+const t12=v=>{if(!v)return '';const [h,m]=String(v).split(':').map(Number),h12=h%12||12,mm=String(m||0).padStart(2,'0');if(S.set.lang!=='bn')return h12+':'+mm+(h<12?' AM':' PM');return dig(String(h12).padStart(2,'0')+':'+mm)+(h<12?' এএম':' পিএম')};
+/* number boxes are plain text boxes so they can show Bangla digits (০-৯) in Bangla mode; nv() reads either kind of digit */
+const toLat=x=>String(x==null?'':x).replace(/[০-৯]/g,c=>'০১২৩৪৫৬৭৮৯'.indexOf(c));
+const nv=e=>parseInt(toLat(e.value));
+const NUMQ=['#gm','#gt','#rh','#rm'];
+const nd=()=>NUMQ.forEach(q=>{const e=$(q);if(e)e.value=dig(toLat(e.value).replace(/\D/g,''))});
 const dparse=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
 function toast(msg,icn){const e=$('#toast');e.innerHTML=(icn?ic(icn)+' ':'')+esc(msg);e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),3500)}
 let rmode='w',ddate=todayKey;
@@ -1322,8 +1330,6 @@ ftDraw()}
 // ---- interval reminders ----
 let remEditing=null,remIdx=0,remGo=null;
 const remInt=x=>x.im||(x.every||2)*60;
-/* show 24h 'HH:MM' as 12-hour time: 12:00 PM / সকাল ১০:০০ */
-const t12=v=>{const [h,m]=String(v||'00:00').split(':').map(Number),h12=h%12||12,hm=h12+':'+String(m).padStart(2,'0');if(S.set.lang!=='bn')return hm+(h<12?' AM':' PM');return (h>=5&&h<12?'সকাল':h>=12&&h<16?'দুপুর':h>=16&&h<18?'বিকেল':h>=18&&h<20?'সন্ধ্যা':'রাত')+' '+hm};
 const remLbl=m=>{const h=Math.floor(m/60),n=m%60,b=S.set.lang==='bn',a=[];if(h)a.push(h+(b?' ঘণ্টা':' h'));if(n)a.push(n+(b?' মিনিট':' min'));return a.join(' ')};
 const remSlots=x=>{const [fh,fm]=x.from.split(':').map(Number),[th,tm]=x.to.split(':').map(Number),a=fh*60+fm;let b=th*60+tm;if(b<=a)b+=1440;/* end time earlier than or same as start (12:00 to 00:00, or 1:22 PM to 1:22 PM) means it runs past midnight / a full day */const o=[];for(let m=a;m<=b&&o.length<150;m+=remInt(x)){const v=m%1440;if(!o.includes(v))o.push(v)}return o};
 const remIds=x=>[...Array.from({length:24},(_,i)=>4000000+x.nid*30+i),...Array.from({length:150},(_,i)=>5000000+x.nid*200+i)];
@@ -1341,7 +1347,7 @@ if(S.rems.length>1)h+=`<div class="rdt" id="rdt">${S.rems.map((r,i)=>`<i class="
 return h+`<button class="chip add" id="radd" style="margin-top:4px">${t('remAdd')}</button>`}
 const p2=n=>String(n).padStart(2,'0');
 function openRem(r){remEditing=r?r.id:null;$('#rtitle').textContent=t(r?'remEdit':'remNew');
-$('#rn').value=r?r.name:'';$('#rh').value=r?p2(Math.floor(remInt(r)/60)):'';$('#rm').value=r?p2(remInt(r)%60):'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
+$('#rn').value=r?r.name:'';$('#rh').value=r?p2(Math.floor(remInt(r)/60)):'';$('#rm').value=r?p2(remInt(r)%60):'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';nd();$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
 function bindRem(r){
 r.querySelectorAll('[data-ron]').forEach(c=>{c.onclick=e=>e.stopPropagation();c.onchange=()=>{const x=S.rems.find(z=>z.id==c.dataset.ron);x.on=c.checked;save();schedRem(x)}});
 r.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>openRem(S.rems.find(z=>z.id==b.dataset.rm)));
@@ -1353,10 +1359,11 @@ $('#rcl').onclick=()=>$('#rsheet').classList.remove('show');
 /* hour / minute boxes always show two digits (01, 00, 05); filling one box fills the other with 00 */
 /* tapping a box selects what is in it (00), so the first digit typed replaces it */
 ['#rh','#rm','#gm','#gt'].forEach(q=>{const e=$(q);e.addEventListener('focus',()=>{setTimeout(()=>{try{e.select()}catch(_){}},0)});e.addEventListener('click',()=>{try{e.select()}catch(_){}})});
+NUMQ.forEach(q=>{const e=$(q);e.addEventListener('input',()=>{e.value=dig(toLat(e.value).replace(/\D/g,''))})});
 ['#rh','#rm'].forEach(q=>{const e=$(q);e.addEventListener('input',()=>{if(e.value.length>2)e.value=e.value.slice(-2)})});
-[['#rh',23,'#rm'],['#rm',59,'#rh']].forEach(([q,mx,o])=>{const e=$(q),f=$(o);e.addEventListener('blur',()=>{if(e.value==='')return;e.value=p2(Math.min(mx,Math.max(0,parseInt(e.value)||0)));if(f.value==='')f.value='00'})});
-$('#rsave').onclick=async()=>{const name=$('#rn').value.trim();if(!name){if(!(parseInt($('#rh').value)||0)&&!(parseInt($('#rm').value)||0)){shake($('#rh'));shake($('#rm'))}shake($('#rn'));return}
-const hh=Math.min(23,Math.max(0,parseInt($('#rh').value)||0)),mm=Math.min(59,Math.max(0,parseInt($('#rm').value)||0)),im=hh*60+mm;if(im<10){shake($('#rm'));shake($('#rh'));toast(t('remBad'));return}
+[['#rh',23,'#rm'],['#rm',59,'#rh']].forEach(([q,mx,o])=>{const e=$(q),f=$(o);e.addEventListener('blur',()=>{if(e.value==='')return;e.value=dig(p2(Math.min(mx,Math.max(0,nv(e)||0))));if(f.value==='')f.value=dig('00')})});
+$('#rsave').onclick=async()=>{const name=$('#rn').value.trim();if(!name){if(!(nv($('#rh'))||0)&&!(nv($('#rm'))||0)){shake($('#rh'));shake($('#rm'))}shake($('#rn'));return}
+const hh=Math.min(23,Math.max(0,nv($('#rh'))||0)),mm=Math.min(59,Math.max(0,nv($('#rm'))||0)),im=hh*60+mm;if(im<10){shake($('#rm'));shake($('#rh'));toast(t('remBad'));return}
 const fr=$('#rf').value||'00:00',to=$('#rt').value||'23:59',[f1,f2]=fr.split(':').map(Number),[t1,t2]=to.split(':').map(Number);let rb=t1*60+t2;const ra=f1*60+f2;if(rb<=ra)rb+=1440;if(Math.floor((rb-ra)/im)+1>150){toast(t('remMax',remLbl(149*im)));return}
 const v={name,im,every:Math.max(1,Math.round(im/60)),from:$('#rf').value||'00:00',to:$('#rt').value||'23:59',on:true};let x;
 if(remEditing){x=S.rems.find(z=>z.id===remEditing);Object.assign(x,v)}else{x=Object.assign({id:Date.now(),nid:S.nid++},v);S.rems.push(x);remGo=S.rems.length-1}
