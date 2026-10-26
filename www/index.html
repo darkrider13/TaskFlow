@@ -927,7 +927,7 @@ const ic=n=>`<svg class="ic" viewBox="0 0 24 24">${IC[n]}</svg>`;
 const TABS=['home','cal','up','rep','more'];
 const ICONS={rep:'<path d="M5 20V10M12 20V4M19 20v-7"/>',more:'<circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/>',home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',up:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'};
 /* Switching tabs only shows/hides the already-rendered views (data changes call render() themselves), so it is instant */
-function tabGo(k){if(k===tab)return;tab=k;document.body.classList.toggle('nofd',k==='more');
+function tabGo(k){if(k===tab)return;if(tab==='cal'){/* leaving Calendar: forget picked date, go back to today's month */const n=new Date();vy=n.getFullYear();vm=n.getMonth();pickKey=null;renderCal();renderCx()}tab=k;document.body.classList.toggle('nofd',k==='more');
 $('#navb').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===k));
 TABS.forEach(z=>$('#v-'+z).classList.toggle('hid',tab!==z));
 $('#v-'+k).querySelectorAll('.tl,.stl').forEach(tlSettle);if(k==='home')hlGo(hlI,false);sfSync()}
