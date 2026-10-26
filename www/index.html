@@ -116,7 +116,6 @@ body:has(.sheet.show) .fab{visibility:hidden}
 .row label{font-size:14px;flex:1}
 input[type=text],input[type=time],input[type=number],input[type=date]{padding:11px;border-radius:12px;border:1px solid var(--edge);font-size:15px;background:var(--glass2);color:var(--ink);outline:0;font-family:inherit}
 input[type=text]{flex:1;min-width:0}input[type=number]{width:90px}
-#rpre{flex:1;min-width:0;height:34px;padding:0 8px;border-radius:9px;border:1px solid var(--edge);font-size:13px;font-family:inherit;background:var(--glass2);color:var(--ink);outline:0}
 ::placeholder{color:var(--muted)}
 .row>button{padding:13px 16px;border-radius:12px;border:1px solid var(--edge);background:var(--glass2);color:var(--ink);font-size:15px}
 .link{background:none;border:0;padding:10px 12px 0 0;font-size:14px;color:var(--muted)}
@@ -373,8 +372,10 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 #panel .todo input[type=checkbox]{width:22px;height:22px;border-radius:7px}
 #dadd{margin-top:8px!important}
 #dadd .row{margin-top:5px}
-#dadd .seg{margin-bottom:2px}
-#dadd textarea{min-height:44px;height:44px;margin-top:5px}
+#dadd .seg{margin-bottom:12px}
+#dadd textarea{min-height:44px;height:44px;margin-top:14px}
+#sb{margin-top:14px}
+.sheet input[type=text]{height:38px;line-height:1.8;font-size:14px;padding:0 12px}
 #dadd #fsave{margin-top:8px}
 .row>input#rh,.row>input#rm{width:66px;min-width:66px;max-width:66px;height:34px;padding:0 6px;font-size:12.5px;text-align:center;box-sizing:border-box;flex:none}
 .tl>.dg{scroll-snap-align:start;display:flow-root}
@@ -504,7 +505,6 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 </div></div>
 <div class="sheet" id="rsheet"><div class="panel">
 <div class="ph"><h2 id="rtitle"></h2><button class="x" id="rcl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-<div class="row" id="rprow"><select id="rpre"></select></div>
 <div class="row"><input type="text" id="rn" data-p="remNamePh"></div>
 <div class="row"><label data-i="remEvery"></label><input type="number" id="rh" min="0" max="23" placeholder="HH" inputmode="numeric"><input type="number" id="rm" min="0" max="59" placeholder="MM" inputmode="numeric"></div>
 <div class="row"><label data-i="remFrom"></label><input type="time" id="rf" value="00:00"></div>
@@ -1302,25 +1302,19 @@ const remInt=x=>x.im||(x.every||2)*60;
 const remLbl=m=>{const h=Math.floor(m/60),n=m%60,b=S.set.lang==='bn',a=[];if(h)a.push(h+(b?' ঘণ্টা':' h'));if(n)a.push(n+(b?' মিনিট':' min'));return a.join(' ')};
 const remSlots=x=>{const [fh,fm]=x.from.split(':').map(Number),[th,tm]=x.to.split(':').map(Number),a=fh*60+fm,b=th*60+tm,o=[];for(let m=a;m<=Math.max(a,b)&&o.length<150;m+=remInt(x))o.push(m);return o};
 const remIds=x=>[...Array.from({length:24},(_,i)=>4000000+x.nid*30+i),...Array.from({length:150},(_,i)=>5000000+x.nid*200+i)];
-const REM_PRESETS=[
-['স্বাস্থ্য ও সুস্থতা',['পানি পান করার','ওষুধ খাওয়ার','ফল খাওয়ার','স্বাস্থ্যকর খাবার খাওয়ার','হাঁটতে যাওয়ার','ব্যায়াম করার','মেডিটেশন করার','দাঁত ব্রাশ করার','ত্বকের যত্ন নেওয়ার','ঘুমাতে যাওয়ার']],
-['পড়াশোনা',['পড়াশোনা করার','নোট লেখার','পড়া রিভিশন দেওয়ার','মুখস্থ করার','বই পড়ার','অনুশীলন করার','পড়াশোনার লক্ষ্য পূরণের','নতুন কিছু শেখার','প্র্যাকটিস করার','পড়াশোনার অগ্রগতি যাচাই করার']],
-['কাজ',['কাজ শুরু করার','টু-ডু লিস্ট দেখার','গুরুত্বপূর্ণ কাজটি করার']]];
 function remBody(n){n=String(n||'').trim().replace(/[,।.?\s]+$/,'');
 if(S.set.lang!=='bn')return `Time for ${n} - remember?`;
 if(/সময়\s*হয়েছে$/.test(n))return n+', মনে আছে তো?';
 if(/সময়$/.test(n))return n+' হয়েছে, মনে আছে তো?';
 if(/ার$/.test(n))return n+' সময় হয়েছে, মনে আছে তো?';
 return n+': সময় হয়েছে, মনে আছে তো?'}
-(function(){const sel=$('#rpre');if(!sel)return;sel.innerHTML='<option value="">তালিকা থেকে বেছে নিন</option>'+REM_PRESETS.map(g=>`<optgroup label="${g[0]}">`+g[1].map(p=>`<option value="${p} সময় হয়েছে">${p} সময় হয়েছে</option>`).join('')+'</optgroup>').join('');
-sel.onchange=()=>{if(sel.value)$('#rn').value=sel.value;sel.value=''}})();
 async function schedRem(x){if(!LN)return;await cancelMany(remIds(x));if(!x.on)return;await askPerm();
 await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:'',body:remBody(x.name),actionTypeId:'REM',schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
 function remHtml(){let h=`<h3>${t('remT')}</h3>`;
 h+=S.rems.map(r=>`<div class="g hab" data-rm="${r.id}" style="--ac:#0000FF"><div class="hi"><b>${ic('clock')} ${esc(r.name)}</b><small>${t('remInfo',remLbl(remInt(r)),r.from,r.to)}</small></div><input type="checkbox" data-ron="${r.id}" ${r.on?'checked':''}></div>`).join('');
 return h+`<button class="chip add" id="radd" style="margin-top:4px">${t('remAdd')}</button>`}
 function openRem(r){remEditing=r?r.id:null;$('#rtitle').textContent=t(r?'remEdit':'remNew');
-$('#rn').value=r?r.name:'';$('#rprow').classList.toggle('hid',S.set.lang!=='bn');$('#rpre').value='';$('#rh').value=r?Math.floor(remInt(r)/60):'';$('#rm').value=r?remInt(r)%60:'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
+$('#rn').value=r?r.name:'';$('#rh').value=r?Math.floor(remInt(r)/60):'';$('#rm').value=r?remInt(r)%60:'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
 function bindRem(r){
 r.querySelectorAll('[data-ron]').forEach(c=>{c.onclick=e=>e.stopPropagation();c.onchange=()=>{const x=S.rems.find(z=>z.id==c.dataset.ron);x.on=c.checked;save();schedRem(x)}});
 r.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>openRem(S.rems.find(z=>z.id==b.dataset.rm)));
