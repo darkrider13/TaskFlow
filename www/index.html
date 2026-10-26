@@ -308,12 +308,27 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 #onb #obn{flex:1;min-width:0;height:auto;padding:10px 0;line-height:1.8;border:0;border-bottom:1px solid var(--obl);border-radius:0;background:transparent;font-size:18px;color:var(--ink);outline:0}
 #onb #obn,#onb #obn:focus{border-bottom-color:#fff}:root[data-theme=light] #onb #obn,:root[data-theme=light] #onb #obn:focus{border-bottom-color:#000}
 #onb #obn.err{border-bottom-color:#fff;animation:obsh .3s}
+input::selection,textarea::selection{background:#fff;color:#000}
+:root[data-theme=light] input::selection,:root[data-theme=light] textarea::selection{background:#000;color:#fff}
+@keyframes shkx{0%,100%{transform:translateX(0)}15%{transform:translateX(-9px)}35%{transform:translateX(8px)}55%{transform:translateX(-6px)}75%{transform:translateX(4px)}}
+.shk{animation:shkx .45s!important;border-color:#FF0000!important;box-shadow:0 0 0 2px rgba(255,0,0,.35)!important}
+.shk::placeholder{color:#FF3B30!important;opacity:1!important}
+#onb #obn.shk{border-bottom-color:#FF0000!important;box-shadow:none!important}
 @keyframes obsh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 #onb .obg{margin-top:auto;padding-top:28px}
 #onb #obgo{width:100%;height:66px;border:0;border-radius:24px;background:#fff;color:#000;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px}
 #onb #obgo svg{width:28px;height:28px}
 .todo input[type=checkbox]{-webkit-appearance:none;appearance:none;flex:none;width:26px;height:26px;margin:0;border-radius:9px;border:2px solid var(--muted);background:transparent no-repeat center/0 0;cursor:pointer;transition:border-color .2s,box-shadow .2s,background-size .2s cubic-bezier(.3,1.6,.5,1)}
 .todo input[type=checkbox]:checked{border-color:var(--mono);box-shadow:0 0 10px rgba(255,255,255,.25);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-size:18px 18px}
+.hab input[data-ron]{-webkit-appearance:none;appearance:none;flex:none;width:26px;height:26px;margin:0 0 0 10px;border-radius:9px;border:2px solid var(--muted);background:transparent no-repeat center/0 0;cursor:pointer;transition:border-color .2s,box-shadow .2s,background-size .2s cubic-bezier(.3,1.6,.5,1)}
+.hab input[data-ron]:checked{border-color:var(--mono);box-shadow:0 0 10px rgba(255,255,255,.25);background-size:18px 18px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+:root[data-theme=light] .hab input[data-ron]:checked{box-shadow:0 0 8px rgba(0,0,0,.2);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.rsl{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -4px 6px;padding:2px 0;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.rsl::-webkit-scrollbar{display:none}
+.rsl>.hab{flex:0 0 calc(100% - 8px);margin:0 4px;scroll-snap-align:center;scroll-snap-stop:always}
+.rdt{display:flex;gap:6px;justify-content:center;margin:0 0 10px}
+.rdt i{width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.45;transition:opacity .2s,width .2s}
+.rdt i.on{opacity:1;width:16px;border-radius:3px;background:var(--ink)}
 .todo .sub input[type=checkbox]{width:20px;height:20px;border-radius:7px}
 .todo.hs{align-items:flex-start}
 .todo.hs>input[type=checkbox]{width:20px;height:20px;border-radius:7px;margin-top:1px}
@@ -357,6 +372,8 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 :root:not([data-theme=light]) #th,:root:not([data-theme=light]) #lg,:root:not([data-theme=light]) #stex,:root:not([data-theme=light]) #stim,:root:not([data-theme=light]) #bcp,:root:not([data-theme=light]) #bfile,:root:not([data-theme=light]) #bpaste,:root:not([data-theme=light]) .pri button:not(.on),:root:not([data-theme=light]) .wdays button:not(.on){background:#000!important;color:#fff;border:1px solid var(--edge)}
 :root[data-theme=light] #th,:root[data-theme=light] #lg,:root[data-theme=light] #stex,:root[data-theme=light] #stim,:root[data-theme=light] #bcp,:root[data-theme=light] #bfile,:root[data-theme=light] #bpaste,:root[data-theme=light] .pri button:not(.on),:root[data-theme=light] .wdays button:not(.on){background:#fff!important;color:#000;border:1px solid rgba(16,37,58,.25)}
 #fsave,#rsave,#usave,#bpaste{margin-top:14px}
+#rsave,#rdel{flex:1 1 0;min-width:0}
+#rdel{margin-top:14px;background:var(--cross);color:#fff;border:0;font-weight:700}
 .holw{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -4px 6px;-webkit-overflow-scrolling:touch}
 .holw::-webkit-scrollbar{display:none}
 .holw .holn{flex:0 0 calc(100% - 8px);margin:0 4px;padding:6px 10px;font-size:13px;line-height:1.35;border-radius:10px;text-align:center;scroll-snap-align:center;scroll-snap-stop:always}
@@ -411,6 +428,9 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 *{overscroll-behavior:none}
 body::after{display:block!important;opacity:1!important;transition:none!important}
 body.fe::after{opacity:1!important}
+/* More tab only: no bottom fade, so the developer card at the bottom stays fully clear */
+body.nofd::after{display:none!important}
+body.nofd .navb{background:linear-gradient(var(--glass),var(--glass)),var(--bgc)}
 #sft{position:fixed;left:0;right:0;top:0;height:28px;z-index:2;pointer-events:none;opacity:0;background-color:var(--bgc);background-image:var(--bgi);background-attachment:fixed;-webkit-mask-image:linear-gradient(to bottom,#000 0,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,transparent 100%);will-change:opacity;transform:translateZ(0)}
 #sft.on{opacity:1}
 /* the last card of a snapping list must not add a bottom margin: it let the list scroll ~8px past its last snap point, cutting the top card */
@@ -509,8 +529,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="row"><label data-i="remEvery"></label><input type="number" id="rh" min="0" max="23" placeholder="HH" inputmode="numeric"><input type="number" id="rm" min="0" max="59" placeholder="MM" inputmode="numeric"></div>
 <div class="row"><label data-i="remFrom"></label><input type="time" id="rf" value="00:00"></div>
 <div class="row"><label data-i="remTo"></label><input type="time" id="rt" value="23:59"></div>
-<div class="row"><button style="flex:1" id="rsave" data-i="save"></button></div>
-<button class="link red hid" id="rdel" data-i="del"></button>
+<div class="row"><button style="flex:1" id="rsave" data-i="save"></button><button class="hid" id="rdel" data-i="del"></button></div>
 </div></div>
 
 <script>
@@ -523,7 +542,7 @@ did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo
 edit:'Edit & goals',del:'Delete',delT:'Delete?',bkCopT:'Copied',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
 newT:'Add new',editT:'Edit habit',editTk:'Edit task',namePh:'Write a name for your habit',askTime:'Ask me every day at',
 gmL:'Monthly goal',gtL:'Overall goal',save:'Save',
-notifT:'Did you do it today?',notifB:n=>`Did you complete today's ${n}?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
+notifT:'Did you do it today?',lbHabit:'Habit',lbTodo:'Task',lbRem:'Reminder',notifB:n=>`Did you complete today's ${n}?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
 tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',noHabH:'No habits left for today.',dailyR:'Daily reminders',noDailyR:'No daily reminders yet.',
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
 segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
@@ -548,7 +567,7 @@ did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'�
 edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',delT:'মুছে ফেলবেন?',bkCopT:'কপি হয়েছে',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
 newT:'নতুন যোগ করুন',editT:'অভ্যাস সম্পাদনা',editTk:'করণীয় সম্পাদনা',namePh:'অভ্যাসের একটি নাম লিখুন',askTime:'প্রতিদিন মনে করানোর সময়',
 gmL:'মাসিক লক্ষ্য',gtL:'সব মিলিয়ে লক্ষ্য',save:'সংরক্ষণ করুন',
-notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`আজকের ${n} সম্পন্ন হয়েছে কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
+notifT:'আজকের কাজটি কি করেছেন?',lbHabit:'অভ্যাস',lbTodo:'কাজ',lbRem:'রিমাইন্ডার',notifB:n=>`আজকের ${n} সম্পন্ন হয়েছে কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
 tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',noHabH:'আজকের জন্য আর কোনো অভ্যাস বাকি নেই।',dailyR:'প্রতিদিনের মনে করানো',noDailyR:'এখনো কোনো প্রতিদিনের মনে করানো নেই।',
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
 segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময়',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
@@ -809,6 +828,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){holSync()
 
 const LN=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
 const safe=async f=>{try{return await f()}catch(e){}};
+const nlb=(k,b)=>t(k)+' · '+b;
 const askPerm=()=>safe(()=>LN&&LN.requestPermissions());
 const cancelN=id=>safe(()=>LN&&LN.cancel({notifications:[{id}]}));
 const cancelMany=ids=>safe(()=>LN&&LN.cancel({notifications:ids.map(id=>({id}))}));
@@ -816,11 +836,11 @@ const actIds=a=>[a.nid,...[0,1,2,3,4,5,6].map(d=>1000000+a.nid*10+d)];
 async function regActions(){if(!LN)return;const Y={id:'yes',title:t('yesA')},N={id:'no',title:t('noA')};
 await safe(()=>LN.registerActionTypes({types:[{id:'ACT',actions:[Y,N]},{id:'TODO',actions:[Y,N,{id:'snooze',title:t('snooze')}]},{id:'REM',actions:[Y,N]}]}));const pa=PA();if(pa)await safe(()=>pa.setTitles({yes:t('yesA'),no:t('noA'),snooze:t('snooze')}))}
 async function schedAct(a){if(!LN)return;await cancelMany(actIds(a));const [h,m]=a.time.split(':').map(Number);
-const base={title:'',body:t('notifB',a.name),actionTypeId:'ACT',extra:{kind:'habit',id:a.id}};
+const base={title:'',body:nlb('lbHabit',t('notifB',a.name)),actionTypeId:'ACT',extra:{kind:'habit',id:a.id}};
 const list=(a.days&&a.days.length)?a.days.map(d=>({...base,id:1000000+a.nid*10+d,schedule:{on:{weekday:d+1,hour:h,minute:m},allowWhileIdle:true}})):[{...base,id:a.nid,schedule:{on:{hour:h,minute:m},allowWhileIdle:true}}];
 await safe(()=>LN.schedule({notifications:list}))}
 async function schedTodo(x){if(!LN)return;await cancelN(x.nid);const at=new Date(x.date+'T'+(x.time||'09:00'));if(!x.time||at<=new Date()||x.done)return;
-await safe(()=>LN.schedule({notifications:[{id:x.nid,title:'',body:t('todoNotifB',x.text),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
+await safe(()=>LN.schedule({notifications:[{id:x.nid,title:'',body:nlb('lbTodo',t('todoNotifB',x.text)),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
 function PA(){return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PendingActions}
 let draining=0;
 async function drainPending(){const p=PA();if(!p||draining)return;draining=1;try{const r=await safe(()=>p.drain());const it=(r&&r.items)||[];let ch=0;
@@ -896,7 +916,7 @@ const ic=n=>`<svg class="ic" viewBox="0 0 24 24">${IC[n]}</svg>`;
 const TABS=['home','cal','up','rep','more'];
 const ICONS={rep:'<path d="M5 20V10M12 20V4M19 20v-7"/>',more:'<circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/>',home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',up:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'};
 /* Switching tabs only shows/hides the already-rendered views (data changes call render() themselves), so it is instant */
-function tabGo(k){if(k===tab)return;tab=k;
+function tabGo(k){if(k===tab)return;tab=k;document.body.classList.toggle('nofd',k==='more');
 $('#navb').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===k));
 TABS.forEach(z=>$('#v-'+z).classList.toggle('hid',tab!==z));
 $('#v-'+k).querySelectorAll('.tl,.stl').forEach(tlSettle);if(k==='home')hlGo(hlI,false);sfSync()}
@@ -1072,11 +1092,11 @@ $('#fsheet').onclick=e=>{if(e.target.id==='fsheet')closeEdit()};
 $('#scl').onclick=()=>$('#ssheet').classList.remove('show');
 $('#seg').querySelectorAll('button').forEach(b=>b.onclick=()=>inl?fillForm(b.dataset.k,null,null,inl):openForm(b.dataset.k));
 $('#fsave').onclick=async()=>{
-if(fm==='task'&&edTodo){const text=$('#tx').value.trim();if(!text)return;const x=edTodo,old=x.sub||[];x.text=text;x.date=$('#td').value||todayKey;x.time=$('#tmv').value==='00:00'?'':$('#tmv').value;x.pri=pri;x.rep=rep;x.cat=cat;x.sub=$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:!!(old.find(o=>o.t===z)||{}).d}));save();await askPerm();await schedTodo(x)}
-else if(fm==='task'){const text=$('#tx').value.trim();if(!text)return;
+if(fm==='task'&&edTodo){const text=$('#tx').value.trim();if(!text){shake($('#tx'));return}const x=edTodo,old=x.sub||[];x.text=text;x.date=$('#td').value||todayKey;x.time=$('#tmv').value==='00:00'?'':$('#tmv').value;x.pri=pri;x.rep=rep;x.cat=cat;x.sub=$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:!!(old.find(o=>o.t===z)||{}).d}));save();await askPerm();await schedTodo(x)}
+else if(fm==='task'){const text=$('#tx').value.trim();if(!text){shake($('#tx'));return}
 const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:false}))};
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
-else{const name=$('#an').value.trim();if(!name)return;
+else{const name=$('#an').value.trim();if(!name){shake($('#an'));return}
 const vals={name,time:$('#at').value||'00:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
 else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
@@ -1158,7 +1178,7 @@ function openCat(){$('#cn').value='';drawCats();$('#csheet').classList.add('show
 function drawCats(){$('#clist').innerHTML=(S.cats||[]).map(c=>`<div class="g hab" style="--ac:#0000FF"><div class="hi"><b>${ic('tag')} ${esc(c.n)}</b></div><button class="x" data-dc="${c.k}">${ic('x')}</button></div>`).join('');
 $('#clist').querySelectorAll('[data-dc]').forEach(b=>b.onclick=()=>{const k=b.dataset.dc;S.cats=S.cats.filter(c=>c.k!==k);if(fcat===k)fcat='';save();drawCats();render()})}
 $('#ccl').onclick=()=>$('#csheet').classList.remove('show');
-$('#csave').onclick=()=>{const n=$('#cn').value.trim();if(!n)return;S.cats=S.cats||[];S.cats.push({k:'c'+Date.now(),n});save();$('#cn').value='';drawCats();render()};
+$('#csave').onclick=()=>{const n=$('#cn').value.trim();if(!n){shake($('#cn'));return}S.cats=S.cats||[];S.cats.push({k:'c'+Date.now(),n});save();$('#cn').value='';drawCats();render()};
 function buildCt(){const ks=[['',t('cNone')],...catAll().map(k=>[k,catLbl(k)])];$('#ct').innerHTML='<div class="ctin">'+ks.map(([k,n])=>`<button data-v="${k}">${esc(n)}</button>`).join('')+'</div>';
 $('#ct').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.v===cat);b.onclick=()=>{cat=b.dataset.v;$('#ct').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b))}});
 ctIdx=0;ctGo(0,false);setTimeout(()=>{const bs=[...$('#ct').querySelectorAll('button')],i=bs.findIndex(z=>z.classList.contains('on'));if(i>0)ctGo(Math.floor(i/2)*2,false)},80)}
@@ -1297,7 +1317,7 @@ ftDraw()}
 
 
 // ---- interval reminders ----
-let remEditing=null;
+let remEditing=null,remIdx=0,remGo=null;
 const remInt=x=>x.im||(x.every||2)*60;
 const remLbl=m=>{const h=Math.floor(m/60),n=m%60,b=S.set.lang==='bn',a=[];if(h)a.push(h+(b?' ঘণ্টা':' h'));if(n)a.push(n+(b?' মিনিট':' min'));return a.join(' ')};
 const remSlots=x=>{const [fh,fm]=x.from.split(':').map(Number),[th,tm]=x.to.split(':').map(Number),a=fh*60+fm,b=th*60+tm,o=[];for(let m=a;m<=Math.max(a,b)&&o.length<150;m+=remInt(x))o.push(m);return o};
@@ -1309,23 +1329,33 @@ if(/সময়$/.test(n))return n+' হয়েছে, মনে আছে �
 if(/ার$/.test(n))return n+' সময় হয়েছে, মনে আছে তো?';
 return n+': সময় হয়েছে, মনে আছে তো?'}
 async function schedRem(x){if(!LN)return;await cancelMany(remIds(x));if(!x.on)return;await askPerm();
-await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:'',body:remBody(x.name),actionTypeId:'REM',schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
+await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:'',body:nlb('lbRem',remBody(x.name)),actionTypeId:'REM',schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
 function remHtml(){let h=`<h3>${t('remT')}</h3>`;
-h+=S.rems.map(r=>`<div class="g hab" data-rm="${r.id}" style="--ac:#0000FF"><div class="hi"><b>${ic('clock')} ${esc(r.name)}</b><small>${t('remInfo',remLbl(remInt(r)),r.from,r.to)}</small></div><input type="checkbox" data-ron="${r.id}" ${r.on?'checked':''}></div>`).join('');
+h+=`<div class="rsl" id="rsl">`+S.rems.map(r=>`<div class="g hab" data-rm="${r.id}" style="--ac:#0000FF"><div class="hi"><b>${ic('clock')} ${esc(r.name)}</b><small>${t('remInfo',remLbl(remInt(r)),r.from,r.to)}</small></div><input type="checkbox" data-ron="${r.id}" ${r.on?'checked':''}></div>`).join('')+`</div>`;
+if(S.rems.length>1)h+=`<div class="rdt" id="rdt">${S.rems.map((r,i)=>`<i class="${i===remIdx?'on':''}"></i>`).join('')}</div>`;
 return h+`<button class="chip add" id="radd" style="margin-top:4px">${t('remAdd')}</button>`}
+const p2=n=>String(n).padStart(2,'0');
 function openRem(r){remEditing=r?r.id:null;$('#rtitle').textContent=t(r?'remEdit':'remNew');
-$('#rn').value=r?r.name:'';$('#rh').value=r?Math.floor(remInt(r)/60):'';$('#rm').value=r?remInt(r)%60:'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
+$('#rn').value=r?r.name:'';$('#rh').value=r?p2(Math.floor(remInt(r)/60)):'';$('#rm').value=r?p2(remInt(r)%60):'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
 function bindRem(r){
 r.querySelectorAll('[data-ron]').forEach(c=>{c.onclick=e=>e.stopPropagation();c.onchange=()=>{const x=S.rems.find(z=>z.id==c.dataset.ron);x.on=c.checked;save();schedRem(x)}});
 r.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>openRem(S.rems.find(z=>z.id==b.dataset.rm)));
-r.querySelector('#radd').onclick=()=>openRem()}
+r.querySelector('#radd').onclick=()=>openRem();
+const sl=r.querySelector('#rsl');if(sl){const n=S.rems.length,ds=r.querySelectorAll('#rdt i');remIdx=Math.max(0,Math.min(remIdx,n-1));
+sl.addEventListener('scroll',()=>{const w=sl.clientWidth;if(!w)return;const i=Math.max(0,Math.min(n-1,Math.round(sl.scrollLeft/w)));remIdx=i;ds.forEach((d,k)=>d.classList.toggle('on',k===i))},{passive:true});
+requestAnimationFrame(()=>{const w=sl.clientWidth;if(!w)return;sl.scrollLeft=remIdx*w;if(remGo!=null){const g=Math.min(remGo,n-1);remGo=null;setTimeout(()=>sl.scrollTo({left:g*w,behavior:'smooth'}),180)}})}}
 $('#rcl').onclick=()=>$('#rsheet').classList.remove('show');
-$('#rsave').onclick=async()=>{const name=$('#rn').value.trim();if(!name)return;
-const hh=Math.min(23,Math.max(0,parseInt($('#rh').value)||0)),mm=Math.min(59,Math.max(0,parseInt($('#rm').value)||0)),im=hh*60+mm;if(im<5){toast(t('remBad'));return}
+/* hour / minute boxes always show two digits (01, 00, 05); filling one box fills the other with 00 */
+/* tapping a box selects what is in it (00), so the first digit typed replaces it */
+['#rh','#rm','#gm','#gt'].forEach(q=>{const e=$(q);e.addEventListener('focus',()=>{setTimeout(()=>{try{e.select()}catch(_){}},0)});e.addEventListener('click',()=>{try{e.select()}catch(_){}})});
+['#rh','#rm'].forEach(q=>{const e=$(q);e.addEventListener('input',()=>{if(e.value.length>2)e.value=e.value.slice(-2)})});
+[['#rh',23,'#rm'],['#rm',59,'#rh']].forEach(([q,mx,o])=>{const e=$(q),f=$(o);e.addEventListener('blur',()=>{if(e.value==='')return;e.value=p2(Math.min(mx,Math.max(0,parseInt(e.value)||0)));if(f.value==='')f.value='00'})});
+$('#rsave').onclick=async()=>{const name=$('#rn').value.trim();if(!name){if(!(parseInt($('#rh').value)||0)&&!(parseInt($('#rm').value)||0)){shake($('#rh'));shake($('#rm'))}shake($('#rn'));return}
+const hh=Math.min(23,Math.max(0,parseInt($('#rh').value)||0)),mm=Math.min(59,Math.max(0,parseInt($('#rm').value)||0)),im=hh*60+mm;if(im<5){shake($('#rm'));shake($('#rh'));toast(t('remBad'));return}
 const v={name,im,every:Math.max(1,Math.round(im/60)),from:$('#rf').value||'00:00',to:$('#rt').value||'23:59',on:true};let x;
-if(remEditing){x=S.rems.find(z=>z.id===remEditing);Object.assign(x,v)}else{x=Object.assign({id:Date.now(),nid:S.nid++},v);S.rems.push(x)}
+if(remEditing){x=S.rems.find(z=>z.id===remEditing);Object.assign(x,v)}else{x=Object.assign({id:Date.now(),nid:S.nid++},v);S.rems.push(x);remGo=S.rems.length-1}
 save();$('#rsheet').classList.remove('show');await schedRem(x);render()};
-$('#rdel').onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:t('remDelQ'),ok:t('bkOkB'),cancel:t('cancelT')}))return;const x=S.rems.find(z=>z.id===remEditing);if(!x)return;cancelMany(remIds(x));S.rems=S.rems.filter(z=>z!==x);save();$('#rsheet').classList.remove('show');render()};
+$('#rdel').onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:t('remDelQ'),ok:t('bkOkB'),cancel:t('cancelT')}))return;const x=S.rems.find(z=>z.id===remEditing);if(!x)return;cancelMany(remIds(x));S.rems=S.rems.filter(z=>z!==x);remIdx=Math.max(0,Math.min(remIdx,S.rems.length-1));save();$('#rsheet').classList.remove('show');render()};
 
 // ---- Screen lock: off / fingerprint / PIN / pattern ----
 Object.assign(IC,{unlock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/>',hash:'<path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/>',pattern:'<circle cx="6" cy="6" r="1.7"/><circle cx="18" cy="6" r="1.7"/><circle cx="6" cy="18" r="1.7"/><circle cx="18" cy="18" r="1.7"/><path d="M7.5 6h9M17 7.5L7 16.5M7.5 18h9"/>'});
@@ -1512,7 +1542,9 @@ function fitFsn(){const e=document.querySelector('.fsn');if(!e||!e.offsetParent)
 {const _rm=renderMore;renderMore=function(){_rm.apply(this,arguments);fitFsn()}}
 window.addEventListener('resize',fitFsn);fitFsn();
 /* ---- end time picker ---- */
-const obDone=()=>{const v=$('#obn').value.trim();if(!v){const e=$('#obn');e.classList.remove('err');void e.offsetWidth;e.classList.add('err');e.focus();return}S.set.name=v;save();$('#onb').classList.add('hid');render()};
+/* mandatory field left empty: the box turns red and shakes (its placeholder text turns red too) until the person types */
+function shake(el){if(!el)return;el.classList.remove('shk');void el.offsetWidth;el.classList.add('shk');try{el.focus()}catch(e){}const f=()=>{el.classList.remove('shk');el.removeEventListener('input',f)};el.addEventListener('input',f)}
+const obDone=()=>{const v=$('#obn').value.trim();if(!v){shake($('#obn'));return}S.set.name=v;save();$('#onb').classList.add('hid');render()};
 $('#obgo').onclick=obDone;$('#obn').onkeydown=e=>{if(e.key==='Enter')obDone()};
 migMood();regActions().then(()=>rescheduleAll());render();if(!S.set.name)$('#onb').classList.remove('hid');
 holSync();gazSync();
