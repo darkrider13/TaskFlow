@@ -305,7 +305,7 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 #onb .obr{display:flex;align-items:center;gap:16px}
 #onb .oba{width:56px;height:56px;border-radius:50%;flex:none;background:var(--glass2);color:var(--muted);display:flex;align-items:center;justify-content:center}
 #onb .oba .ic{width:26px;height:26px;fill:currentColor;stroke:none}
-#onb #obn{flex:1;min-width:0;height:auto;padding:14px 0;border:0;border-bottom:1px solid var(--obl);border-radius:0;background:transparent;font-size:18px;color:var(--ink);outline:0}
+#onb #obn{flex:1;min-width:0;height:auto;padding:10px 0;line-height:1.8;border:0;border-bottom:1px solid var(--obl);border-radius:0;background:transparent;font-size:18px;color:var(--ink);outline:0}
 #onb #obn,#onb #obn:focus{border-bottom-color:#fff}:root[data-theme=light] #onb #obn,:root[data-theme=light] #onb #obn:focus{border-bottom-color:#000}
 #onb #obn.err{border-bottom-color:#fff;animation:obsh .3s}
 @keyframes obsh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
@@ -362,9 +362,9 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 .holw .holn{flex:0 0 calc(100% - 8px);margin:0 4px;padding:6px 10px;font-size:13px;line-height:1.35;border-radius:10px;text-align:center;scroll-snap-align:center;scroll-snap-stop:always}
 .holx{position:relative;margin:0 0 6px}
 .holx .holw{margin:0 -4px}
-.holx .holn{padding:6px 30px}
-.ha{position:absolute;top:50%;transform:translateY(-50%);font-size:20px;font-weight:700;line-height:1;pointer-events:none;transition:opacity .15s}
-.ha.l{left:12px}.ha.r{right:12px}.ha.off{opacity:0}
+.holx .holn{padding:6px 30px;position:relative}
+.ha{position:absolute;top:50%;transform:translateY(-50%);font-size:20px;font-weight:700;line-height:1;pointer-events:none;color:inherit}
+.ha.l{left:12px}.ha.r{right:12px}.ha{transition:opacity .15s}.holw.sl .ha{opacity:0}
 #panel{padding:12px 14px}
 #panel .ph{margin-bottom:8px}
 #panel .todo{padding:7px 10px;margin-bottom:5px;gap:8px}
@@ -669,13 +669,13 @@ for(const n of nm){if(Math.floor(hxSid(n)/30)===5&&+hKey(new Date(n)).slice(0,4)
 for(const m of ms){if(!m.ok)continue;
 if(m.sg===5){[[6,'Maha Shashthi','মহাষষ্ঠী','o'],[7,'Maha Saptami','মহাসপ্তমী','o'],[8,'Maha Ashtami','মহাঅষ্টমী','o'],[9,'Durga Puja (Mahanabami)','দুর্গাপূজা (মহানবমী)','g'],[10,'Durga Puja (Bijoya Dashami)','দুর্গাপূজা (বিজয়া দশমী)','g']].forEach(([t,e,b,k])=>{const d=last(m,t);if(d!==null){put(r[k],d,e,b);if(t===10)put(r.g,d+D,'Durga Puja holiday','দুর্গাপূজার ছুটি')}});
 let lp=null,kp=null;for(const d of days(m)){if(tN(d)===15&&d>=d0(m.s))lp=d;if(tM(d)===30&&d>=d0(m.s)+10*D)kp=d}
-if(lp!==null)put(r.o,lp,'Lakshmi Puja (Kojagari)','লক্ষ্মী পূজা (কোজাগরী)');
-if(kp!==null){put(r.o,kp,'Kali Puja / Shyama Puja / Diwali','কালী পূজা / শ্যামা পূজা / দীপাবলি');for(let d=kp+D;d<=kp+6*D;d+=D)if(tS(d)===2){put(r.o,d,'Bhai Phota','ভাইফোঁটা');break}}}
+if(lp!==null)put(r.o,lp,'Lakshmi Puja','লক্ষ্মী পূজা');
+if(kp!==null){put(r.o,kp,'Kali Puja / Diwali','কালী পূজা / দীপাবলি');for(let d=kp+D;d<=kp+6*D;d+=D)if(tS(d)===2){put(r.o,d,'Bhai Phota','ভাইফোঁটা');break}}}
 if(m.sg===0){const d=last(m,15);if(d!==null)put(r.g,d,'Buddha Purnima','বুদ্ধ পূর্ণিমা')}
 if(m.sg===2){const d=last(m,2);if(d!==null)put(r.o,d,'Rath Yatra','রথযাত্রা')}
 if(m.sg===3){let j=null;for(const d of days(m))if(tM(d)===23&&d>=d0(m.s)+10*D){j=d;break}if(j!==null)put(r.g,j,'Janmashtami','জন্মাষ্টমী')}
 if(m.sg===9){const d=last(m,5);if(d!==null)put(r.o,d,'Saraswati Puja','সরস্বতী পূজা');let q=null;for(const x of days(m))if(tM(x)===29&&x>=d0(m.s)+10*D)q=x;if(q!==null)put(r.o,q,'Maha Shivaratri','মহাশিবরাত্রি')}
-if(m.sg===10){const d=last(m,15);if(d!==null)put(r.o,d,'Dol Jatra / Holi','দোলযাত্রা / হোলি')}}
+if(m.sg===10){const d=last(m,15);if(d!==null)put(r.o,d,'Dol Jatra','দোলযাত্রা')}}
 return r}
 /* Estimated list for a year: g = govt (moon based, only until the feed covers the year), o = other observances */
 function holCalc(y,withG){const g=[],o=[],put=(L,d,e,b)=>{const k=hKey(d);if(+k.slice(0,4)===y)L.push([k.slice(5),e,b])};
@@ -737,7 +737,7 @@ if(/meraj|miraj/.test(q))return 'শবে মেরাজ';
 if(/islamic new year|hijri/.test(q))return 'ইসলামি নববর্ষ';
 return p};
 return String(en).split(' / ').map(tr).join(' / ')}
-function holInfo(k){const y=+k.slice(0,4),md=k.slice(5),i=S.set.lang==='bn'?1:0,Y=holYear(y),nmf=x=>i?bnFix(x[0],x[1]):x[0],nm=a=>(a||[]).map(nmf),MN=/barat|qadr|jumatul|wida|bida|fitr|adha|azha|ashura|milad/i,dd=Math.round((new Date(y,+md.slice(0,2)-1,+md.slice(3,5))-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5),nx=a=>(a||[]).map(x=>nmf(x)+((x[2]||(MN.test(x[0])&&dd>3&&!gazOK(y)))?' ('+(i?'অনিশ্চিত':'unconfirmed')+')':''));return {g:nm(Y.g[md]),o:nm(Y.o[md]),gx:nx(Y.g[md])}}
+function holInfo(k){const y=+k.slice(0,4),md=k.slice(5),i=S.set.lang==='bn'?1:0,Y=holYear(y),uq=a=>a.filter((v,j)=>a.indexOf(v)===j),nmf=x=>{const n=String(i?bnFix(x[0],x[1]):x[0]).replace(/Jumatul\s+(?:Bida|Vida)/i,'Jumatul Wida'),c=n.replace(/\s*[\(（][^)）]*[\)）]/g,'').replace(/\s{2,}/g,' ').trim();return c||n},nm=a=>uq((a||[]).map(nmf)),MN=/barat|qadr|jumatul|wida|bida|fitr|adha|azha|ashura|milad/i,dd=Math.round((new Date(y,+md.slice(0,2)-1,+md.slice(3,5))-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5),nx=a=>uq((a||[]).map(x=>nmf(x)+((x[2]||(MN.test(x[0])&&dd>3&&!gazOK(y)))?' ('+(i?'অনিশ্চিত':'unconfirmed')+')':'')));return {g:nm(Y.g[md]),o:nm(Y.o[md]),gx:nx(Y.g[md])}}
 const holOf=k=>holInfo(k).g;
 function holIcs(txt){const ev=[];let cur=null;
 String(txt).replace(/\r?\n[ \t]/g,'').split(/\r?\n/).forEach(l=>{
@@ -1053,12 +1053,12 @@ function showDay(k,kind){
 formBack();
 const a=act(),p=$('#panel'),_st=($('#tl')||{}).scrollTop||0;
 let h=`<div class="ph"><h2>${fdate(k,{weekday:'long',day:'numeric',month:'long'})}</h2><button class="x" id="cl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
-{const hi=holInfo(k);const hl=[...(hi.g.length?hi.gx:[]).map(x=>`<div class="holn">${esc(x)}</div>`),...(hi.o.length?hi.o:[]).map(x=>`<div class="holn o">${esc(x)}</div>`)];if(hl.length){const hw=`<div class="holw">${hl.join('')}</div>`;h+=hl.length>1?`<div class="holx">${hw}<b class="ha l off">«</b><b class="ha r">»</b></div>`:hw}}
+{const hi=holInfo(k);const hr=[...(hi.g.length?hi.gx:[]).map(x=>[x,'']),...(hi.o.length?hi.o:[]).map(x=>[x,' o'])];const hl=hr.map(([x,c],i)=>`<div class="holn${c}">${i>0?'<b class="ha l">«</b>':''}${esc(x)}${i<hr.length-1?'<b class="ha r">»</b>':''}</div>`);if(hl.length){const hw=`<div class="holw">${hl.join('')}</div>`;h+=hl.length>1?`<div class="holx">${hw}</div>`:hw}}
 if(a){const on=(S.marks[a.id]||{})[k];h+=`<div class="hrow"><button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button><button class="ib" id="ed" aria-label="${t('edit')}">${ic('edit')}</button><button class="ib red" id="del" aria-label="${t('del')}">${ic('trash')}</button></div>`}
 const _tl=a?'':S.todos.filter(x=>x.date===k).map(x=>taskHtml(x,{cx:1})).join('');h+=_tl?`<div class="tl" data-n="2">${_tl}</div>`:'';
 if(!a)h+=`<div id="dadd" style="margin-top:14px"></div>`;
 p.innerHTML=h;$('#sheet').classList.add('show');
-{const hw=p.querySelector('.holx .holw');if(hw){const L=p.querySelector('.ha.l'),R=p.querySelector('.ha.r'),c=hw.children.length,up=()=>{const n=Math.min(c-1,Math.max(0,Math.round(hw.scrollLeft/hw.clientWidth)));L.classList.toggle('off',n<=0);R.classList.toggle('off',n>=c-1);L.style.color=R.style.color=getComputedStyle(hw.children[n]).color};up();hw.addEventListener('scroll',up,{passive:true})}}
+{const hw=p.querySelector('.holx .holw');if(hw){let t,dn=0;const ok=()=>{const w=hw.clientWidth;return Math.abs(hw.scrollLeft-Math.round(hw.scrollLeft/w)*w)<1.5},chk=()=>{clearTimeout(t);if(dn)return;if(ok())hw.classList.remove('sl');else t=setTimeout(chk,80)},hide=()=>{hw.classList.add('sl');clearTimeout(t);t=setTimeout(chk,120)};hw.addEventListener('scroll',hide,{passive:true});hw.addEventListener('touchmove',()=>{dn=1;hw.classList.add('sl')},{passive:true});['touchend','touchcancel'].forEach(n=>hw.addEventListener(n,()=>{dn=0;chk()},{passive:true}))}}
 if(!a){const d=$('#dadd');FP.forEach(s=>d.appendChild($(s)));inl=k;fillForm(kind||'task',null,null,k)}
 $('#cl').onclick=()=>$('#sheet').classList.remove('show');
 const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else S.marks[a.id][k]=1;save();$('#sheet').classList.remove('show');render()}}
