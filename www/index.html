@@ -96,10 +96,11 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .navb svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .fabi{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;border-radius:50%;border:1px solid var(--edge);background:#000;color:#fff;font-size:.85em;line-height:1;vertical-align:middle;margin:0 .15em}
 .fab{position:fixed;right:20px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);width:46px;height:46px;border-radius:50%;border:1px solid var(--edge);background:#000;color:#fff;font-size:24px;line-height:1;z-index:5}
-.sheet{position:fixed;inset:0;background:var(--shade);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:none;align-items:flex-end;z-index:10}
+.sheet{position:fixed;inset:0;background:var(--shade);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;z-index:10}
 body:has(.sheet.show) .fab{visibility:hidden}
 .sheet.show{display:flex}
-.panel{width:100%;border-radius:22px 22px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 16px);max-height:90vh;overflow:auto;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);border-bottom:0}
+.panel{width:100%;border-radius:22px;padding:16px;max-height:88vh;overflow:auto;background:var(--panel);-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);border:1px solid var(--edge);animation:shin .18s ease-out}
+@keyframes shin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 .panel h2{font-size:18px;margin:0}
 .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .x{width:36px;height:36px;border-radius:50%;border:0;box-shadow:none;background:transparent;color:var(--ink);font-size:16px;flex:none}
@@ -115,6 +116,7 @@ body:has(.sheet.show) .fab{visibility:hidden}
 .row label{font-size:14px;flex:1}
 input[type=text],input[type=time],input[type=number],input[type=date]{padding:11px;border-radius:12px;border:1px solid var(--edge);font-size:15px;background:var(--glass2);color:var(--ink);outline:0;font-family:inherit}
 input[type=text]{flex:1;min-width:0}input[type=number]{width:90px}
+#rpre{flex:1;min-width:0;height:34px;padding:0 8px;border-radius:9px;border:1px solid var(--edge);font-size:13px;font-family:inherit;background:var(--glass2);color:var(--ink);outline:0}
 ::placeholder{color:var(--muted)}
 .row>button{padding:13px 16px;border-radius:12px;border:1px solid var(--edge);background:var(--glass2);color:var(--ink);font-size:15px}
 .link{background:none;border:0;padding:10px 12px 0 0;font-size:14px;color:var(--muted)}
@@ -353,6 +355,27 @@ input[type=time].tpx,input[type=date].tpx{display:none}
 :root[data-theme=light] .row>button.tpb{background:#fff;color:#000;border:1px solid rgba(16,37,58,.25)}
 :root:not([data-theme=light]) .row>button.tpb{background:#000;color:#fff;border:1px solid var(--edge)}
 :root:not([data-theme=light]) #ta,:root:not([data-theme=light]) #fsave,:root:not([data-theme=light]) #usave,:root:not([data-theme=light]) #rsave,:root:not([data-theme=light]) #csave{background:#fff;color:#000;border:0;font-weight:700}
+:root:not([data-theme=light]) #th,:root:not([data-theme=light]) #lg,:root:not([data-theme=light]) #stex,:root:not([data-theme=light]) #stim,:root:not([data-theme=light]) #bcp,:root:not([data-theme=light]) #bfile,:root:not([data-theme=light]) #bpaste,:root:not([data-theme=light]) .pri button:not(.on),:root:not([data-theme=light]) .wdays button:not(.on){background:#000!important;color:#fff;border:1px solid var(--edge)}
+:root[data-theme=light] #th,:root[data-theme=light] #lg,:root[data-theme=light] #stex,:root[data-theme=light] #stim,:root[data-theme=light] #bcp,:root[data-theme=light] #bfile,:root[data-theme=light] #bpaste,:root[data-theme=light] .pri button:not(.on),:root[data-theme=light] .wdays button:not(.on){background:#fff!important;color:#000;border:1px solid rgba(16,37,58,.25)}
+#fsave,#rsave,#usave,#bpaste{margin-top:14px}
+.holw{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -4px 6px;-webkit-overflow-scrolling:touch}
+.holw::-webkit-scrollbar{display:none}
+.holw .holn{flex:0 0 calc(100% - 8px);margin:0 4px;padding:6px 10px;font-size:13px;line-height:1.35;border-radius:10px;text-align:center;scroll-snap-align:center;scroll-snap-stop:always}
+.holx{position:relative;margin:0 0 6px}
+.holx .holw{margin:0 -4px}
+.holx .holn{padding:6px 30px}
+.ha{position:absolute;top:50%;transform:translateY(-50%);font-size:20px;font-weight:700;line-height:1;pointer-events:none;transition:opacity .15s}
+.ha.l{left:12px}.ha.r{right:12px}.ha.off{opacity:0}
+#panel{padding:12px 14px}
+#panel .ph{margin-bottom:8px}
+#panel .todo{padding:7px 10px;margin-bottom:5px;gap:8px}
+#panel .todo span{font-size:14px}
+#panel .todo input[type=checkbox]{width:22px;height:22px;border-radius:7px}
+#dadd{margin-top:8px!important}
+#dadd .row{margin-top:5px}
+#dadd .seg{margin-bottom:2px}
+#dadd textarea{min-height:44px;height:44px;margin-top:5px}
+#dadd #fsave{margin-top:8px}
 .row>input#rh,.row>input#rm{width:66px;min-width:66px;max-width:66px;height:34px;padding:0 6px;font-size:12.5px;text-align:center;box-sizing:border-box;flex:none}
 .tl>.dg{scroll-snap-align:start;display:flow-root}
 .dg .tl{overscroll-behavior:auto}
@@ -436,7 +459,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div class="row"><label data-i="catL"></label><div class="pri" id="ct"><button data-v="" data-i="cNone"></button><button data-v="study" data-i="cStudy"></button><button data-v="work" data-i="cWork"></button><button data-v="personal" data-i="cPers"></button></div></div>
 <textarea id="sb" rows="4" data-p="subPh"></textarea></div>
 <div id="f-habit"><div class="row"><input type="text" id="an" data-p="namePh"></div>
-<div class="row"><label data-i="askTime"></label><input type="time" id="at" value="21:00"></div>
+<div class="row"><label data-i="askTime"></label><input type="time" id="at" value="00:00"></div>
 <div class="row"><label data-i="gmL"></label><input type="number" id="gm" min="0" max="31" value="00"></div>
 <div class="row"><label data-i="gtL"></label><input type="number" id="gt" min="0" value="00"></div>
 <div class="row"><label data-i="strL"></label><button type="button" class="tpb dpb" id="stb"></button></div>
@@ -472,7 +495,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <h3 data-i="dataT"></h3>
 <div class="row" style="margin-top:0"><button style="flex:1" id="stex" data-i="expT" data-ic="export"></button><button style="flex:1" id="stim" data-i="impT" data-ic="import"></button></div>
 
-<button class="big" id="stsave" data-i="save" style="margin:16px 0 0"></button>
+<button class="big" id="stsave" data-i="save" style="margin:22px 0 0"></button>
 </div></div>
 <div class="sheet" id="csheet"><div class="panel">
 <div class="ph"><h2 data-i="catNewT"></h2><button class="x" id="ccl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -481,10 +504,11 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 </div></div>
 <div class="sheet" id="rsheet"><div class="panel">
 <div class="ph"><h2 id="rtitle"></h2><button class="x" id="rcl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+<div class="row" id="rprow"><select id="rpre"></select></div>
 <div class="row"><input type="text" id="rn" data-p="remNamePh"></div>
 <div class="row"><label data-i="remEvery"></label><input type="number" id="rh" min="0" max="23" placeholder="HH" inputmode="numeric"><input type="number" id="rm" min="0" max="59" placeholder="MM" inputmode="numeric"></div>
-<div class="row"><label data-i="remFrom"></label><input type="time" id="rf" value="08:00"></div>
-<div class="row"><label data-i="remTo"></label><input type="time" id="rt" value="22:00"></div>
+<div class="row"><label data-i="remFrom"></label><input type="time" id="rf" value="00:00"></div>
+<div class="row"><label data-i="remTo"></label><input type="time" id="rt" value="23:59"></div>
 <div class="row"><button style="flex:1" id="rsave" data-i="save"></button></div>
 <button class="link red hid" id="rdel" data-i="del"></button>
 </div></div>
@@ -499,7 +523,7 @@ did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo
 edit:'Edit & goals',del:'Delete',delT:'Delete?',bkCopT:'Copied',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
 newT:'Add new',editT:'Edit habit',editTk:'Edit task',namePh:'Write a name for your habit',askTime:'Ask me every day at',
 gmL:'Monthly goal',gtL:'Overall goal',save:'Save',
-notifT:'Did you do it today?',notifB:n=>`${n}, did you do it?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
+notifT:'Did you do it today?',notifB:n=>`Did you complete today's ${n}?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
 tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',noHabH:'No habits left for today.',dailyR:'Daily reminders',noDailyR:'No daily reminders yet.',
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
 segTask:'Task',segHabit:'Habit',taskPh:'Write your task',dateL:'Date',timeL:'Time',priL:'Priority',p0:'Normal',p1:'Medium',p2:'High',
@@ -524,7 +548,7 @@ did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'�
 edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',delT:'মুছে ফেলবেন?',bkCopT:'কপি হয়েছে',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
 newT:'নতুন যোগ করুন',editT:'অভ্যাস সম্পাদনা',editTk:'করণীয় সম্পাদনা',namePh:'অভ্যাসের একটি নাম লিখুন',askTime:'প্রতিদিন মনে করানোর সময়',
 gmL:'মাসিক লক্ষ্য',gtL:'সব মিলিয়ে লক্ষ্য',save:'সংরক্ষণ করুন',
-notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`${n}, কাজটি করেছেন কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
+notifT:'আজকের কাজটি কি করেছেন?',notifB:n=>`আজকের ${n} সম্পন্ন হয়েছে কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
 tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',noHabH:'আজকের জন্য আর কোনো অভ্যাস বাকি নেই।',dailyR:'প্রতিদিনের মনে করানো',noDailyR:'এখনো কোনো প্রতিদিনের মনে করানো নেই।',
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
 segTask:'করণীয়',segHabit:'অভ্যাস',taskPh:'করণীয়টি লিখুন',dateL:'তারিখ',timeL:'সময়',priL:'অগ্রাধিকার',p0:'সাধারণ',p1:'মাঝারি',p2:'জরুরি',
@@ -790,13 +814,13 @@ const cancelN=id=>safe(()=>LN&&LN.cancel({notifications:[{id}]}));
 const cancelMany=ids=>safe(()=>LN&&LN.cancel({notifications:ids.map(id=>({id}))}));
 const actIds=a=>[a.nid,...[0,1,2,3,4,5,6].map(d=>1000000+a.nid*10+d)];
 async function regActions(){if(!LN)return;const Y={id:'yes',title:t('yesA')},N={id:'no',title:t('noA')};
-await safe(()=>LN.registerActionTypes({types:[{id:'ACT',actions:[Y,N]},{id:'TODO',actions:[Y,N,{id:'snooze',title:t('snooze')}]}]}));const pa=PA();if(pa)await safe(()=>pa.setTitles({yes:t('yesA'),no:t('noA'),snooze:t('snooze')}))}
+await safe(()=>LN.registerActionTypes({types:[{id:'ACT',actions:[Y,N]},{id:'TODO',actions:[Y,N,{id:'snooze',title:t('snooze')}]},{id:'REM',actions:[Y,N]}]}));const pa=PA();if(pa)await safe(()=>pa.setTitles({yes:t('yesA'),no:t('noA'),snooze:t('snooze')}))}
 async function schedAct(a){if(!LN)return;await cancelMany(actIds(a));const [h,m]=a.time.split(':').map(Number);
-const base={title:t('notifT'),body:t('notifB',a.name),actionTypeId:'ACT',extra:{kind:'habit',id:a.id}};
+const base={title:'',body:t('notifB',a.name),actionTypeId:'ACT',extra:{kind:'habit',id:a.id}};
 const list=(a.days&&a.days.length)?a.days.map(d=>({...base,id:1000000+a.nid*10+d,schedule:{on:{weekday:d+1,hour:h,minute:m},allowWhileIdle:true}})):[{...base,id:a.nid,schedule:{on:{hour:h,minute:m},allowWhileIdle:true}}];
 await safe(()=>LN.schedule({notifications:list}))}
 async function schedTodo(x){if(!LN)return;await cancelN(x.nid);const at=new Date(x.date+'T'+(x.time||'09:00'));if(!x.time||at<=new Date()||x.done)return;
-await safe(()=>LN.schedule({notifications:[{id:x.nid,title:t('todoNotifT'),body:t('todoNotifB',x.text),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
+await safe(()=>LN.schedule({notifications:[{id:x.nid,title:'',body:t('todoNotifB',x.text),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
 function PA(){return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PendingActions}
 let draining=0;
 async function drainPending(){const p=PA();if(!p||draining)return;draining=1;try{const r=await safe(()=>p.drain());const it=(r&&r.items)||[];let ch=0;
@@ -1021,7 +1045,7 @@ $('#seg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.datase
 $('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();setStrict();
 buildCt();$('#sb').value=tx?(tx.sub||[]).map((z,i)=>bn(i+1)+'. '+z.t).join('\n'):'';
 $('#tx').value=tx?tx.text:'';$('#td').value=tx?tx.date:(dkey||todayKey);$('#tmv').value=tx&&tx.time?tx.time:'00:00';
-$('#an').value=a?a.name:'';$('#at').value=a?a.time:'21:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';
+$('#an').value=a?a.name:'';$('#at').value=a?a.time:'00:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';
 }
 
 function tlFit(st){const l=$('#tl');if(!l)return;const it=l.querySelectorAll(':scope>.todo');if(it.length>3){const e=it[2];l.style.maxHeight=(e.offsetTop+e.offsetHeight+4)+'px'}l.scrollTop=st||0}
@@ -1029,11 +1053,12 @@ function showDay(k,kind){
 formBack();
 const a=act(),p=$('#panel'),_st=($('#tl')||{}).scrollTop||0;
 let h=`<div class="ph"><h2>${fdate(k,{weekday:'long',day:'numeric',month:'long'})}</h2><button class="x" id="cl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
-{const hi=holInfo(k);if(hi.g.length)h+=`<div class="holn">${hi.gx.map(esc).join('<br>')}</div>`;if(hi.o.length)h+=`<div class="holn o">${hi.o.map(esc).join('<br>')}</div>`}
+{const hi=holInfo(k);const hl=[...(hi.g.length?hi.gx:[]).map(x=>`<div class="holn">${esc(x)}</div>`),...(hi.o.length?hi.o:[]).map(x=>`<div class="holn o">${esc(x)}</div>`)];if(hl.length){const hw=`<div class="holw">${hl.join('')}</div>`;h+=hl.length>1?`<div class="holx">${hw}<b class="ha l off">«</b><b class="ha r">»</b></div>`:hw}}
 if(a){const on=(S.marks[a.id]||{})[k];h+=`<div class="hrow"><button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button><button class="ib" id="ed" aria-label="${t('edit')}">${ic('edit')}</button><button class="ib red" id="del" aria-label="${t('del')}">${ic('trash')}</button></div>`}
 const _tl=a?'':S.todos.filter(x=>x.date===k).map(x=>taskHtml(x,{cx:1})).join('');h+=_tl?`<div class="tl" data-n="2">${_tl}</div>`:'';
 if(!a)h+=`<div id="dadd" style="margin-top:14px"></div>`;
 p.innerHTML=h;$('#sheet').classList.add('show');
+{const hw=p.querySelector('.holx .holw');if(hw){const L=p.querySelector('.ha.l'),R=p.querySelector('.ha.r'),c=hw.children.length,up=()=>{const n=Math.min(c-1,Math.max(0,Math.round(hw.scrollLeft/hw.clientWidth)));L.classList.toggle('off',n<=0);R.classList.toggle('off',n>=c-1);L.style.color=R.style.color=getComputedStyle(hw.children[n]).color};up();hw.addEventListener('scroll',up,{passive:true})}}
 if(!a){const d=$('#dadd');FP.forEach(s=>d.appendChild($(s)));inl=k;fillForm(kind||'task',null,null,k)}
 $('#cl').onclick=()=>$('#sheet').classList.remove('show');
 const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else S.marks[a.id][k]=1;save();$('#sheet').classList.remove('show');render()}}
@@ -1052,7 +1077,7 @@ else if(fm==='task'){const text=$('#tx').value.trim();if(!text)return;
 const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:false}))};
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name)return;
-const vals={name,time:$('#at').value||'21:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
+const vals={name,time:$('#at').value||'00:00',goalM:Math.min(31,Math.max(0,parseInt($('#gm').value)||0)),goalT:parseInt($('#gt').value)||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
 else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
 sel=a.id;save();await askPerm();await schedAct(a)}
@@ -1277,13 +1302,25 @@ const remInt=x=>x.im||(x.every||2)*60;
 const remLbl=m=>{const h=Math.floor(m/60),n=m%60,b=S.set.lang==='bn',a=[];if(h)a.push(h+(b?' ঘণ্টা':' h'));if(n)a.push(n+(b?' মিনিট':' min'));return a.join(' ')};
 const remSlots=x=>{const [fh,fm]=x.from.split(':').map(Number),[th,tm]=x.to.split(':').map(Number),a=fh*60+fm,b=th*60+tm,o=[];for(let m=a;m<=Math.max(a,b)&&o.length<150;m+=remInt(x))o.push(m);return o};
 const remIds=x=>[...Array.from({length:24},(_,i)=>4000000+x.nid*30+i),...Array.from({length:150},(_,i)=>5000000+x.nid*200+i)];
+const REM_PRESETS=[
+['স্বাস্থ্য ও সুস্থতা',['পানি পান করার','ওষুধ খাওয়ার','ফল খাওয়ার','স্বাস্থ্যকর খাবার খাওয়ার','হাঁটতে যাওয়ার','ব্যায়াম করার','মেডিটেশন করার','দাঁত ব্রাশ করার','ত্বকের যত্ন নেওয়ার','ঘুমাতে যাওয়ার']],
+['পড়াশোনা',['পড়াশোনা করার','নোট লেখার','পড়া রিভিশন দেওয়ার','মুখস্থ করার','বই পড়ার','অনুশীলন করার','পড়াশোনার লক্ষ্য পূরণের','নতুন কিছু শেখার','প্র্যাকটিস করার','পড়াশোনার অগ্রগতি যাচাই করার']],
+['কাজ',['কাজ শুরু করার','টু-ডু লিস্ট দেখার','গুরুত্বপূর্ণ কাজটি করার']]];
+function remBody(n){n=String(n||'').trim().replace(/[,।.?\s]+$/,'');
+if(S.set.lang!=='bn')return `Time for ${n} - remember?`;
+if(/সময়\s*হয়েছে$/.test(n))return n+', মনে আছে তো?';
+if(/সময়$/.test(n))return n+' হয়েছে, মনে আছে তো?';
+if(/ার$/.test(n))return n+' সময় হয়েছে, মনে আছে তো?';
+return n+': সময় হয়েছে, মনে আছে তো?'}
+(function(){const sel=$('#rpre');if(!sel)return;sel.innerHTML='<option value="">তালিকা থেকে বেছে নিন</option>'+REM_PRESETS.map(g=>`<optgroup label="${g[0]}">`+g[1].map(p=>`<option value="${p} সময় হয়েছে">${p} সময় হয়েছে</option>`).join('')+'</optgroup>').join('');
+sel.onchange=()=>{if(sel.value)$('#rn').value=sel.value;sel.value=''}})();
 async function schedRem(x){if(!LN)return;await cancelMany(remIds(x));if(!x.on)return;await askPerm();
-await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:t('todoNotifT'),body:x.name,schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
+await safe(()=>LN.schedule({notifications:remSlots(x).map((m,i)=>({id:5000000+x.nid*200+i,title:'',body:remBody(x.name),actionTypeId:'REM',schedule:{on:{hour:Math.floor(m/60),minute:m%60},allowWhileIdle:true}}))}))}
 function remHtml(){let h=`<h3>${t('remT')}</h3>`;
 h+=S.rems.map(r=>`<div class="g hab" data-rm="${r.id}" style="--ac:#0000FF"><div class="hi"><b>${ic('clock')} ${esc(r.name)}</b><small>${t('remInfo',remLbl(remInt(r)),r.from,r.to)}</small></div><input type="checkbox" data-ron="${r.id}" ${r.on?'checked':''}></div>`).join('');
 return h+`<button class="chip add" id="radd" style="margin-top:4px">${t('remAdd')}</button>`}
 function openRem(r){remEditing=r?r.id:null;$('#rtitle').textContent=t(r?'remEdit':'remNew');
-$('#rn').value=r?r.name:'';$('#rh').value=r?Math.floor(remInt(r)/60):'';$('#rm').value=r?remInt(r)%60:'';$('#rf').value=r?r.from:'08:00';$('#rt').value=r?r.to:'22:00';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
+$('#rn').value=r?r.name:'';$('#rprow').classList.toggle('hid',S.set.lang!=='bn');$('#rpre').value='';$('#rh').value=r?Math.floor(remInt(r)/60):'';$('#rm').value=r?remInt(r)%60:'';$('#rf').value=r?r.from:'00:00';$('#rt').value=r?r.to:'23:59';$('#rdel').classList.toggle('hid',!r);$('#rsheet').classList.add('show')}
 function bindRem(r){
 r.querySelectorAll('[data-ron]').forEach(c=>{c.onclick=e=>e.stopPropagation();c.onchange=()=>{const x=S.rems.find(z=>z.id==c.dataset.ron);x.on=c.checked;save();schedRem(x)}});
 r.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>openRem(S.rems.find(z=>z.id==b.dataset.rm)));
@@ -1291,7 +1328,7 @@ r.querySelector('#radd').onclick=()=>openRem()}
 $('#rcl').onclick=()=>$('#rsheet').classList.remove('show');
 $('#rsave').onclick=async()=>{const name=$('#rn').value.trim();if(!name)return;
 const hh=Math.min(23,Math.max(0,parseInt($('#rh').value)||0)),mm=Math.min(59,Math.max(0,parseInt($('#rm').value)||0)),im=hh*60+mm;if(im<5){toast(t('remBad'));return}
-const v={name,im,every:Math.max(1,Math.round(im/60)),from:$('#rf').value||'08:00',to:$('#rt').value||'22:00',on:true};let x;
+const v={name,im,every:Math.max(1,Math.round(im/60)),from:$('#rf').value||'00:00',to:$('#rt').value||'23:59',on:true};let x;
 if(remEditing){x=S.rems.find(z=>z.id===remEditing);Object.assign(x,v)}else{x=Object.assign({id:Date.now(),nid:S.nid++},v);S.rems.push(x)}
 save();$('#rsheet').classList.remove('show');await schedRem(x);render()};
 $('#rdel').onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:t('remDelQ'),ok:t('bkOkB'),cancel:t('cancelT')}))return;const x=S.rems.find(z=>z.id===remEditing);if(!x)return;cancelMany(remIds(x));S.rems=S.rems.filter(z=>z!==x);save();$('#rsheet').classList.remove('show');render()};
