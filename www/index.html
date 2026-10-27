@@ -63,7 +63,7 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .mini{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;text-align:center}
 .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
 .pl{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;margin:10px 0 5px}
-.pl em{font-style:normal;font-weight:700}
+.pl em{font-style:normal;font-weight:700}.cnt{display:flex;gap:12px;align-items:center;white-space:nowrap}.cnt i{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-weight:700}.cnt .ic{width:16px;height:16px;stroke-width:2.8}.cnt .ck{color:#00FF00}.cnt .cx{color:#FF0000}
 .mnav{display:flex;align-items:center;justify-content:center;min-height:40px;margin-bottom:6px}
 .mnav button{background:none;border:0;font-size:24px;padding:6px 14px;color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
@@ -603,7 +603,7 @@ let S;try{S=JSON.parse(localStorage.getItem('hb')||'null')}catch(e){}
 S=S||{acts:[],marks:{},todos:[],nid:1};
 {const CM={'#14B8A6':'#00FFFF','#3B82F6':'#0000FF','#8B5CF6':'#8000FF','#F97316':'#FF8000','#EC4899':'#FF0080','#84CC16':'#00FF00'};(S.acts||[]).forEach(x=>{const m=CM[String(x.color).toUpperCase()];if(m)x.color=m})}
 {const used=new Set();(S.acts||[]).forEach(x=>{let c=String(x.color||'').toUpperCase();if(!c||used.has(c)){x.color=pickColor(used);c=x.color.toUpperCase()}used.add(c)})}
-S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];
+S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.nos=S.nos||{};S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];
 const save=()=>{try{localStorage.setItem('hb',JSON.stringify(S))}catch(e){}};
 const t=(k,...a)=>{const v=L[S.set.lang][k];return typeof v==='function'?v(...a):v};
 const bn=n=>S.set.lang==='bn'?Number(n).toLocaleString('bn-BD'):String(n);
@@ -853,9 +853,10 @@ await safe(()=>LN.schedule({notifications:list}))}
 async function schedTodo(x){if(!LN)return;await cancelN(x.nid);const at=new Date(x.date+'T'+(x.time||'09:00'));if(!x.time||at<=new Date()||x.done)return;
 await safe(()=>LN.schedule({notifications:[{id:x.nid,title:'',body:nlb('lbTodo',t('todoNotifB',x.text)),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
 function PA(){return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PendingActions}
+function habAns(id,k,yes){S.marks[id]=S.marks[id]||{};S.nos=S.nos||{};S.nos[id]=S.nos[id]||{};if(yes){S.marks[id][k]=1;delete S.nos[id][k]}else{delete S.marks[id][k];S.nos[id][k]=1}}
 let draining=0;
 async function drainPending(){const p=PA();if(!p||draining)return;draining=1;try{const r=await safe(()=>p.drain());const it=(r&&r.items)||[];let ch=0;
-for(const q of it){if(q.kind==='habit'){const a=S.acts.find(z=>z.id===q.id);if(!a||!q.date)continue;S.marks[a.id]=S.marks[a.id]||{};S.marks[a.id][q.date]=1;ch=1}
+for(const q of it){if(q.kind==='habit'){const a=S.acts.find(z=>z.id===q.id);if(!a||!q.date)continue;habAns(a.id,q.date,q.act!=='no');ch=1}
 else if(q.kind==='todo'){const x=S.todos.find(z=>z.id===q.id);if(x&&!x.done){setDone(x,true);ch=1}}}
 if(ch){save();render()}}finally{draining=0}}
 async function rescheduleAll(){await Promise.all([...S.acts.map(a=>schedAct(a)),...S.todos.map(x=>schedTodo(x)),...S.rems.map(r=>schedRem(r))])}
@@ -865,7 +866,7 @@ const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).joi
 function stats(a,y=vy,m=vm){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
 const total=Object.keys(marks).length,month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
 let streak=0;const c=new Date();
-for(let i=0;i<3700;i++){const k=dk(c);if(marks[k])streak++;else if(isSched(a,c)&&k!==todayKey)break;else if(k<a.start)break;c.setDate(c.getDate()-1)}
+for(let i=0;i<3700;i++){const k=dk(c);if(marks[k])streak++;else if((S.nos[a.id]||{})[k])break;else if(isSched(a,c)&&k!==todayKey)break;else if(k<a.start)break;c.setDate(c.getDate()-1)}
 return {total,month,streak}}
 
 function nextDate(k,r,x){const [y,m,d]=k.split('-').map(Number);let c;
@@ -982,7 +983,7 @@ if(ov.length)h=`<button class="g ovl" data-goup><span>${t('ovN',bn(ov.length),ov
 HN=ov.length?5:6;r.classList.toggle('emp',emptyAll&&!ov.length);r.innerHTML=h;bindTasks(r,render);hlSetup();
 r.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{homeTab=b.dataset.ht;renderHome()});
 const go=r.querySelector('[data-goup]');if(go)go.onclick=()=>{tab='up';render();const u=$('#ulist');if(u)u.scrollTop=0};
-r.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{const id=b.dataset.h;S.marks[id]=S.marks[id]||{};if(S.marks[id][todayKey])delete S.marks[id][todayKey];else S.marks[id][todayKey]=1;save();render()});
+r.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{const id=b.dataset.h;S.marks[id]=S.marks[id]||{};if(S.marks[id][todayKey])delete S.marks[id][todayKey];else habAns(id,todayKey,true);save();render()});
 r.querySelectorAll('[data-o]').forEach(b=>b.onclick=e=>{if(e.target.closest('.chk'))return;const a=S.acts.find(z=>z.id===+b.dataset.o);if(a)openForm('habit',a)})}
 
 let upTab='task';
@@ -1027,8 +1028,10 @@ const loc=t('loc'),ch=$('#chips'),inner=document.createElement('div');inner.clas
 S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=sel===a.id?null:a.id;render()};inner.appendChild(b)});
 ch.style.display=S.acts.length?'':'none';ch.appendChild(inner);chGo(chIdx,false);
 const a=act();let h='';
-if(a){const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
-h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span><em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
+if(a){let ck=0,cx=0;{const mk=S.marks[a.id]||{},nk=S.nos[a.id]||{},ld=new Date(vy,vm+1,0).getDate();for(let d=1;d<=ld;d++){const k=key(vy,vm,d);if(mk[k])ck++;else if(nk[k]||(isSched(a,new Date(vy,vm,d))&&k>=a.start&&k<todayKey))cx++}}
+const cnt=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i><i class="cx">${ic('x')}${bn(cx)}</i></span>`;
+const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
+h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:`<div class="pl" style="justify-content:center">${cnt}</div>`}`;
 if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(s.total),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
 else h='';
 $('#info').innerHTML=h;
@@ -1042,6 +1045,7 @@ for(let d=1;d<=last;d++){const k=key(vy,vm,d),b=document.createElement('button')
 let cls='day'+(k===todayKey?' today':'')+(k===pickKey?' pick':'')+((h=>h.g.length?' hol':h.o.length?' hol2':'')(holInfo(k))),inner=bn(d),shown=false;
 const dt=a?[]:S.todos.filter(x=>x.date===k),all=dt.length>0&&dt.every(x=>x.done);if(dt.length&&!all)cls+=' ev';
 if(a){if(marks[k]){cls+=' htick';inner+='<span class="hm">'+ic('check')+'</span>';shown=true}
+else if((S.nos[a.id]||{})[k]){cls+=' hx';inner+='<span class="hm">'+ic('x')+'</span>';shown=true}
 else if(!isSched(a,new Date(vy,vm,d))){cls+=' off'}
 else if(k>=a.start&&k<todayKey){cls+=' hx';inner+='<span class="hm">'+ic('x')+'</span>';shown=true}}
 if(all){if(!shown){cls+=' tick';b.style.setProperty('--tc','var(--mono)')}}else if(dt.length)inner+='<i class="dot"></i>';
@@ -1092,10 +1096,10 @@ p.innerHTML=h;$('#sheet').classList.add('show');
 {const hw=p.querySelector('.holx .holw');if(hw){let t,dn=0;const ok=()=>{const w=hw.clientWidth;return Math.abs(hw.scrollLeft-Math.round(hw.scrollLeft/w)*w)<1.5},chk=()=>{clearTimeout(t);if(dn)return;if(ok())hw.classList.remove('sl');else t=setTimeout(chk,80)},hide=()=>{hw.classList.add('sl');clearTimeout(t);t=setTimeout(chk,120)};hw.addEventListener('scroll',hide,{passive:true});hw.addEventListener('touchmove',()=>{dn=1;hw.classList.add('sl')},{passive:true});['touchend','touchcancel'].forEach(n=>hw.addEventListener(n,()=>{dn=0;chk()},{passive:true}))}}
 if(!a){const d=$('#dadd');FP.forEach(s=>d.appendChild($(s)));inl=k;fillForm(kind||'task',null,null,k)}
 $('#cl').onclick=()=>$('#sheet').classList.remove('show');
-const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else S.marks[a.id][k]=1;save();$('#sheet').classList.remove('show');render()}}
+const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else habAns(a.id,k,true);save();$('#sheet').classList.remove('show');render()}}
 bindTasks(p,()=>{showDay(k,fm);render()});
 const ed=$('#ed');if(ed)ed.onclick=()=>{openForm('habit',a);backDay=k};
-const del=$('#del');if(del)del.onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:esc(t('confirmDel',a.name)),ok:t('bkOkB'),cancel:t('cancelT')}))return;cancelMany(actIds(a));delete S.marks[a.id];S.acts=S.acts.filter(z=>z!==a);sel=S.acts[0]?S.acts[0].id:null;save();$('#sheet').classList.remove('show');render()}}
+const del=$('#del');if(del)del.onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:esc(t('confirmDel',a.name)),ok:t('bkOkB'),cancel:t('cancelT')}))return;cancelMany(actIds(a));delete S.marks[a.id];delete S.nos[a.id];S.acts=S.acts.filter(z=>z!==a);sel=S.acts[0]?S.acts[0].id:null;save();$('#sheet').classList.remove('show');render()}}
 
 ['sheet','ssheet','bsheet','rsheet','stsheet','csheet'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id===id)e.target.classList.remove('show')});
 $('#fcl').onclick=closeEdit;
@@ -1133,8 +1137,8 @@ $('#rp').querySelectorAll('button').forEach(b=>b.onclick=()=>{rep=b.dataset.v;$(
 if(LN)safe(()=>LN.addListener('localNotificationActionPerformed',e=>{
 const ex=e.notification.extra||{},a=S.acts.find(z=>z.id===ex.id),x=S.todos.find(z=>z.id===ex.id),o=ex.kind==='habit'?a:x;if(!o)return;
 if(e.actionId==='snooze'){safe(()=>LN.schedule({notifications:[{id:2000000+o.nid,title:e.notification.title,body:e.notification.body,actionTypeId:e.notification.actionTypeId,extra:ex,schedule:{at:new Date(Date.now()+600000),allowWhileIdle:true}}]}))}
-else if(e.actionId==='yes'||e.actionId==='done'){if(ex.kind==='habit'){S.marks[a.id]=S.marks[a.id]||{};S.marks[a.id][dk(new Date())]=1;save()}else setDone(x,true);render()}
-else if(e.actionId==='no'){render()}}));
+else if(e.actionId==='yes'||e.actionId==='done'){if(ex.kind==='habit'){habAns(a.id,dk(new Date()),true);save()}else setDone(x,true);render()}
+else if(e.actionId==='no'){if(ex.kind==='habit'){habAns(a.id,dk(new Date()),false);save()}render()}}));
 
 const dump=()=>JSON.stringify({app:'taskflow',v:1,at:new Date().toISOString(),data:Object.assign({},S,{lock:undefined})});
 async function clearAllN(){await safe(async()=>{const p=await LN.getPending();if(p.notifications.length)await LN.cancel(p)})}
@@ -1144,7 +1148,7 @@ const MAXB=10*1024*1024;
 async function doImport(txt){if(txt.length>MAXB){await dlg({kind:'bad',title:t('bkBadT'),text:t('imBig'),ok:t('bkOkB')});return}let o;try{o=JSON.parse(txt)}catch(e){await bkBadD();return}
 const d=o&&o.data?o.data:o;if(!d||!Array.isArray(d.acts)||!Array.isArray(d.todos)||!d.marks||typeof d.marks!=='object'){await bkBadD();return}
 if(!await dlg({kind:'import',title:t('bkQT'),text:t('bkQ'),ok:t('bkImB'),cancel:t('cancelT')}))return;
-const ol=S.lock;S=d;if(ol)S.lock=ol;else delete S.lock;S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];migMood();S.nid=Math.max(S.nid||1,...[...S.acts,...S.todos].map(z=>(z.nid||0)+1));
+const ol=S.lock;S=d;if(ol)S.lock=ol;else delete S.lock;S.set=Object.assign({theme:'dark',lang:'bn',name:''},S.set||{});S.nos=S.nos||{};S.diary=S.diary||{};S.focus=S.focus||{};S.rems=S.rems||[];migMood();S.nid=Math.max(S.nid||1,...[...S.acts,...S.todos].map(z=>(z.nid||0)+1));
 sel=S.acts[0]?S.acts[0].id:null;save();$('#bsheet').classList.remove('show');render();
 /* notification re-scheduling can be slow (hundreds of alarms): show a spinner only if it takes more than 0.25s, then the success popup */
 if(LN){let ld=null;const tm=setTimeout(()=>{ld=document.createElement('div');ld.className='dlg';ld.innerHTML=`<div class="dbox" style="text-align:center"><div class="imps"></div><b>${t('impIng')}</b></div>`;document.body.appendChild(ld)},250);try{await clearAllN();await regActions();await rescheduleAll()}finally{clearTimeout(tm);if(ld)ld.remove()}}await dlg({title:t('bkDoneT'),text:t('bkDoneD',d.acts.length,d.todos.length),ok:t('bkOkB')})}
