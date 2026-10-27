@@ -45,21 +45,24 @@ public class NotifActionReceiver extends BroadcastReceiver {
             String src = i.getStringExtra("src");
             NotificationManagerCompat.from(c).cancel(nid);
 
-            if ("yes".equals(aid) || "done".equals(aid)) {
+            boolean isYes = "yes".equals(aid) || "done".equals(aid);
+            if (isYes || "no".equals(aid)) {
                 JSONObject o = new JSONObject(src);
                 JSONObject ex = o.optJSONObject("extra");
                 if (ex == null) return;
+                String kind = ex.optString("kind");
+                // "No" is recorded only for habits (red cross); for to-dos it just dismisses
+                if (!isYes && !"habit".equals(kind)) return;
                 JSONObject item = new JSONObject();
-                item.put("kind", ex.optString("kind"));
+                item.put("kind", kind);
                 item.put("id", ex.opt("id"));
-                item.put("act", "yes");
+                item.put("act", isYes ? "yes" : "no");
                 item.put("date", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date()));
                 item.put("ts", System.currentTimeMillis());
                 enqueue(c, item);
             } else if ("snooze".equals(aid)) {
                 scheduleSnooze(c, base, src);
             }
-            // "no": notification is just dismissed
         } catch (Exception e) {
             // never crash from a background receiver
         }
