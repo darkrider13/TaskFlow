@@ -63,7 +63,7 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .mini{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;text-align:center}
 .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
 .pl{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;margin:10px 0 5px}
-.pl em{font-style:normal;font-weight:700}.cnt{display:flex;gap:12px;align-items:center;white-space:nowrap}.cnt i{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-weight:700}.cnt .ic{width:16px;height:16px;stroke-width:2.8}.cnt .ck{color:#00FF00}.cnt .cx{color:#FF0000}
+.pl em{font-style:normal;font-weight:700;margin-left:auto}.cnt{display:flex;gap:12px;margin-left:22px;align-items:center;white-space:nowrap}.cnt i{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-weight:700}.cnt .ic{width:16px;height:16px;stroke-width:2.8}.cnt .ck{color:#00FF00}.cnt .cx{color:#FF0000}
 .mnav{display:flex;align-items:center;justify-content:center;min-height:40px;margin-bottom:6px}
 .mnav button{background:none;border:0;font-size:24px;padding:6px 14px;color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
@@ -1031,7 +1031,7 @@ const a=act();let h='';
 if(a){let ck=0,cx=0;{const mk=S.marks[a.id]||{},nk=S.nos[a.id]||{},ld=new Date(vy,vm+1,0).getDate();for(let d=1;d<=ld;d++){const k=key(vy,vm,d);if(mk[k])ck++;else if(nk[k]||(isSched(a,new Date(vy,vm,d))&&k>=a.start&&k<todayKey))cx++}}
 const cnt=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i><i class="cx">${ic('x')}${bn(cx)}</i></span>`;
 const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
-h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:`<div class="pl" style="justify-content:center">${cnt}</div>`}`;
+h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:`<div class="pl">${cnt.replace('class="cnt"','class="cnt" style="margin-left:0"')}</div>`}`;
 if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(s.total),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
 else h='';
 $('#info').innerHTML=h;
