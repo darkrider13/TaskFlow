@@ -2,7 +2,11 @@
 <html lang="bn"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TaskFlow</title>
+<script>/* if a screen lock is set, cover the app from the very first paint (no flash of the UI before the lock appears) */
+var _h=document.documentElement;_h.classList.add('pre');setTimeout(function(){_h.classList.remove('pre')},3000);try{var _s=JSON.parse(localStorage.getItem('hb')||'null');if(_s&&_s.lock)_h.classList.add('lk')}catch(e){}</script>
 <style>
+html.pre body>*{visibility:hidden!important}
+html.pre.lk #lock.hid{display:flex;visibility:visible!important}
 :root{--bgc:#000;--bgi:none;--ink:#F4F4F5;--muted:rgba(244,244,245,.56);--glass:rgba(255,255,255,.08);--glass2:rgba(255,255,255,.16);--edge:rgba(255,255,255,.18);--hi:rgba(255,255,255,.2);--sh:rgba(0,0,0,.5);--panel:rgba(22,22,26,.78);--daybg:rgba(255,255,255,.06);--cross:#FF0000;--streak:#FFFF00;--shade:rgba(0,0,0,.6);--ac:#00FFFF;--tink:#041014;--mono:#fff}
 :root[data-theme=light]{--mono:#000;--bgc:#E6EEF5;--bgi:radial-gradient(circle at 12% 6%,rgba(94,234,212,.55),transparent 42%),radial-gradient(circle at 92% 28%,rgba(167,139,250,.45),transparent 45%),radial-gradient(circle at 18% 96%,rgba(251,146,160,.4),transparent 45%);--ink:#10253A;--muted:rgba(16,37,58,.6);--glass:rgba(255,255,255,.5);--glass2:rgba(255,255,255,.78);--edge:rgba(255,255,255,.95);--hi:rgba(255,255,255,.9);--sh:rgba(40,70,110,.18);--panel:rgba(244,249,255,.85);--daybg:rgba(255,255,255,.45);--cross:#FF0000;--streak:#FFC400;--shade:rgba(16,37,58,.35)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -1575,6 +1579,7 @@ migMood();regActions().then(()=>rescheduleAll());render();if(!S.set.name)$('#onb
 holSync();gazSync();
 drainPending();document.addEventListener('visibilitychange',()=>{if(!document.hidden)drainPending()});setInterval(()=>{if(!document.hidden)drainPending()},4000);
 if(S.lock)showLock('unlock');
+document.documentElement.classList.remove('pre','lk');
 bioOk().then(v=>{bioAv=v;bioReady=true;renderMore();if(!$('#lock').classList.contains('hid')){lockDraw();if(lmode==='unlock')tryBio()}});
 
 /* Subtask box (#sb): lines are numbered automatically (১. ২. ৩.) and the box scrolls one line at a time (snap) */
