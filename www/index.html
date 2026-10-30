@@ -1139,13 +1139,13 @@ const nx=dx<0;if(nx){vm++;if(vm>11){vm=0;vy++}}else{vm--;if(vm<0){vm=11;vy--}}re
 const ng=$('#grid');if(ng&&ng.animate)ng.animate([{transform:'translateX('+(nx?36:-36)+'px)',opacity:.2},{transform:'none',opacity:1}],{duration:200,easing:'ease-out'})},{passive:true});
 g.addEventListener('touchcancel',()=>{ok=false},{passive:true})}
 function setGmb(){const n=nv($('#gm'))||0;$('#gmb').textContent=gall?t('gaL'):(n?dig(String(n))+' '+t('gdU'):dig('00'))}
-function gmOpen(){const n0=Math.min(31,nv($('#gm'))||0),n=gall?31:(n0?n0-1:31);
+function gmOpen(){const n0=Math.min(31,nv($('#gm'))||0),n=gall?32:n0;
 tpEl.innerHTML=`<div class="tpc gmp"><div class="tph"><span class="tpi"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg></span><h2>${esc(t('gmL'))}</h2></div><div class="tpws"><div class="tpband"></div><div class="tpcol" id="tpD"></div></div><div class="tpa"><button type="button" class="tpbc" id="tpc">${esc(t('cancelT'))}</button><button type="button" class="tpbs" id="tps">${esc(t('setB'))}</button></div></div>`;
 tpEl.classList.add('show');
-const items=[];for(let i=1;i<=31;i++)items.push(dig(pad(i)));items.push(esc(t('gaL')));
+const items=[dig('00')];for(let i=1;i<=31;i++)items.push(dig(pad(i)));items.push(esc(t('gaL')));
 const g=tpWheel($('#tpD'),items,n,true);
 $('#tpc').onclick=tpClose;
-$('#tps').onclick=()=>{const k=g();if(k===31){gall=1;$('#gm').value=dig('31')}else{gall=0;$('#gm').value=dig(String(k+1))}setGmb();tpClose()}}
+$('#tps').onclick=()=>{const k=g();if(k===32){gall=1;$('#gm').value=dig('31')}else{gall=0;$('#gm').value=k?dig(String(k)):dig('00')}setGmb();tpClose()}}
 $('#gmb').onclick=gmOpen;
 function setStrict(){$('#stb').textContent=t(strict?'strX':'strF');$('#dwrap').classList.toggle('hid',!strict)}
 $('#stb').onclick=()=>{strict=strict?0:1;setStrict()};
