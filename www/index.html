@@ -7,8 +7,8 @@ var _h=document.documentElement;_h.classList.add('pre');setTimeout(function(){_h
 <style>
 html.pre body>*{visibility:hidden!important}
 html.pre.lk #lock.hid{display:flex;visibility:visible!important}
-:root{--bgc:#000;--bgi:none;--ink:#F4F4F5;--muted:rgba(244,244,245,.56);--glass:rgba(255,255,255,.08);--glass2:rgba(255,255,255,.16);--edge:rgba(255,255,255,.18);--hi:rgba(255,255,255,.2);--sh:rgba(0,0,0,.5);--panel:rgba(22,22,26,.78);--daybg:rgba(255,255,255,.06);--cross:#FF0000;--streak:#FFFF00;--shade:rgba(0,0,0,.6);--ac:#00FFFF;--tink:#041014;--mono:#fff}
-:root[data-theme=light]{--mono:#000;--bgc:#E6EEF5;--bgi:radial-gradient(circle at 12% 6%,rgba(94,234,212,.55),transparent 42%),radial-gradient(circle at 92% 28%,rgba(167,139,250,.45),transparent 45%),radial-gradient(circle at 18% 96%,rgba(251,146,160,.4),transparent 45%);--ink:#10253A;--muted:rgba(16,37,58,.6);--glass:rgba(255,255,255,.5);--glass2:rgba(255,255,255,.78);--edge:rgba(255,255,255,.95);--hi:rgba(255,255,255,.9);--sh:rgba(40,70,110,.18);--panel:rgba(244,249,255,.85);--daybg:rgba(255,255,255,.45);--cross:#FF0000;--streak:#FFC400;--shade:rgba(16,37,58,.35)}
+:root{--bgc:#000;--bgi:none;--ink:#F4F4F5;--muted:rgba(244,244,245,.56);--glass:rgba(255,255,255,.08);--glass2:rgba(255,255,255,.16);--edge:rgba(255,255,255,.18);--hi:rgba(255,255,255,.2);--sh:rgba(0,0,0,.5);--panel:rgba(22,22,26,.78);--daybg:rgba(255,255,255,.06);--cross:#FF0000;--shade:rgba(0,0,0,.6);--ac:#00FFFF;--tink:#041014;--mono:#fff}
+:root[data-theme=light]{--mono:#000;--bgc:#E6EEF5;--bgi:radial-gradient(circle at 12% 6%,rgba(94,234,212,.55),transparent 42%),radial-gradient(circle at 92% 28%,rgba(167,139,250,.45),transparent 45%),radial-gradient(circle at 18% 96%,rgba(251,146,160,.4),transparent 45%);--ink:#10253A;--muted:rgba(16,37,58,.6);--glass:rgba(255,255,255,.5);--glass2:rgba(255,255,255,.78);--edge:rgba(255,255,255,.95);--hi:rgba(255,255,255,.9);--sh:rgba(40,70,110,.18);--panel:rgba(244,249,255,.85);--daybg:rgba(255,255,255,.45);--cross:#FF0000;--shade:rgba(16,37,58,.35)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{min-height:100%;background:var(--bgc)}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;background:var(--bgi);background-attachment:fixed;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 0;height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none}
@@ -64,7 +64,10 @@ section.emp #ulist{flex:1;display:flex;flex-direction:column;min-height:0}
 .chip.on{color:var(--tink);font-weight:700;border-color:transparent}
 .chip.add{border-style:dashed;color:var(--muted)}
 .card{padding:14px;margin-bottom:12px}
-.mini{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;text-align:center}
+.mini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;margin-bottom:12px;text-align:center}
+.ghint{font-size:11px;color:var(--muted);margin:-4px 2px 6px;line-height:1.4}
+.ghint{font-size:11px;color:var(--muted);margin:-4px 2px 6px;line-height:1.4}
+.mini.tri{grid-auto-flow:row;grid-template-columns:1fr auto 1fr;align-items:center}.mini .sd.l{justify-self:start}.mini .sd.r{justify-self:end}.mini .sd .cnt{margin:0}
 .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
 .pl{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;margin:10px 0 5px}
 .pl em{font-style:normal;font-weight:700;margin-left:auto}.cnt{display:flex;gap:12px;margin-left:4px;align-items:center;white-space:nowrap}.cnt i{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-weight:700}.cnt .ic{width:16px;height:16px;stroke-width:2.8}.cnt .ck{color:#00FF00}.cnt .cx{color:#FF0000}
@@ -273,6 +276,7 @@ body::after{will-change:opacity;transform:translateZ(0)}
 .row>button.tpb{flex:none;width:120px;min-width:120px;max-width:120px;height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--edge);background:var(--glass2);color:var(--ink);font-size:13px;white-space:nowrap}
 input[type=time].tpx,input[type=date].tpx{display:none}
 .row>button.tpb.dpb{width:140px;min-width:140px;max-width:140px;font-size:12.5px;overflow:hidden;text-overflow:ellipsis}
+.gmp .tpws{grid-template-columns:1fr}
 .dp .tpl,.dp .tpws{grid-template-columns:1fr 1.25fr 1.25fr}
 #tpd{--tb:#141414;--tt:#fff;--tm:rgba(255,255,255,.42);--tc:#1f1f1f;--te:rgba(255,255,255,.12);--tcb:#e5e5e5;--tbn:#fff;--tband:rgba(255,255,255,.14);position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 :root[data-theme=light] #tpd{--tb:#F4F9FF;--tt:#10253A;--tm:rgba(16,37,58,.4);--tc:rgba(16,37,58,.06);--te:rgba(16,37,58,.12);--tcb:#10253A;--tbn:#10253A;--tband:rgba(16,37,58,.08);background:rgba(16,37,58,.4)}
@@ -496,7 +500,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <div id="sbw"><div id="sbm" aria-hidden="true"><div id="sbmi"></div></div><textarea id="sb" rows="4" data-p="subPh"></textarea></div></div>
 <div id="f-habit"><div class="row"><input type="text" id="an" data-p="namePh"></div>
 <div class="row"><label data-i="askTime"></label><input type="time" id="at" value="00:00"></div>
-<div class="row"><label data-i="gmL"></label><input type="text" inputmode="numeric" autocomplete="off" id="gm" value="00"></div>
+<div class="row"><label data-i="gmL"></label><button type="button" class="tpb dpb" id="gmb"></button><input type="text" inputmode="numeric" autocomplete="off" id="gm" value="00" class="hid" tabindex="-1"></div>
 <div class="row"><label data-i="gtL"></label><input type="text" inputmode="numeric" autocomplete="off" id="gt" value="00"></div>
 <div class="row"><label data-i="strL"></label><button type="button" class="tpb dpb" id="stb"></button></div>
 <div id="dwrap"><div class="row" style="flex-wrap:wrap"><label data-i="daysL"></label><div class="wdays" id="wdp" style="flex-basis:100%"></div></div></div></div>
@@ -550,13 +554,13 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 <script>
 const L={
 en:{userPh:'Tap to add your name',userPh2:'Write your name',nameTitle:"What's your name?",start:'Get started',obHi:'Get Started with',obSub:"Let's personalize your dashboard",obProf:'Your Profile',
-add:'+ New habit',streak:'Day streak',total:'Total days',left:'Left this month',
-monthGoal:(x,y)=>`This month: ${x}/${y} days`,totalGoal:(x,y)=>`Overall goal: ${x}/${y} days`,
+add:'+ New habit',total:'Total days',left:'Left this month',
+monthGoal:(x,y)=>`This month: ${x}/${y} days`,totalGoal:(x,y)=>`Total: ${x}/${y} days`,
 hint:'Tap any date to see its tick and tasks.',empty:'Tap "+ New habit" to start tracking with a goal.',
 did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo:'Add',
 edit:'Edit & goals',del:'Delete',delT:'Delete?',bkCopT:'Copied',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
 newT:'Add new',editT:'Edit habit',editTk:'Edit task',namePh:'Write a name for your habit',askTime:'Ask me every day at',
-gmL:'Monthly goal',gtL:'Overall goal',save:'Save',
+wgT:'Goal can\'t be lowered',wgTot:x=>`You have already completed ${x} days of this habit, so the total goal can\'t be lower than ${x}. Please set it to ${x} or more.`,gaL:'Every day of the month',gdU:'days',gmL:'Days per month',gtL:'Total days',save:'Save',
 notifT:'Did you do it today?',lbHabit:'Habit',lbTodo:'Task',lbRem:'Reminder',notifB:n=>`Did you complete today's ${n}?`,todoNotifT:'Reminder',todoNotifB:n=>`${n} - did you do it?`,
 tHome:'Home',tUp:'Upcoming',tCal:'Calendar',today:'Today',tmr:'Tomorrow',over:'Overdue',habitsT:'Habits',noHabH:'No habits left for today.',dailyR:'Daily reminders',noDailyR:'No daily reminders yet.',
 every:x=>`Every day at ${x}`,tasksDone:(x,y)=>`${x} of ${y} tasks done today`,noToday:'No tasks for today. Open Calendar and tap a date to add one.',noUp:"Nothing coming up. You're all clear!",
@@ -565,7 +569,7 @@ remT:'Interval reminders',remAdd:'+ New reminder',remNamePh:'Write a name for th
 lockH:'App Security',lockTypeT:'Screen lock type',lockTypeD:'Choose how you want to protect the app',lockNone:'Off',lockFp:'Fingerprint',lockPinN:'PIN',lockPatN:'Pattern',lockChgP:'Change pattern',lockPT:'Draw pattern',lockPNew:'Draw a new pattern',lockPConfirm:'Draw the pattern again',lockPBad:'Wrong pattern',lockPShort:'Connect at least 4 dots',lockPMis:"Patterns don't match, try again",lockPOn:'Pattern lock is on',lockFpOn:'Fingerprint lock is on',lockFpT:'Use your fingerprint',lockRetry:'Try again',ovN:(b,n)=>`${n} ${n===1?'task is':'tasks are'} overdue`,ftDev:'Developed by MD.INSANUL ISLAM ABIR',ftCopy:'© Copyright MD.INSANUL ISLAM ABIR. All rights reserved.',lockSet:'Turn on PIN lock',lockChg:'Change PIN',lockOff:'Turn off lock',lockBio:'Unlock with fingerprint',lockNoBio:'Fingerprint is not available on this device. Set up a fingerprint in phone settings first.',lockT:'Enter PIN',lockNew:'Choose a 4-digit PIN',lockConfirm:'Confirm PIN',lockBad:'Wrong PIN',lockMis:"PINs don't match, try again",lockOn:'PIN lock is on',lockOffT:'Lock turned off',lockHint:'If you forget the PIN, the only way back is clearing app data. Take a backup first.',cancelT:'Cancel',pickT:'Select time',hrL:'Hour',mnL:'Minute',amL:'AM',pmL:'PM',setB:'Set',dpT:'Select a date',dyL:'Date',dmL:'Month',dyrL:'Year',
 setT:'Settings',yourName:'Your name',appear:'Appearance',dataT:'Export or import your data',expT:'Export',impT:'Import',altT:'Copy / paste backup as text',thD:'Dark mode',thL:'Light mode',
 tRep:'Report',tMore:'More',rW:'Last 7 days',rM:'This month',rY:'This year',rChartM:'Monthly progress',badgesH:'These count your whole history, not just the period selected above.',rHero:p=>`${p}% of scheduled habit days done`,rTasks:(a,b)=>`Tasks: ${a} of ${b} done`,rChart:'Daily progress',rHab:'By habit',rNone:'Add a habit to see reports.',
-badgesT:'Milestones (all time)',bStreak:n=>`${n}-day streak`,bTotal:n=>`${n} ticks`,bTask:n=>`${n} tasks done`,newBadge:'New badge',
+badgesT:'Milestones (all time)',bTotal:n=>`${n} ticks`,bTask:n=>`${n} tasks done`,newBadge:'New badge',
 focusT:'Focus timer',fFocus:'Focus',fShort:'Break',fLong:'Long break',fStart:'Start',fPause:'Pause',fResume:'Resume',fReset:'Reset',fToday:n=>`Session completed: ${n}`,fDoneT:'Focus session done!',fDoneB:'Time for a short break.',fBrkT:'Break over',fBrkB:'Ready for the next session?',
 diaryT:'Diary',diaryPh:'Write about your day',diaryPast:'Earlier entries',
 dLeft:'in {n} days',catL:'Category',cNone:'None',cAll:'All',catNewT:'New category',catNamePh:'Write a category name',cStudy:'Study',cWork:'Work',cPers:'Personal',subPh:'Write checklist items, one per line',searchPh:'Search tasks',noRes:'No matching tasks.',mvT:'→ Today',mvM:'→ Tomorrow',mvAll:'Move all to today',
@@ -575,13 +579,13 @@ bkT:'Backup & restore',bkHint:'Save all your data to a file so you can restore i
 bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a} habits and ${b} tasks. All current data will be replaced. Continue?`,bkOk:'Restored!',bkQT:'Import backup',bkQ:'Do you want to import your backup file?',bkImB:'Import',bkOkB:'OK',bkBadT:'Import failed',bkDoneT:'Import successful',impIng:'Importing…',bkDoneD:(a,b)=>`${a} habits and ${b} tasks imported`,exQT:'Export backup',exQ:'Choose how you want to export your backup file (up to 10 MB).',exShare:'Share',exSave:'Save',exDoneT:'Export successful',exDoneD:(a,b)=>`${a} habits and ${b} tasks exported`,exSavedAt:p=>`Saved in ${p}`,exBadT:'Export failed',exBadD:'Could not export the file. Please try again.',exBig:'This backup is larger than 10 MB, so it cannot be exported.',imBig:'This file is larger than 10 MB, so it cannot be imported.',bkCopied:'Copied! Paste it somewhere safe (Notes, WhatsApp…).',
 wd:['S','M','T','W','T','F','S'],loc:'en-US'},
 bn:{userPh:'এখানে ট্যাপ করে আপনার নাম লিখুন',userPh2:'আপনার নাম লিখুন',nameTitle:'আপনার নাম কী?',start:'শুরু করুন',obHi:'স্বাগতম',obSub:'আপনার ড্যাশবোর্ড সাজিয়ে নিন',obProf:'আপনার প্রোফাইল',
-add:'+ নতুন অভ্যাস',streak:'টানা দিন',total:'মোট দিন',left:'এ মাসে বাকি',
-monthGoal:(x,y)=>`এই মাসের লক্ষ্য: ${x}/${y} দিন`,totalGoal:(x,y)=>`সব মিলিয়ে লক্ষ্য: ${x}/${y} দিন`,
+add:'+ নতুন অভ্যাস',total:'মোট দিন',left:'এ মাসে বাকি',
+monthGoal:(x,y)=>`এই মাসে: ${x}/${y} দিন`,totalGoal:(x,y)=>`মোট: ${x}/${y} দিন`,
 hint:'যেকোনো তারিখে ট্যাপ করলে সেদিনের টিক ও করণীয় দেখতে পাবেন।',empty:'"+ নতুন অভ্যাস" চেপে লক্ষ্যসহ শুরু করুন।',
 did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'করণীয় বা রিমাইন্ডার লিখুন',addTodo:'যোগ করুন',
 edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',delT:'মুছে ফেলবেন?',bkCopT:'কপি হয়েছে',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
 newT:'নতুন যোগ করুন',editT:'অভ্যাস সম্পাদনা',editTk:'করণীয় সম্পাদনা',namePh:'অভ্যাসের একটি নাম লিখুন',askTime:'প্রতিদিন মনে করানোর সময়',
-gmL:'মাসিক লক্ষ্য',gtL:'সব মিলিয়ে লক্ষ্য',save:'সংরক্ষণ করুন',
+wgT:'লক্ষ্য কম দেওয়া যাবে না',wgTot:x=>`আপনি এই অভ্যাসে ইতিমধ্যে ${x} দিন পূর্ণ করে ফেলেছেন, তাই মোট লক্ষ্য ${x} দিনের কম দেওয়া যাবে না। অনুগ্রহ করে ${x} বা তার বেশি দিন।`,gaL:'মাসের সব দিন',gdU:'দিন',gmL:'মাসে কত দিন',gtL:'মোট কত দিন',save:'সংরক্ষণ করুন',
 notifT:'আজকের কাজটি কি করেছেন?',lbHabit:'অভ্যাস',lbTodo:'কাজ',lbRem:'রিমাইন্ডার',notifB:n=>`আজকের ${n} সম্পন্ন হয়েছে কি?`,todoNotifT:'মনে করিয়ে দিচ্ছি',todoNotifB:n=>`${n} - কাজটি করেছেন কি?`,
 tHome:'হোম',tUp:'আসন্ন',tCal:'ক্যালেন্ডার',today:'আজ',tmr:'আগামীকাল',over:'বাকি পড়ে আছে',habitsT:'অভ্যাস',noHabH:'আজকের জন্য আর কোনো অভ্যাস বাকি নেই।',dailyR:'প্রতিদিনের মনে করানো',noDailyR:'এখনো কোনো প্রতিদিনের মনে করানো নেই।',
 every:x=>`প্রতিদিন ${x}-এ`,tasksDone:(x,y)=>`আজ ${y}টির মধ্যে ${x}টি করণীয় সম্পন্ন`,noToday:'আজকের জন্য কোনো করণীয় নেই। ক্যালেন্ডারে কোনো তারিখে ট্যাপ করে যোগ করুন।',noUp:'সামনে কিছু বাকি নেই। দারুণ!',
@@ -590,7 +594,7 @@ remT:'নির্দিষ্ট সময় পরপর মনে করা�
 lockH:'অ্যাপ সিকিউরিটি',lockTypeT:'স্ক্রিন লক টাইপ',lockTypeD:'অ্যাপ সুরক্ষিত রাখতে যেভাবে চান তা বেছে নিন',lockNone:'বন্ধ',lockFp:'ফিঙ্গারপ্রিন্ট',lockPinN:'পিন',lockPatN:'প্যাটার্ন',lockChgP:'প্যাটার্ন বদলান',lockPT:'প্যাটার্ন আঁকুন',lockPNew:'নতুন প্যাটার্ন আঁকুন',lockPConfirm:'আবার প্যাটার্ন আঁকুন',lockPBad:'ভুল প্যাটার্ন',lockPShort:'কমপক্ষে ৪টি বিন্দু যুক্ত করুন',lockPMis:'দুটি প্যাটার্ন মেলেনি, আবার আঁকুন',lockPOn:'প্যাটার্ন লক চালু হয়েছে',lockFpOn:'ফিঙ্গারপ্রিন্ট লক চালু হয়েছে',lockFpT:'আঙুলের ছাপ দিন',lockRetry:'আবার চেষ্টা করুন',ovN:b=>`${b}টি কাজ বাকি পড়ে আছে`,ftDev:'মোঃ ইনসানুল ইসলাম আবীর দ্বারা তৈরি',ftCopy:'© কপিরাইট মোঃ ইনসানুল ইসলাম আবীর। সর্বস্বত্ব সংরক্ষিত।',lockSet:'পিন লক চালু করুন',lockChg:'পিন বদলান',lockOff:'লক বন্ধ করুন',lockBio:'আঙুলের ছাপ দিয়ে খুলুন',lockNoBio:'এই ফোনে আঙুলের ছাপ পাওয়া যাচ্ছে না। আগে ফোনের সেটিংসে ফিঙ্গারপ্রিন্ট সেট করুন।',lockT:'পিন দিন',lockNew:'৪ সংখ্যার নতুন পিন দিন',lockConfirm:'আবার পিন দিন',lockBad:'ভুল পিন',lockMis:'দুটি পিন মেলেনি, আবার দিন',lockOn:'পিন লক চালু হয়েছে',lockOffT:'লক বন্ধ হয়েছে',lockHint:'পিন ভুলে গেলে অ্যাপের ডেটা মুছে ফেলা ছাড়া উপায় নেই। আগে ব্যাকআপ নিয়ে রাখুন।',cancelT:'বাতিল',pickT:'সময় নির্বাচন করুন',hrL:'ঘন্টা',mnL:'মিনিট',amL:'এএম',pmL:'পিএম',setB:'সেট করুন',dpT:'একটি তারিখ নির্বাচন করুন',dyL:'তারিখ',dmL:'মাস',dyrL:'বছর',
 setT:'সেটিংস',yourName:'আপনার নাম',appear:'চেহারা',dataT:'ডেটা এক্সপোর্ট বা ইমপোর্ট',expT:'এক্সপোর্ট',impT:'ইমপোর্ট',altT:'লেখা আকারে কপি/পেস্ট করুন',thD:'ডার্ক মোড',thL:'লাইট মোড',
 tRep:'রিপোর্ট',tMore:'আরও',rW:'গত ৭ দিন',rM:'এই মাস',rY:'এই বছর',rChartM:'মাসভিত্তিক অগ্রগতি',badgesH:'এগুলো নির্বাচিত সময়ের নয়, আপনার পুরো ইতিহাস থেকে গণনা হয়।',rHero:p=>`নির্ধারিত অভ্যাসের ${p}% সম্পন্ন`,rTasks:(a,b)=>`করণীয়: ${b}টির মধ্যে ${a}টি সম্পন্ন`,rChart:'দিনভিত্তিক অগ্রগতি',rHab:'অভ্যাস অনুযায়ী',rNone:'রিপোর্ট দেখতে একটি অভ্যাস যোগ করুন।',
-badgesT:'মাইলস্টোন (সর্বকালের)',bStreak:n=>`${Number(n).toLocaleString('bn-BD')} দিন টানা`,bTotal:n=>`${Number(n).toLocaleString('bn-BD')}টি টিক`,bTask:n=>`${Number(n).toLocaleString('bn-BD')}টি করণীয় সম্পন্ন`,newBadge:'নতুন ব্যাজ',
+badgesT:'মাইলস্টোন (সর্বকালের)',bTotal:n=>`${Number(n).toLocaleString('bn-BD')}টি টিক`,bTask:n=>`${Number(n).toLocaleString('bn-BD')}টি করণীয় সম্পন্ন`,newBadge:'নতুন ব্যাজ',
 focusT:'ফোকাস টাইমার',fFocus:'ফোকাস',fShort:'বিরতি',fLong:'দীর্ঘ বিরতি',fStart:'শুরু করুন',fPause:'থামান',fResume:'চালিয়ে যান',fReset:'রিসেট',fToday:n=>`সেশন সম্পন্ন: ${n}`,fDoneT:'ফোকাস শেষ!',fDoneB:'এবার একটু বিরতি নিন।',fBrkT:'বিরতি শেষ',fBrkB:'পরের সেশন শুরু করবেন?',
 diaryT:'ডায়েরি',diaryPh:'আজকের দিনের কথা লিখুন',diaryPast:'আগের লেখা',
 dLeft:'{n} দিন বাদে',catL:'ক্যাটাগরি',cNone:'নেই',cAll:'সব',catNewT:'নতুন ক্যাটাগরি',catNamePh:'ক্যাটাগরির নাম লিখুন',cStudy:'পড়াশোনা',cWork:'কাজ',cPers:'ব্যক্তিগত',subPh:'ছোট তালিকা লিখুন, প্রতি লাইনে একটি',searchPh:'করণীয় খুঁজুন',noRes:'কিছু পাওয়া যায়নি।',mvT:'→ আজ',mvM:'→ আগামীকাল',mvAll:'সবগুলো আজকে সরান',
@@ -616,7 +620,7 @@ let tmrKey=(()=>{const tm=new Date(now);tm.setDate(tm.getDate()+1);return dk(tm)
 /* Day rollover: if the app stays open past midnight, move 'today' forward and redraw everything */
 function dayRoll(){try{const n=new Date(),k=dk(n);if(k===todayKey)return;now=n;todayKey=k;const t2=new Date(n);t2.setDate(t2.getDate()+1);tmrKey=dk(t2);vy=n.getFullYear();vm=n.getMonth();pickKey=null;render()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)dayRoll()});window.addEventListener('focus',dayRoll);setInterval(dayRoll,30000);
-let vy=now.getFullYear(),vm=now.getMonth(),sel=null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],strict=0,cat='';
+let vy=now.getFullYear(),vm=now.getMonth(),sel=null,editing=null,edTodo=null,tab='home',fm='task',pri=0,rep='none',wsel=[],strict=0,cat='',gall=0;
 const act=()=>S.acts.find(a=>a.id===sel);
 const esc=x=>{const d=document.createElement('div');d.textContent=x;return d.innerHTML};
 const SB_PFX=/^\s*[0-9\u09E6-\u09EF]+\s*[.)]\s?/,sbStrip=z=>String(z).replace(SB_PFX,'');
@@ -867,11 +871,11 @@ async function rescheduleAll(){await Promise.all([...S.acts.map(a=>schedAct(a)),
 
 function isSched(a,d){return !a.days||!a.days.length||a.days.includes(d.getDay())}
 const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).join(', '),t12(a.time)):t('every',t12(a.time));
+function mgoal(a,y,m){if(!a.goalM)return 0;const ld=new Date(y,m+1,0).getDate();let n=0;for(let d=1;d<=ld;d++){if(key(y,m,d)>=a.start&&isSched(a,new Date(y,m,d)))n++}return a.goalAll?n:Math.min(a.goalM,n)}
 function stats(a,y=vy,m=vm){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
-const total=Object.keys(marks).length,month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
-let streak=0;const c=new Date();
-for(let i=0;i<3700;i++){const k=dk(c);if(marks[k])streak++;else if((S.nos[a.id]||{})[k])break;else if(isSched(a,c)&&k!==todayKey)break;else if(k<a.start)break;c.setDate(c.getDate()-1)}
-return {total,month,streak}}
+let total=0;{const [sy,sm,sd]=String(a.start).split('-').map(Number),c=new Date(sy,sm-1,sd),e=new Date();e.setHours(0,0,0,0);for(let i=0;i<20000&&c<=e;i++){if(isSched(a,c))total++;c.setDate(c.getDate()+1)}}
+const month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
+return {total,month}}
 
 function nextDate(k,r,x){const [y,m,d]=k.split('-').map(Number);let c;
 if(r==='daily'){c=new Date(y,m-1,d+1)}else if(r==='weekly'){c=new Date(y,m-1,d+7)}
@@ -978,7 +982,7 @@ const ha=S.acts.filter(a=>isSched(a,now)&&!(S.marks[a.id]||{})[todayKey]);
 const rdT=homeTab==='hab'&&td.length>dn?'<i class="rd"></i>':'',rdH=homeTab==='task'&&ha.length?'<i class="rd"></i>':'';
 const htabs=`<div class="seg" id="htabs"><button data-ht="task" class="${homeTab==='task'?'on':''}">${t('segTask')}${rdT}</button><button data-ht="hab" class="${homeTab==='hab'?'on':''}">${t('segHabit')}${rdH}</button></div>`;
 h+=htabs;if(homeTab==='hab')h+=!ha.length?`<div class="g empty">${t('noHabH')}</div>`:ha.map(a=>{const on=(S.marks[a.id]||{})[todayKey],s=stats(a,now.getFullYear(),now.getMonth());
-return `<div class="g hab" data-o="${a.id}" style="--ac:${a.color};cursor:pointer"><div class="hi"><b>${esc(a.name)}</b><small>${a.goalM?t('monthGoal',bn(s.month),bn(a.goalM)):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
+return `<div class="g hab" data-o="${a.id}" style="--ac:${a.color};cursor:pointer"><div class="hi"><b>${esc(a.name)}</b><small>${a.goalM?t('monthGoal',bn(Math.min(s.month,mgoal(a,now.getFullYear(),now.getMonth()))),bn(mgoal(a,now.getFullYear(),now.getMonth()))):''}</small></div><button class="chk ${on?'on':''}" data-h="${a.id}">${ic('check')}</button></div>`}).join('');
 if(homeTab==='task')h+=!td.length?`<div class="g empty">${t('noToday').replace('+','<span class="fabi">+</span>')}</div>`:catChips()+(fl(td).length?`<div class="hl" id="hl"><div class="hlin">${fl(td).map(x=>taskHtml(x,{cx:1})).join('')}</div></div>`:`<div class="g empty">${t('noRes')}</div>`);
 const r=$('#v-home'),emptyAll=false;
 if(emptyAll)h=`<div class="g hero"><small>${fdate(todayKey,{weekday:'long',day:'numeric',month:'long'})}</small></div><div class="es">${ic('check')}<b>${t('noToday').replace('+','<span class="fabi">+</span>')}</b></div>`;
@@ -1033,10 +1037,10 @@ S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(
 ch.style.display=S.acts.length?'':'none';ch.appendChild(inner);chGo(chIdx,false);
 const a=act();let h='';
 if(a){let ck=0,cx=0;{const mk=S.marks[a.id]||{},nk=S.nos[a.id]||{},ld=new Date(vy,vm+1,0).getDate();for(let d=1;d<=ld;d++){const k=key(vy,vm,d);if(mk[k])ck++;else if(nk[k]||(isSched(a,new Date(vy,vm,d))&&k>=a.start&&k<todayKey))cx++}}
-const cnt=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i><i class="cx">${ic('x')}${bn(cx)}</i></span>`;
-const s=stats(a),gm=a.goalM||0,gt=a.goalT||0;
-h=`<div class="g card" style="--ac:${a.color}"><div class="mini"><div><b>${bn(s.total)}</b><span>${t('total')}</span></div><div><b>${bn(gm?Math.max(0,gm-s.month):0)}</b><span>${t('left')}</span></div></div>${gm?`<div class="pl"><span>${t('monthGoal',bn(s.month),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:`<div class="pl">${cnt.replace('class="cnt"','class="cnt" style="margin-left:0"')}</div>`}`;
-if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(s.total),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
+const ckH=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i></span>`,cxH=`<span class="cnt"><i class="cx">${ic('x')}${bn(cx)}</i></span>`,cnt=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i><i class="cx">${ic('x')}${bn(cx)}</i></span>`;
+const s=stats(a),gm=mgoal(a,vy,vm),gt=a.goalT||0;
+h=`<div class="g card" style="--ac:${a.color}"><div class="mini${gm?'':' tri'}">${gm?'':`<div class="sd l">${ckH}</div>`}<div><b>${bn(s.total)}</b><span>${t('total')}</span></div>${gm?`<div><b>${bn(Math.max(0,gm-s.month))}</b><span>${t('left')}</span></div>`:`<div class="sd r">${cxH}</div>`}</div>${gm?`<div class="pl"><span>${t('monthGoal',bn(Math.min(s.month,gm)),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
+if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(Math.min(s.total,gt)),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
 else h='';
 $('#info').innerHTML=h;
 $('#mname').textContent=new Date(vy,vm,1).toLocaleDateString(loc,{month:'long',year:'numeric'});
@@ -1084,7 +1088,7 @@ $('#seg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.datase
 $('#rp').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===rep));buildWd();setStrict();
 buildCt();$('#sb').value=tx?(tx.sub||[]).map((z,i)=>bn(i+1)+'. '+z.t).join('\n'):'';
 $('#tx').value=tx?tx.text:'';$('#td').value=tx?tx.date:(dkey||todayKey);$('#tmv').value=tx&&tx.time?tx.time:'00:00';
-$('#an').value=a?a.name:'';$('#at').value=a?a.time:'00:00';$('#gm').value=a?(a.goalM||'00'):'00';$('#gt').value=a&&a.goalT?a.goalT:'00';nd();
+$('#an').value=a?a.name:'';$('#at').value=a?a.time:'00:00';$('#gm').value=a?(a.goalM||'00'):'00';gall=a&&a.goalAll?1:0;setGmb();$('#gt').value=a&&a.goalT?a.goalT:'00';nd();
 }
 
 function tlFit(st){const l=$('#tl');if(!l)return;const it=l.querySelectorAll(':scope>.todo');if(it.length>3){const e=it[2];l.style.maxHeight=(e.offsetTop+e.offsetHeight+4)+'px'}l.scrollTop=st||0}
@@ -1093,14 +1097,14 @@ formBack();
 const a=act(),p=$('#panel'),_st=($('#tl')||{}).scrollTop||0;
 let h=`<div class="ph"><h2>${fdate(k,{weekday:'long',day:'numeric',month:'long'})}</h2><button class="x" id="cl"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
 {const hi=holInfo(k);const hr=[...(hi.g.length?hi.gx:[]).map(x=>[x,'']),...(hi.o.length?hi.o:[]).map(x=>[x,' o'])];const hl=hr.map(([x,c],i)=>`<div class="holn${c}">${i>0?'<b class="ha l">«</b>':''}${esc(x)}${i<hr.length-1?'<b class="ha r">»</b>':''}</div>`);if(hl.length){const hw=`<div class="holw">${hl.join('')}</div>`;h+=hl.length>1?`<div class="holx">${hw}</div>`:hw}}
-if(a){const on=(S.marks[a.id]||{})[k];h+=`<div class="hrow"><button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button><button class="ib" id="ed" aria-label="${t('edit')}">${ic('edit')}</button><button class="ib red" id="del" aria-label="${t('del')}">${ic('trash')}</button></div>`}
+if(a){const on=(S.marks[a.id]||{})[k];h+=`<div class="hrow"><button class="big ${on?'undo':''}" id="tg" style="--ac:${a.color}" ${k>todayKey||(k<a.start&&!on)?'disabled':''}>${on?ic('x')+' '+t('undo'):ic('check')+' '+esc(t('did',a.name))}</button><button class="ib" id="ed" aria-label="${t('edit')}">${ic('edit')}</button><button class="ib red" id="del" aria-label="${t('del')}">${ic('trash')}</button></div>`}
 const _tl=a?'':S.todos.filter(x=>x.date===k).map(x=>taskHtml(x,{cx:1})).join('');h+=_tl?`<div class="tl" data-n="2">${_tl}</div>`:'';
 if(!a)h+=`<div id="dadd" style="margin-top:14px"></div>`;
 p.innerHTML=h;$('#sheet').classList.add('show');
 {const hw=p.querySelector('.holx .holw');if(hw){let t,dn=0;const ok=()=>{const w=hw.clientWidth;return Math.abs(hw.scrollLeft-Math.round(hw.scrollLeft/w)*w)<1.5},chk=()=>{clearTimeout(t);if(dn)return;if(ok())hw.classList.remove('sl');else t=setTimeout(chk,80)},hide=()=>{hw.classList.add('sl');clearTimeout(t);t=setTimeout(chk,120)};hw.addEventListener('scroll',hide,{passive:true});hw.addEventListener('touchmove',()=>{dn=1;hw.classList.add('sl')},{passive:true});['touchend','touchcancel'].forEach(n=>hw.addEventListener(n,()=>{dn=0;chk()},{passive:true}))}}
 if(!a){const d=$('#dadd');FP.forEach(s=>d.appendChild($(s)));inl=k;fillForm(kind||'task',null,null,k)}
 $('#cl').onclick=()=>$('#sheet').classList.remove('show');
-const tg=$('#tg');if(tg){if(k>todayKey)tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(S.marks[a.id][k])delete S.marks[a.id][k];else habAns(a.id,k,true);save();$('#sheet').classList.remove('show');render()}}
+const tg=$('#tg');if(tg){if(k>todayKey||(k<a.start&&!(S.marks[a.id]||{})[k]))tg.style.opacity='.4';tg.onclick=()=>{S.marks[a.id]=S.marks[a.id]||{};if(k<a.start&&!S.marks[a.id][k])return;if(S.marks[a.id][k])delete S.marks[a.id][k];else habAns(a.id,k,true);save();$('#sheet').classList.remove('show');render()}}
 bindTasks(p,()=>{showDay(k,fm);render()});
 const ed=$('#ed');if(ed)ed.onclick=()=>{openForm('habit',a);backDay=k};
 const del=$('#del');if(del)del.onclick=async()=>{if(!await dlg({kind:'warn',title:t('delT'),text:esc(t('confirmDel',a.name)),ok:t('bkOkB'),cancel:t('cancelT')}))return;cancelMany(actIds(a));delete S.marks[a.id];delete S.nos[a.id];S.acts=S.acts.filter(z=>z!==a);sel=S.acts[0]?S.acts[0].id:null;save();$('#sheet').classList.remove('show');render()}}
@@ -1116,7 +1120,9 @@ else if(fm==='task'){const text=$('#tx').value.trim();if(!text){shake($('#tx'));
 const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#tmv').value==='00:00'?'':$('#tmv').value,done:false,pri,rep,cat,sub:$('#sb').value.split('\n').map(z=>sbStrip(z).trim()).filter(Boolean).map(z=>({t:z,d:false}))};
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name){shake($('#an'));return}
-const vals={name,time:$('#at').value||'00:00',goalM:Math.min(31,Math.max(0,nv($('#gm'))||0)),goalT:nv($('#gt'))||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
+const vals={name,time:$('#at').value||'00:00',goalAll:!!gall,goalM:gall?31:Math.min(31,Math.max(0,nv($('#gm'))||0)),goalT:nv($('#gt'))||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
+if(editing){const ea=S.acts.find(z=>z.id===editing);if(ea){const tmp={id:ea.id,start:ea.start,days:vals.days},dn=stats(tmp,now.getFullYear(),now.getMonth());
+if(vals.goalT>0&&vals.goalT<dn.total){await dlg({kind:'warn',title:t('wgT'),text:t('wgTot',bn(dn.total)),ok:t('bkOkB')});return}}}
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
 else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
 sel=a.id;save();await askPerm();await schedAct(a)}
@@ -1132,6 +1138,15 @@ if(Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.4||Date.now()-st>800)return;
 const nx=dx<0;if(nx){vm++;if(vm>11){vm=0;vy++}}else{vm--;if(vm<0){vm=11;vy--}}render();
 const ng=$('#grid');if(ng&&ng.animate)ng.animate([{transform:'translateX('+(nx?36:-36)+'px)',opacity:.2},{transform:'none',opacity:1}],{duration:200,easing:'ease-out'})},{passive:true});
 g.addEventListener('touchcancel',()=>{ok=false},{passive:true})}
+function setGmb(){const n=nv($('#gm'))||0;$('#gmb').textContent=gall?t('gaL'):(n?dig(String(n))+' '+t('gdU'):dig('00'))}
+function gmOpen(){const n0=Math.min(31,nv($('#gm'))||0),n=gall?31:(n0?n0-1:31);
+tpEl.innerHTML=`<div class="tpc gmp"><div class="tph"><span class="tpi"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg></span><h2>${esc(t('gmL'))}</h2></div><div class="tpws"><div class="tpband"></div><div class="tpcol" id="tpD"></div></div><div class="tpa"><button type="button" class="tpbc" id="tpc">${esc(t('cancelT'))}</button><button type="button" class="tpbs" id="tps">${esc(t('setB'))}</button></div></div>`;
+tpEl.classList.add('show');
+const items=[];for(let i=1;i<=31;i++)items.push(dig(pad(i)));items.push(esc(t('gaL')));
+const g=tpWheel($('#tpD'),items,n,true);
+$('#tpc').onclick=tpClose;
+$('#tps').onclick=()=>{const k=g();if(k===31){gall=1;$('#gm').value=dig('31')}else{gall=0;$('#gm').value=dig(String(k+1))}setGmb();tpClose()}}
+$('#gmb').onclick=gmOpen;
 function setStrict(){$('#stb').textContent=t(strict?'strX':'strF');$('#dwrap').classList.toggle('hid',!strict)}
 $('#stb').onclick=()=>{strict=strict?0:1;setStrict()};
 function buildWd(){const w=$('#wdp');w.innerHTML=t('wds').map((n,i)=>`<button data-d="${i}" class="${wsel.includes(i)?'on':''}">${n}</button>`).join('');
