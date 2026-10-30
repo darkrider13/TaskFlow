@@ -555,7 +555,7 @@ body.fb::after{opacity:0!important;transition:opacity .2s!important}
 const L={
 en:{userPh:'Tap to add your name',userPh2:'Write your name',nameTitle:"What's your name?",start:'Get started',obHi:'Get Started with',obSub:"Let's personalize your dashboard",obProf:'Your Profile',
 add:'+ New habit',total:'Total days',left:'Left this month',
-monthGoal:(x,y)=>`This month: ${x}/${y} days`,totalGoal:(x,y)=>`Total: ${x}/${y} days`,
+monthGoal:(x,y)=>`Goal: ${x}/${y} days`,totalGoal:(x,y)=>`Total: ${x}/${y} days`,
 hint:'Tap any date to see its tick and tasks.',empty:'Tap "+ New habit" to start tracking with a goal.',
 did:n=>`I did ${n}`,undo:'Remove tick',todoPh:'Write a task or reminder',addTodo:'Add',
 edit:'Edit & goals',del:'Delete',delT:'Delete?',bkCopT:'Copied',confirmDel:n=>`"${n}" and all its ticks will be deleted. Are you sure?`,
@@ -580,7 +580,7 @@ bkBad:'This is not a valid TaskFlow backup.',bkConf:(a,b)=>`This backup has ${a}
 wd:['S','M','T','W','T','F','S'],loc:'en-US'},
 bn:{userPh:'এখানে ট্যাপ করে আপনার নাম লিখুন',userPh2:'আপনার নাম লিখুন',nameTitle:'আপনার নাম কী?',start:'শুরু করুন',obHi:'স্বাগতম',obSub:'আপনার ড্যাশবোর্ড সাজিয়ে নিন',obProf:'আপনার প্রোফাইল',
 add:'+ নতুন অভ্যাস',total:'মোট দিন',left:'এ মাসে বাকি',
-monthGoal:(x,y)=>`এই মাসে: ${x}/${y} দিন`,totalGoal:(x,y)=>`মোট: ${x}/${y} দিন`,
+monthGoal:(x,y)=>`লক্ষ্য: ${x}/${y} দিন`,totalGoal:(x,y)=>`মোট: ${x}/${y} দিন`,
 hint:'যেকোনো তারিখে ট্যাপ করলে সেদিনের টিক ও করণীয় দেখতে পাবেন।',empty:'"+ নতুন অভ্যাস" চেপে লক্ষ্যসহ শুরু করুন।',
 did:n=>`${n} করেছি`,undo:'টিক তুলে নিন',todoPh:'করণীয় বা রিমাইন্ডার লিখুন',addTodo:'যোগ করুন',
 edit:'সম্পাদনা ও লক্ষ্য',del:'মুছে ফেলুন',delT:'মুছে ফেলবেন?',bkCopT:'কপি হয়েছে',confirmDel:n=>`"${n}" এবং এর সব টিক মুছে যাবে। আপনি কি নিশ্চিত?`,
@@ -872,6 +872,7 @@ async function rescheduleAll(){await Promise.all([...S.acts.map(a=>schedAct(a)),
 function isSched(a,d){return !a.days||!a.days.length||a.days.includes(d.getDay())}
 const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).join(', '),t12(a.time)):t('every',t12(a.time));
 function mgoal(a,y,m){if(!a.goalM)return 0;const ld=new Date(y,m+1,0).getDate();let n=0;for(let d=1;d<=ld;d++){if(key(y,m,d)>=a.start&&isSched(a,new Date(y,m,d)))n++}return a.goalAll?n:Math.min(a.goalM,n)}
+function remDays(a,y,m){const mk=S.marks[a.id]||{},ld=new Date(y,m+1,0).getDate();let n=0;for(let d=1;d<=ld;d++){const k=key(y,m,d);if(k>=a.start&&k>=todayKey&&!mk[k]&&isSched(a,new Date(y,m,d)))n++}return n}
 function stats(a,y=vy,m=vm,incl){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
 let total=0;{const [sy,sm,sd]=String(a.start).split('-').map(Number),c=new Date(sy,sm-1,sd),e=new Date();e.setHours(0,0,0,0);for(let i=0;i<20000&&c<=e;i++){if(isSched(a,c)&&(incl||dk(c)<todayKey||marks[dk(c)]))total++;c.setDate(c.getDate()+1)}}
 const month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
@@ -1039,7 +1040,7 @@ const a=act();let h='';
 if(a){let ck=0,cx=0;{const mk=S.marks[a.id]||{},nk=S.nos[a.id]||{},ld=new Date(vy,vm+1,0).getDate();for(let d=1;d<=ld;d++){const k=key(vy,vm,d);if(mk[k])ck++;else if(nk[k]||(isSched(a,new Date(vy,vm,d))&&k>=a.start&&k<todayKey))cx++}}
 const ckH=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i></span>`,cxH=`<span class="cnt"><i class="cx">${ic('x')}${bn(cx)}</i></span>`,cnt=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i><i class="cx">${ic('x')}${bn(cx)}</i></span>`;
 const s=stats(a),gm=mgoal(a,vy,vm),gt=a.goalT||0;
-h=`<div class="g card" style="--ac:${a.color}"><div class="mini${gm?'':' tri'}">${gm?'':`<div class="sd l">${ckH}</div>`}<div><b>${bn(s.total)}</b><span>${t('total')}</span></div>${gm?`<div><b>${bn(Math.max(0,gm-s.month))}</b><span>${t('left')}</span></div>`:`<div class="sd r">${cxH}</div>`}</div>${gm?`<div class="pl"><span>${t('monthGoal',bn(Math.min(s.month,gm)),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
+h=`<div class="g card" style="--ac:${a.color}"><div class="mini${gm?'':' tri'}">${gm?'':`<div class="sd l">${ckH}</div>`}<div><b>${bn(s.total)}</b><span>${t('total')}</span></div>${gm?`<div><b>${bn(Math.min(Math.max(0,gm-s.month),remDays(a,vy,vm)))}</b><span>${t('left')}</span></div>`:`<div class="sd r">${cxH}</div>`}</div>${gm?`<div class="pl"><span>${t('monthGoal',bn(Math.min(s.month,gm)),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
 if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(Math.min(s.total,gt)),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
 else h='';
 $('#info').innerHTML=h;
