@@ -861,7 +861,7 @@ await safe(()=>LN.schedule({notifications:list}))}
 async function schedTodo(x){if(!LN)return;await cancelN(x.nid);const at=new Date(x.date+'T'+(x.time||'09:00'));if(!x.time||at<=new Date()||x.done)return;
 await safe(()=>LN.schedule({notifications:[{id:x.nid,title:'',body:nlb('lbTodo',t('todoNotifB',x.text)),actionTypeId:'TODO',extra:{kind:'todo',id:x.id},schedule:{at,allowWhileIdle:true}}]}))}
 function PA(){return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PendingActions}
-function habAns(id,k,yes){S.marks[id]=S.marks[id]||{};S.nos=S.nos||{};S.nos[id]=S.nos[id]||{};if(yes){S.marks[id][k]=1;delete S.nos[id][k]}else{delete S.marks[id][k];S.nos[id][k]=1}}
+function habAns(id,k,yes){const _a=S.acts.find(z=>z.id===id);if(yes&&_a&&k<_a.start)return;S.marks[id]=S.marks[id]||{};S.nos=S.nos||{};S.nos[id]=S.nos[id]||{};if(yes){S.marks[id][k]=1;delete S.nos[id][k]}else{delete S.marks[id][k];S.nos[id][k]=1}}
 let draining=0;
 async function drainPending(){const p=PA();if(!p||draining)return;draining=1;try{const r=await safe(()=>p.drain());const it=(r&&r.items)||[];let ch=0;
 for(const q of it){if(q.kind==='habit'){const a=S.acts.find(z=>z.id===q.id);if(!a||!q.date)continue;habAns(a.id,q.date,q.act!=='no');ch=1}
@@ -872,8 +872,8 @@ async function rescheduleAll(){await Promise.all([...S.acts.map(a=>schedAct(a)),
 function isSched(a,d){return !a.days||!a.days.length||a.days.includes(d.getDay())}
 const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).join(', '),t12(a.time)):t('every',t12(a.time));
 function mgoal(a,y,m){if(!a.goalM)return 0;const ld=new Date(y,m+1,0).getDate();let n=0;for(let d=1;d<=ld;d++){if(key(y,m,d)>=a.start&&isSched(a,new Date(y,m,d)))n++}return a.goalAll?n:Math.min(a.goalM,n)}
-function stats(a,y=vy,m=vm){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
-let total=0;{const [sy,sm,sd]=String(a.start).split('-').map(Number),c=new Date(sy,sm-1,sd),e=new Date();e.setHours(0,0,0,0);for(let i=0;i<20000&&c<=e;i++){if(isSched(a,c))total++;c.setDate(c.getDate()+1)}}
+function stats(a,y=vy,m=vm,incl){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
+let total=0;{const [sy,sm,sd]=String(a.start).split('-').map(Number),c=new Date(sy,sm-1,sd),e=new Date();e.setHours(0,0,0,0);for(let i=0;i<20000&&c<=e;i++){if(isSched(a,c)&&(incl||dk(c)<todayKey||marks[dk(c)]))total++;c.setDate(c.getDate()+1)}}
 const month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
 return {total,month}}
 
@@ -1121,7 +1121,7 @@ const x={id:Date.now(),nid:S.nid++,text,date:$('#td').value||todayKey,time:$('#t
 S.todos.push(x);save();await askPerm();await schedTodo(x)}
 else{const name=$('#an').value.trim();if(!name){shake($('#an'));return}
 const vals={name,time:$('#at').value||'00:00',goalAll:!!gall,goalM:gall?31:Math.min(31,Math.max(0,nv($('#gm'))||0)),goalT:nv($('#gt'))||0,days:(!strict||wsel.length===7)?[]:wsel.slice().sort((p,q)=>p-q)};
-if(editing){const ea=S.acts.find(z=>z.id===editing);if(ea){const tmp={id:ea.id,start:ea.start,days:vals.days},dn=stats(tmp,now.getFullYear(),now.getMonth());
+if(editing){const ea=S.acts.find(z=>z.id===editing);if(ea){const tmp={id:ea.id,start:ea.start,days:vals.days},dn=stats(tmp,now.getFullYear(),now.getMonth(),true);
 if(vals.goalT>0&&vals.goalT<dn.total){await dlg({kind:'warn',title:t('wgT'),text:t('wgTot',bn(dn.total)),ok:t('bkOkB')});return}}}
 let a;if(editing){a=S.acts.find(z=>z.id===editing);Object.assign(a,vals)}
 else{a=Object.assign({id:Date.now(),nid:S.nid++,start:todayKey,color:pickColor(new Set(S.acts.map(z=>String(z.color).toUpperCase())))},vals);S.acts.push(a)}
@@ -1255,13 +1255,13 @@ function badgeList(){const tot=S.acts.reduce((p,a)=>p+Object.keys(S.marks[a.id]|
 const BC={s7:'#FF8000',s30:'#FF0000',s100:'#FF0080',s365:'#8000FF',t10:'#00FFFF',t50:'#0080FF',t100:'#00FF80',t500:'#FFB800',k10:'#80FF00',k50:'#FF00FF',k100:'#FFB800'};
 [10,50,100,500].forEach(n=>o.push({id:'t'+n,ic:'award',txt:t('bTotal',n),cur:tot,n}));
 [10,50,100].forEach(n=>o.push({id:'k'+n,ic:'checkc',txt:t('bTask',n),cur:td,n}));o.forEach(b=>b.c=BC[b.id]||'#fff');return o}
-function checkBadges(){const earned=badgeList().filter(b=>b.cur>=b.n);
+function checkBadges(){return;const earned=badgeList().filter(b=>b.cur>=b.n);
 if(!S.bd){S.bd=earned.map(b=>b.id);save();return}
 const nw=earned.filter(b=>!S.bd.includes(b.id));if(nw.length){S.bd.push(...nw.map(b=>b.id));save();toast(t('newBadge')+': '+nw.map(b=>b.txt).join(', '),'award')}}
 
 function periodDays(){const o=[],y=now.getFullYear();if(rmode==='w'){for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);o.push(d)}}else if(rmode==='y'){for(let m=0;m<=now.getMonth();m++){const last=m===now.getMonth()?now.getDate():new Date(y,m+1,0).getDate();for(let i=1;i<=last;i++)o.push(new Date(y,m,i))}}else{for(let i=1;i<=now.getDate();i++)o.push(new Date(y,now.getMonth(),i))}return o}
 function renderRep(){
-const days=periodDays(),on=(a,k)=>(S.marks[a.id]||{})[k],cnt=(a,d,k)=>k>=a.start&&isSched(a,d);
+const days=periodDays(),on=(a,k)=>(S.marks[a.id]||{})[k],cnt=(a,d,k)=>k>=a.start&&k<todayKey&&isSched(a,d);
 let h=`<div class="seg">${[['w','rW'],['m','rM'],['y','rY']].map(([k,l])=>`<button data-r="${k}" class="${rmode===k?'on':''}">${t(l)}</button>`).join('')}</div>`;
 const ks=new Set(days.map(dk)),tt=S.todos.filter(x=>ks.has(x.date)),tdone=tt.filter(x=>x.done).length;
 if(!S.acts.length){h+=`<div class="g card" style="margin-top:10px">`+(tt.length?`<div class="big2">${bn(pct(tdone,tt.length))}%</div><div class="hint" style="margin:2px 0 0;font-size:13px">${t('rTasks',bn(tdone),bn(tt.length))}</div>`:`<div class="hint" style="margin:0;font-size:13px">${t('rNone')}</div>`)+`</div>`}
@@ -1276,7 +1276,6 @@ return `<rect x="${(i*bw+bw*.15).toFixed(1)}" y="${(96-hh).toFixed(1)}" width="$
 h+=`<div class="g card" style="margin-top:10px"><div class="big2">${bn(pct(tdn,tsc))}%</div><div class="hint" style="margin:2px 0 6px;font-size:13px">${t('rHero',bn(pct(tdn,tsc)))}</div><div class="hint" style="margin:0;font-size:13px">${t('rTasks',bn(tdone),bn(tt.length))}</div></div>`;
 h+=`<h3>${t(rmode==='y'?'rChartM':'rChart')}</h3><div class="g card"><svg viewBox="0 0 ${W} 118" style="width:100%;display:block">${bars}</svg></div>`;
 h+=`<h3>${t('rHab')}</h3>`+rows.map(r=>`<div class="g card" style="--ac:${r.a.color};padding:12px;margin-bottom:8px"><div class="pl" style="margin-top:0"><span>${esc(r.a.name)}</span><em>${dig(r.dn)}/${dig(r.sc)} · ${bn(pct(r.dn,r.sc))}%</em></div><div class="bar"><i style="width:${pct(r.dn,r.sc)}%"></i></div></div>`).join('')}
-h+=`<h3>${t('badgesT')}</h3><div class="bdgs">`+badgeList().map(b=>`<div class="bdg ${b.cur>=b.n?'on':''}" style="--bc:${b.c}"><i>${ic(b.ic)}</i><b>${b.txt}</b><small>${bn(Math.min(b.cur,b.n))}/${bn(b.n)} · ${bn(pct(b.cur,b.n))}%</small><div class="bar" style="margin-top:8px;height:6px"><i style="width:${pct(b.cur,b.n)}%"></i></div></div>`).join('')+`</div>`;
 const r=$('#v-rep'),ci=h.indexOf('</div>')+6;r.innerHTML=h.slice(0,ci)+'<div class="rscroll">'+h.slice(ci)+'</div>';r.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{rmode=b.dataset.r;renderRep()})}
 
 const FM={focus:25,short:5,long:15},ft={mode:'focus',left:1500,end:0,run:false,n:0},FNID=3000001;
