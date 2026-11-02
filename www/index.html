@@ -877,7 +877,7 @@ const evLabel=a=>a.days&&a.days.length?t('onDays',a.days.map(d=>t('wds')[d]).joi
 function mgoal(a,y,m){if(!a.goalM)return 0;const ld=new Date(y,m+1,0).getDate();let n=0;for(let d=1;d<=ld;d++){if(key(y,m,d)>=a.start&&isSched(a,new Date(y,m,d)))n++}return a.goalAll?n:Math.min(a.goalM,n)}
 function remDays(a,y,m){const mk=S.marks[a.id]||{},ld=new Date(y,m+1,0).getDate();let n=0;for(let d=1;d<=ld;d++){const k=key(y,m,d);if(k>=a.start&&k>=todayKey&&!mk[k]&&isSched(a,new Date(y,m,d)))n++}return n}
 function stats(a,y=vy,m=vm,incl){const marks=S.marks[a.id]||{},pre=y+'-'+pad(m+1)+'-';
-let total=0;{const [sy,sm,sd]=String(a.start).split('-').map(Number),c=new Date(sy,sm-1,sd),e=new Date();e.setHours(0,0,0,0);for(let i=0;i<20000&&c<=e;i++){if(isSched(a,c)&&(incl||dk(c)<todayKey||marks[dk(c)]))total++;c.setDate(c.getDate()+1)}}
+let total=0;{const [sy,sm,sd]=String(a.start).split('-').map(Number),c=new Date(sy,sm-1,sd),e=new Date();e.setHours(0,0,0,0);for(let i=0;i<20000&&c<=e;i++){if((isSched(a,c)&&(incl||dk(c)<todayKey))||marks[dk(c)])total++;c.setDate(c.getDate()+1)}}
 const month=Object.keys(marks).filter(k=>k.startsWith(pre)).length;
 return {total,month}}
 
@@ -1040,10 +1040,11 @@ const loc=t('loc'),ch=$('#chips'),inner=document.createElement('div');inner.clas
 S.acts.forEach(a=>{const b=document.createElement('button');b.className='chip'+(a.id===sel?' on':'');if(a.id===sel)b.style.background=a.color;b.textContent=a.name;b.onclick=()=>{sel=sel===a.id?null:a.id;render()};inner.appendChild(b)});
 ch.style.display=S.acts.length?'':'none';ch.appendChild(inner);chGo(chIdx,false);
 const a=act();let h='';
-if(a){let ck=0,cx=0;{const mk=S.marks[a.id]||{},nk=S.nos[a.id]||{},ld=new Date(vy,vm+1,0).getDate();for(let d=1;d<=ld;d++){const k=key(vy,vm,d);if(mk[k])ck++;else if(nk[k]||(isSched(a,new Date(vy,vm,d))&&k>=a.start&&k<todayKey))cx++}}
+if(a){let ck=0,cx=0,rt=null;{const mk=S.marks[a.id]||{},nk=S.nos[a.id]||{},ld=new Date(vy,vm+1,0).getDate();if(!a.goalM){const lk=key(vy,vm,ld),ek=lk<todayKey?lk:todayKey;ck=Object.keys(mk).filter(k=>k>=a.start&&k<=ek).length;rt=0;const c=dparse(a.start),e=dparse(ek);for(let i=0;i<20000&&c<=e;i++){const k=dk(c),sc=isSched(a,c);if(!mk[k]&&(nk[k]||(sc&&k<todayKey)))cx++;if((sc&&k<todayKey)||mk[k])rt++;c.setDate(c.getDate()+1)}}
+else for(let d=1;d<=ld;d++){const k=key(vy,vm,d);if(mk[k])ck++;else if(nk[k]||(isSched(a,new Date(vy,vm,d))&&k>=a.start&&k<todayKey))cx++}}
 const ckH=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i></span>`,cxH=`<span class="cnt"><i class="cx">${ic('x')}${bn(cx)}</i></span>`,cnt=`<span class="cnt"><i class="ck">${ic('check')}${bn(ck)}</i><i class="cx">${ic('x')}${bn(cx)}</i></span>`;
 const s=stats(a),gm=mgoal(a,vy,vm),gt=a.goalT||0;
-h=`<div class="g card" style="--ac:${a.color}"><div class="mini${gm?'':' tri'}">${gm?'':`<div class="sd l">${ckH}</div>`}<div><b>${bn(s.total)}</b><span>${t('total')}</span></div>${gm?`<div><b>${bn(Math.min(Math.max(0,gm-s.month),remDays(a,vy,vm)))}</b><span>${t('left')}</span></div>`:`<div class="sd r">${cxH}</div>`}</div>${gm?`<div class="pl"><span>${t('monthGoal',bn(Math.min(s.month,gm)),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
+h=`<div class="g card" style="--ac:${a.color}"><div class="mini${gm?'':' tri'}">${gm?'':`<div class="sd l">${ckH}</div>`}<div><b>${bn(rt===null?s.total:rt)}</b><span>${t('total')}</span></div>${gm?`<div><b>${bn(Math.min(Math.max(0,gm-s.month),remDays(a,vy,vm)))}</b><span>${t('left')}</span></div>`:`<div class="sd r">${cxH}</div>`}</div>${gm?`<div class="pl"><span>${t('monthGoal',bn(Math.min(s.month,gm)),bn(gm))}</span>${cnt}<em>${bn(pct(s.month,gm))}%</em></div><div class="bar"><i style="width:${pct(s.month,gm)}%"></i></div>`:''}`;
 if(gt)h+=`<div class="pl"><span>${t('totalGoal',bn(Math.min(s.total,gt)),bn(gt))}</span><em>${bn(pct(s.total,gt))}%</em></div><div class="bar"><i style="width:${pct(s.total,gt)}%"></i></div>`;h+='</div>'}
 else h='';
 $('#info').innerHTML=h;
