@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -57,7 +58,16 @@ public class NotifActionReceiver extends BroadcastReceiver {
                 item.put("kind", kind);
                 item.put("id", ex.opt("id"));
                 item.put("act", isYes ? "yes" : "no");
-                item.put("date", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date()));
+                Calendar cal = Calendar.getInstance();
+                JSONObject sch = o.optJSONObject("schedule");
+                JSONObject on = sch != null ? sch.optJSONObject("on") : null;
+                if (on != null && on.has("hour")) {
+                    int nowMin = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+                    int schMin = on.optInt("hour") * 60 + on.optInt("minute");
+                    // answered after midnight -> the reminder belonged to the previous day
+                    if (nowMin < schMin) cal.add(Calendar.DAY_OF_MONTH, -1);
+                }
+                item.put("date", new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.getTime()));
                 item.put("ts", System.currentTimeMillis());
                 enqueue(c, item);
             } else if ("snooze".equals(aid)) {
