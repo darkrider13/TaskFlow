@@ -379,7 +379,8 @@ fun Onboarding(rev: Int) {
                 Spacer(Modifier.width(16.dp))
                 BasicTextField(
                     value = v,
-                    onValueChange = { if (it.length <= 40) { v = it; err = false } },
+                    onValueChange = { if (it.length <= 40) { v = normDigits(it); err = false } },
+                    visualTransformation = BnDigits,
                     singleLine = true,
                     textStyle = TextStyle(color = p.ink, fontSize = 18.sp),
                     cursorBrush = SolidColor(p.ink),

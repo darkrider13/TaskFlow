@@ -155,10 +155,10 @@ fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)
     val gap = 6.dp
     val hasAdd = onAdd != null
     androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
-        val avail = constraints.maxWidth
+        val maxW = this.maxWidth
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
             androidx.compose.ui.layout.Layout(
-                modifier = Modifier.widthIn(min = maxWidth),
+                modifier = Modifier.widthIn(min = maxW),
                 content = {
                     for ((k, label) in items) {
                         val on = k == sel
@@ -299,7 +299,8 @@ fun TfInput(value: String, onChange: (String) -> Unit, hint: String, modifier: M
     val bd = if (p.dark) p.edge else Color(0x4010253A)
     BasicTextField(
         value = value,
-        onValueChange = onChange,
+        onValueChange = { onChange(normDigits(it)) },
+        visualTransformation = BnDigits,
         singleLine = true,
         textStyle = TextStyle(color = fg, fontSize = 14.sp),
         cursorBrush = SolidColor(fg),
@@ -369,4 +370,20 @@ object IconExtra {
         ),
         "tg" to listOf(IconData.Part("M22 2L11 13", false), IconData.Part("M22 2l-7 20-4-9-9-4z", false)),
     )
+}
+
+
+/** Bangla mode: digits typed in any input box are shown as Bangla digits (the stored text keeps English digits). */
+object BnDigits : androidx.compose.ui.text.input.VisualTransformation {
+    override fun filter(text: androidx.compose.ui.text.AnnotatedString) =
+        androidx.compose.ui.text.input.TransformedText(
+            androidx.compose.ui.text.AnnotatedString(Str.dig(text.text)),
+            androidx.compose.ui.text.input.OffsetMapping.Identity,
+        )
+}
+
+/** Bangla digits -> English digits, so everything stored/parsed stays English. */
+fun normDigits(s: String): String {
+    if (s.none { it in '\u09E6'..'\u09EF' }) return s
+    return s.map { c -> if (c in '\u09E6'..'\u09EF') '0' + (c - '\u09E6') else c }.joinToString("")
 }

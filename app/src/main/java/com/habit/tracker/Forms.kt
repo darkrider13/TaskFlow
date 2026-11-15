@@ -237,7 +237,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
             Spacer(Modifier.height(8.dp))
             val shape = RoundedCornerShape(12.dp)
             BasicTextField(
-                value = subs, onValueChange = { subs = it },
+                value = subs, onValueChange = { subs = normDigits(it) }, visualTransformation = BnDigits,
                 textStyle = TextStyle(color = p.ink, fontSize = 13.sp), cursorBrush = SolidColor(p.ink),
                 modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape),
                 decorationBox = { inner ->
@@ -347,7 +347,7 @@ private fun FormInput(value: String, onChange: (String) -> Unit, hint: String, e
     val fg = if (p.dark) p.ink else Color.Black
     Row(Modifier.fillMaxWidth().padding(top = 2.dp)) {
         BasicTextField(
-            value = value, onValueChange = onChange, singleLine = true,
+            value = value, onValueChange = { onChange(normDigits(it)) }, visualTransformation = BnDigits, singleLine = true,
             textStyle = TextStyle(color = fg, fontSize = 14.sp), cursorBrush = SolidColor(fg),
             modifier = Modifier.weight(1f).height(38.dp).clip(shape).background(bg)
                 .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.edge else Color(0x4010253A), shape),

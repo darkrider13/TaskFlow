@@ -56,7 +56,7 @@ fun UpcomingScreen(rev: Int, todayKey: String, bottomPad: Dp, onEditTask: (JSONO
             val shape = RoundedCornerShape(12.dp)
             Box(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
                 BasicTextField(
-                    value = q, onValueChange = { q = it }, singleLine = true,
+                    value = q, onValueChange = { q = normDigits(it) }, visualTransformation = BnDigits, singleLine = true,
                     textStyle = TextStyle(color = if (p.dark) p.ink else Color.Black, fontSize = 14.sp),
                     cursorBrush = SolidColor(p.ink),
                     modifier = Modifier.fillMaxWidth().height(40.dp).clip(shape).background(if (p.dark) p.glass2 else Color.White)
@@ -130,7 +130,7 @@ fun CatSheet(rev: Int, onClose: () -> Unit) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             val shape = RoundedCornerShape(9.dp)
             BasicTextField(
-                value = n, onValueChange = { n = it; err = false }, singleLine = true,
+                value = n, onValueChange = { n = normDigits(it); err = false }, visualTransformation = BnDigits, singleLine = true,
                 textStyle = TextStyle(color = if (p.dark) p.ink else Color.Black, fontSize = 14.sp), cursorBrush = SolidColor(p.ink),
                 modifier = Modifier.weight(1f).height(38.dp).clip(shape).background(if (p.dark) p.glass2 else Color.White)
                     .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.edge else Color(0x4010253A), shape),

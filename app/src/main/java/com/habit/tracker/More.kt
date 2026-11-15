@@ -272,7 +272,7 @@ private fun RemBox(value: String, onChange: (String) -> Unit, hint: String, modi
     val shape = RoundedCornerShape(9.dp)
     val fg = if (p.dark) p.ink else Color.Black
     BasicTextField(
-        value = value, onValueChange = onChange, singleLine = true,
+        value = value, onValueChange = { onChange(normDigits(it)) }, visualTransformation = BnDigits, singleLine = true,
         textStyle = TextStyle(color = fg, fontSize = 14.sp, textAlign = if (numeric) TextAlign.Center else TextAlign.Start),
         cursorBrush = SolidColor(fg),
         keyboardOptions = if (numeric) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
