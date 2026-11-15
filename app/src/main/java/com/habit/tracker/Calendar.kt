@@ -300,9 +300,10 @@ fun HabitInfo(a: JSONObject, vy: Int, vm: Int, todayKey: String) {
                 }
             }
             Row(Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 5.dp), verticalAlignment = Alignment.CenterVertically) {
-                Tx(Str.f("monthGoal", Str.bn(minOf(s.month, gm)), Str.bn(gm)), Modifier.weight(1f), size = 13.5.sp)
+                Tx(Str.f("monthGoal", Str.bn(minOf(s.month, gm)), Str.bn(gm)), size = 13.5.sp)
+                Spacer(Modifier.width(12.dp))
                 Cnt("check", ck, Color(0xFF00C000)); Spacer(Modifier.width(12.dp)); Cnt("x", cx, Color(0xFFFF0000))
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.weight(1f))
                 Tx(Str.bn(Logic.pct(s.month, gm)) + "%", size = 13.5.sp)
             }
             Bar(Logic.pct(s.month, gm) / 100f, color)

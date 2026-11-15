@@ -186,20 +186,21 @@ fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)
                 },
             ) { measurables, cons ->
                 val g = gap.roundToPx()
-                val nat = measurables.map { it.measure(androidx.compose.ui.unit.Constraints()) }
-                val total = nat.sumOf { it.width } + g * (nat.size - 1).coerceAtLeast(0)
+                val hPx = 28.dp.roundToPx()
+                // natural widths come from intrinsics, so every chip is measured exactly ONCE (Compose forbids measuring twice)
+                val nat = measurables.map { it.maxIntrinsicWidth(hPx) }
+                val total = nat.sum() + g * (nat.size - 1).coerceAtLeast(0)
                 val width = maxOf(total, cons.minWidth)
                 // extra space is shared by the label chips only (the "+" button keeps its own size)
                 val grow = if (hasAdd) nat.size - 1 else nat.size
                 val extra = if (grow > 0) (width - total).coerceAtLeast(0) / grow else 0
-                val placed = nat.mapIndexed { i, pl ->
-                    if (i < grow && extra > 0)
-                        measurables[i].measure(androidx.compose.ui.unit.Constraints.fixed(pl.width + extra, pl.height))
-                    else pl
+                val placed = measurables.mapIndexed { i, m ->
+                    val w = nat[i] + if (i < grow) extra else 0
+                    m.measure(androidx.compose.ui.unit.Constraints.fixedWidth(w))
                 }
                 val h = placed.maxOfOrNull { it.height } ?: 0
                 val used = placed.sumOf { it.width } + g * (placed.size - 1).coerceAtLeast(0)
-                layout(maxOf(used, if (extra > 0) width else used), h) {
+                layout(maxOf(used, width), h) {
                     var x = 0
                     placed.forEach { it.placeRelative(x, 0); x += it.width + g }
                 }
