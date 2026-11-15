@@ -165,7 +165,7 @@ fun Root() {
 
     CompositionLocalProvider(LocalPal provides pal) {
         Box(Modifier.fillMaxSize().appBg(pal)) {
-            ThemeBackdrop(pal.dark)
+            if (pal.dark) ThemeBackdrop()
             val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             Box(Modifier.fillMaxSize().then(if (blurOn) Modifier.blur(14.dp) else Modifier)) {
             Column(Modifier.fillMaxSize().statusBarsPadding().padding(start = 14.dp, end = 14.dp, top = 12.dp)) {
@@ -314,17 +314,16 @@ fun NameSheet(rev: Int, onClose: () -> Unit) {
     }
 }
 
-/** Photo background shared by every screen: moonlit night in dark mode, sunny misty hills in day mode. A soft veil keeps text and buttons easy to read on top of it. */
+/** Dark-mode photo background shared by every screen. The dark veil keeps the picture soft and text easy to read. */
 @Composable
-fun ThemeBackdrop(dark: Boolean) {
+fun ThemeBackdrop() {
     Image(
-        painter = androidx.compose.ui.res.painterResource(if (dark) R.drawable.bg_night else R.drawable.bg_day),
+        painter = androidx.compose.ui.res.painterResource(R.drawable.bg_night),
         contentDescription = null,
         contentScale = androidx.compose.ui.layout.ContentScale.Crop,
         modifier = Modifier.fillMaxSize(),
     )
-    val veil = if (dark) listOf(Color(0x8C000000), Color(0x73000000), Color(0x8C000000))
-    else listOf(Color(0x80FFFFFF), Color(0x66FFFFFF), Color(0x80FFFFFF))
+    val veil = listOf(Color(0xA6000000), Color(0x99000000), Color(0xA6000000))
     Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.verticalGradient(veil)))
 }
 
