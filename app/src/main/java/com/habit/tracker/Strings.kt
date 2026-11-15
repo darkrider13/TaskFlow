@@ -28,6 +28,12 @@ object Str {
         return fmtCache.getOrPut("$pattern|$tag") { java.time.format.DateTimeFormatter.ofPattern(pattern, java.util.Locale.forLanguageTag(tag)) }
     }
 
+    /** Weekday + day + month, e.g. "বৃহস্পতি ৫ আগ." — Bangla weekday comes from our own table because the system's short form cuts Thursday to "বৃহস্". */
+    fun wdDate(d: java.time.LocalDate, comma: Boolean = false): String {
+        val w = if (isBn) t("wdc").split("|")[d.dayOfWeek.value % 7] else d.format(fmt("EEE"))
+        return dig(w + (if (comma) ", " else " ") + d.format(fmt("d MMM")))
+    }
+
     fun t(k: String): String {
         val m = if (isBn) StrData.bn else StrData.en
         return m[k] ?: StrData.en[k] ?: k

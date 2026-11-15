@@ -170,7 +170,7 @@ fun EventCard(k: String, title: String, todayKey: String, onOpenDay: (String) ->
     val p = LocalPal.current
     val n = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(todayKey), LocalDate.parse(k)).toInt()
     val left = if (n <= 0) Str.t("cxToday") else Str.f("cxLeft", Str.bn(n))
-    val ds = Str.dig(LocalDate.parse(k).format(Str.fmt("EEE d MMM")))
+    val ds = Str.wdDate(LocalDate.parse(k))
     val shape = RoundedCornerShape(16.dp)
     Row(
         Modifier.fillMaxWidth().padding(bottom = 8.dp).glass(16.dp)

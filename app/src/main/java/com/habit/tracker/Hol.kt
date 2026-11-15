@@ -324,6 +324,16 @@ object Hol {
         return en.split(" / ").joinToString(" / ") { tr(it) }
     }
 
+    /** Everyday short names for the two holidays people call by one name. */
+    private fun shortBn(en: String, bn: String): String {
+        val t = en + " " + bn
+        return when {
+            Regex("ekushey|mother language|language martyr|একুশে|মাতৃভাষা", RegexOption.IGNORE_CASE).containsMatchIn(t) -> "একুশে ফেব্রুয়ারি"
+            Regex("pohela boishakh|pahela baishakh|pahela boishakh|pohela baishakh|bengali new year|পহেলা বৈশাখ|বাংলা নববর্ষ", RegexOption.IGNORE_CASE).containsMatchIn(t) -> "পহেলা বৈশাখ"
+            else -> bn
+        }
+    }
+
     private val MN = Regex("barat|qadr|jumatul|wida|bida|fitr|adha|azha|ashura|milad", RegexOption.IGNORE_CASE)
 
     /** Holidays of one day: g = government, o = other observances, gx = government with "(unconfirmed)" notes. */
@@ -347,7 +357,7 @@ object Hol {
         val bn = Str.isBn
         val Y = holYear(y)
         fun nmf(x: Item): String {
-            val n = (if (bn) bnFix(x.en, x.bn) else x.en).replace(RX_WIDA, "Jumatul Wida")
+            val n = (if (bn) shortBn(x.en, bnFix(x.en, x.bn)) else x.en).replace(RX_WIDA, "Jumatul Wida")
             val c = n.replace(RX_PAREN, "").replace(RX_SPACES, " ").trim()
             return c.ifEmpty { n }
         }
