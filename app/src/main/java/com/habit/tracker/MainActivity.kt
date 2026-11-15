@@ -334,6 +334,14 @@ fun UpdateBox(onToast: (String) -> Unit) {
     }
     Tx((if (bn) "বর্তমান ভার্সন: " else "Current version: ") + Updater.versionLabel(ctx), size = 13.sp, color = p.muted)
     if (info.isNotEmpty()) Tx(info, size = 13.sp, modifier = Modifier.padding(top = 4.dp))
+    if (st == "downloading") {
+        val frac by androidx.compose.animation.core.animateFloatAsState(Updater.progress / 100f, label = "dl")
+        Box(
+            Modifier.fillMaxWidth().padding(top = 8.dp).height(6.dp).clip(RoundedCornerShape(3.dp)).background(p.glass2)
+        ) {
+            Box(Modifier.fillMaxWidth(frac.coerceIn(0f, 1f)).fillMaxHeight().clip(RoundedCornerShape(3.dp)).background(p.ac))
+        }
+    }
     Spacer(Modifier.height(8.dp))
     when (st) {
         "checking", "downloading" -> {}
@@ -348,7 +356,7 @@ fun UpdateBox(onToast: (String) -> Unit) {
         "ready" -> RowBtn(if (bn) "ইনস্টল করুন" else "Install", Modifier.fillMaxWidth(), icon = "import") {
             if (!Updater.install(ctx)) onToast(if (bn) "ইনস্টলের অনুমতি দিয়ে ফিরে এসে আবার ইনস্টল চাপুন" else "Allow installs, come back and tap install again")
         }
-        else -> RowBtn(if (bn) "আপডেট চেক করুন" else "Check for update", Modifier.fillMaxWidth()) {
+        else -> RowBtn(if (bn) "আপডেট চেক করুন" else "Check for update", Modifier.fillMaxWidth(), icon = "refresh") {
             scope.launch(io) { Updater.check(ctx) }
         }
     }

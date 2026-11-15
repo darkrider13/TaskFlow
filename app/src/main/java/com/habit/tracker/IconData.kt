@@ -7,6 +7,7 @@ object IconData {
         "share" to listOf(Part("M3.4,12.0a2.6,2.6 0 1,0 5.2,0a2.6,2.6 0 1,0 -5.2,0z", false), Part("M15.4,6.0a2.6,2.6 0 1,0 5.2,0a2.6,2.6 0 1,0 -5.2,0z", false), Part("M15.4,18.0a2.6,2.6 0 1,0 5.2,0a2.6,2.6 0 1,0 -5.2,0z", false), Part("M8.3 10.8l7.4-3.6M8.3 13.2l7.4 3.6", false)),
         "save" to listOf(Part("M12 4v11M8 11l4 4 4-4", false), Part("M5 19h14", false)),
         "export" to listOf(Part("M12 15V4M8 8l4-4 4 4", false), Part("M5 13v6h14v-6", false)),
+        "refresh" to listOf(Part("M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", false), Part("M21 3v5h-5", false), Part("M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", false), Part("M8 16H3v5", false)),
         "import" to listOf(Part("M12 4v11M8 11l4 4 4-4", false), Part("M5 13v6h14v-6", false)),
         "warn" to listOf(Part("M12 3.5l9.5 16.5h-19z", false), Part("M12 10v4.5", false), Part("M11.4,17.2a0.6,0.6 0 1,0 1.2,0a0.6,0.6 0 1,0 -1.2,0z", true)),
         "trash" to listOf(Part("M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3", false)),
