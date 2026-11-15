@@ -1,7 +1,10 @@
 package com.habit.tracker
 
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -159,6 +162,13 @@ object Updater {
             )
             return false
         }
+        // Preferred: Android's installer session (on Android 12+ it asks for no extra confirmation when updating itself).
+        try {
+            installSession(ctx, f)
+            return true
+        } catch (e: Exception) {
+            // fall through to the classic install screen
+        }
         val uri = FileProvider.getUriForFile(ctx, ctx.packageName + ".fileprovider", f)
         ctx.startActivity(
             Intent(Intent.ACTION_VIEW)
@@ -166,5 +176,48 @@ object Updater {
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
         )
         return true
+    }
+
+    private fun installSession(ctx: Context, f: File) {
+        val inst = ctx.packageManager.packageInstaller
+        val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+        params.setAppPackageName(ctx.packageName)
+        if (Build.VERSION.SDK_INT >= 31) params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
+        val id = inst.createSession(params)
+        val session = inst.openSession(id)
+        try {
+            f.inputStream().use { inp ->
+                session.openWrite("TaskFlow.apk", 0, f.length()).use { out ->
+                    inp.copyTo(out)
+                    session.fsync(out)
+                }
+            }
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0)
+            val pending = PendingIntent.getBroadcast(ctx, id, Intent(ctx, InstallReceiver::class.java), flags)
+            session.commit(pending.intentSender)
+        } catch (e: Exception) {
+            try { session.abandon() } catch (x: Exception) {}
+            throw e
+        } finally {
+            session.close()
+        }
+    }
+}
+
+/** Receives the installer's result: opens the confirmation screen when Android still needs one. */
+class InstallReceiver : BroadcastReceiver() {
+    override fun onReceive(ctx: Context, i: Intent) {
+        when (i.getIntExtra(PackageInstaller.EXTRA_STATUS, -1)) {
+            PackageInstaller.STATUS_PENDING_USER_ACTION -> {
+                @Suppress("DEPRECATION")
+                val c = if (Build.VERSION.SDK_INT >= 33) i.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java) else i.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
+                if (c != null) {
+                    c.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    try { ctx.startActivity(c) } catch (e: Exception) { Updater.status = "error" }
+                }
+            }
+            PackageInstaller.STATUS_SUCCESS -> {}
+            else -> { Updater.errCode = -3; Updater.status = "error" }
+        }
     }
 }
