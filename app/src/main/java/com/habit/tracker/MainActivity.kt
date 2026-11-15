@@ -344,7 +344,7 @@ fun UpdateBox(onToast: (String) -> Unit) {
         "downloading" -> if (bn) "ডাউনলোড হচ্ছে… ${Updater.progress}%" else "Downloading… ${Updater.progress}%"
         "ready" -> if (bn) "ডাউনলোড শেষ। ইনস্টল করুন।" else "Download finished. Tap install."
         "nonet" -> if (bn) "ইন্টারনেট নেই। নেট চালু করে আবার চেষ্টা করুন।" else "No internet. Turn it on and try again."
-        "error" -> if (bn) "আপডেট চেক করা যায়নি। একটু পরে আবার চেষ্টা করুন।" else "Could not check for updates. Try again later."
+        "error" -> (if (bn) "আপডেট চেক করা যায়নি। একটু পরে আবার চেষ্টা করুন।" else "Could not check for updates. Try again later.") + (if (Updater.errCode != 0) " (${Updater.errCode})" else "")
         else -> ""
     }
     Tx((if (bn) "বর্তমান ভার্সন: " else "Current version: ") + Updater.versionLabel(ctx), size = 13.sp, color = p.muted)

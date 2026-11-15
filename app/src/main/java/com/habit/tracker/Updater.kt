@@ -25,6 +25,13 @@ object Updater {
     /** Change user / repository if yours are different (the repository must be public). */
     const val API = "https://api.github.com/repos/darkrider13/TaskFlow-v2/releases/tags/latest"
 
+    /** Plain web page of the same release; used when the API refuses (e.g. its hourly limit on shared mobile networks). */
+    const val WEB = "https://github.com/darkrider13/TaskFlow-v2/releases/tag/latest"
+    const val APK = "https://github.com/darkrider13/TaskFlow-v2/releases/download/latest/TaskFlow.apk"
+
+    /** HTTP code of the last failed request, shown in the error text to find the cause. */
+    var errCode by mutableIntStateOf(0)
+
     /** idle | checking | uptodate | avail | downloading | ready | nonet | error */
     var status by mutableStateOf("idle")
     var progress by mutableIntStateOf(0)
@@ -42,13 +49,15 @@ object Updater {
     fun check(ctx: Context) {
         if (status == "checking" || status == "downloading") return
         status = "checking"
+        errCode = 0
         try {
             val c = URL(API).openConnection() as HttpURLConnection
             c.connectTimeout = 10000
             c.readTimeout = 10000
             c.setRequestProperty("Accept", "application/vnd.github+json")
             c.setRequestProperty("User-Agent", "TaskFlow-App")
-            if (c.responseCode != 200) { status = "error"; return }
+            val code = c.responseCode
+            if (code != 200) { errCode = code; checkWeb(ctx); return }
             val j = JSONObject(c.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
             val build = Regex("build\\s*(\\d+)", RegexOption.IGNORE_CASE).find(j.optString("name"))?.groupValues?.get(1)?.toIntOrNull()
             val assets = j.optJSONArray("assets")
@@ -57,13 +66,38 @@ object Updater {
                 val a = assets.optJSONObject(i) ?: continue
                 if (a.optString("name").endsWith(".apk", true)) { url = a.optString("browser_download_url"); break }
             }
-            if (build == null || url.isEmpty()) { status = "error"; return }
+            if (build == null || url.isEmpty()) { checkWeb(ctx); return }
             remoteBuild = build
             apkUrl = url
             status = if (build > localBuild(ctx)) "avail" else "uptodate"
         } catch (e: IOException) {
             status = "nonet"
         } catch (e: Exception) {
+            status = "error"
+        }
+    }
+
+    /** Second way to find the newest build: read the release page's title ("TaskFlow (build N)"). */
+    private fun checkWeb(ctx: Context) {
+        try {
+            val c = URL(WEB).openConnection() as HttpURLConnection
+            c.connectTimeout = 10000
+            c.readTimeout = 10000
+            c.instanceFollowRedirects = true
+            c.setRequestProperty("User-Agent", "TaskFlow-App")
+            val code = c.responseCode
+            if (code != 200) { errCode = code; status = "error"; return }
+            val html = c.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            val title = Regex("<title>([^<]*)</title>", RegexOption.IGNORE_CASE).find(html)?.groupValues?.get(1) ?: ""
+            val build = Regex("build\\s*(\\d+)", RegexOption.IGNORE_CASE).find(title)?.groupValues?.get(1)?.toIntOrNull()
+            if (build == null) { errCode = -1; status = "error"; return }
+            remoteBuild = build
+            apkUrl = APK
+            status = if (build > localBuild(ctx)) "avail" else "uptodate"
+        } catch (e: IOException) {
+            status = "nonet"
+        } catch (e: Exception) {
+            errCode = -2
             status = "error"
         }
     }
