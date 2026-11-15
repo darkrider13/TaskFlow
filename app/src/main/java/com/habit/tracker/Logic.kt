@@ -221,6 +221,12 @@ object LogicExt {
         Store.touch()
     }
 
+    fun renameCat(k: String, n: String) {
+        val arr = Store.s.optJSONArray("cats") ?: return
+        for (i in 0 until arr.length()) arr.optJSONObject(i)?.let { if (it.optString("k") == k) it.put("n", n) }
+        Store.touch()
+    }
+
     fun delCat(k: String) {
         val arr = Store.s.optJSONArray("cats") ?: return
         for (i in 0 until arr.length()) if (arr.optJSONObject(i)?.optString("k") == k) { arr.remove(i); break }

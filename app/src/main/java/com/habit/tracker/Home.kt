@@ -93,7 +93,7 @@ fun HomeScreen(
                 EmptyCard { PlusText(Str.t("noToday"), size = 14.sp, color = p.muted) }
             } else {
                 val chips = listOf("" to Str.t("cAll")) + Logic.catAll().map { it to Logic.catLbl(it) }
-                ChipsRow(chips, fcat, onAdd = { UiState.showCats = true }) { UiState.fcat = it }
+                ChipsRow(chips, fcat, onAdd = { UiState.showCats = true }, onSelAgain = { k -> if (k.isNotEmpty() && k !in Logic.builtinCats) UiState.editCat = k }) { UiState.fcat = it }
                 val shown = fl(td)
                 if (shown.isEmpty()) {
                     EmptyCard { Tx(Str.t("noRes"), size = 14.sp, color = p.muted, align = androidx.compose.ui.text.style.TextAlign.Center) }

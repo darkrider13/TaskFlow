@@ -34,6 +34,8 @@ object UiState {
     var remSheet by mutableStateOf(false)
     var remObj by mutableStateOf<JSONObject?>(null)
     var showCats by mutableStateOf(false)
+    /** key of the custom category whose edit/delete popup is open */
+    var editCat by mutableStateOf<String?>(null)
     /** habit waiting for the "delete?" answer after a swipe on the Home tab */
     var delHabit by mutableStateOf<JSONObject?>(null)
     /** habit the user confirmed to delete - its card plays the slide-out animation, then deletes it */

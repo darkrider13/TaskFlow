@@ -149,7 +149,7 @@ fun Root() {
     }
 
     // blur the screen behind while a popup / sheet is open
-    val blurOn = UiState.dayKey != null || UiState.edit != null || UiState.showCats || UiState.remSheet ||
+    val blurOn = UiState.dayKey != null || UiState.edit != null || UiState.showCats || UiState.editCat != null || UiState.remSheet ||
         showSettings || showName || LockState.typeDlg || UiState.dlg != null || UiState.pickers > 0 || UiState.delHabit != null
 
     CompositionLocalProvider(LocalPal provides pal) {
@@ -187,6 +187,7 @@ fun Root() {
             UiState.dayKey?.let { DaySheet(rev, it, onClose = { UiState.dayKey = null }, onToast = toast) }
             UiState.edit?.let { FormSheet(rev, it, toast) }
             if (UiState.showCats) CatSheet(rev) { UiState.showCats = false }
+            UiState.editCat?.let { CatEditSheet(it, rev) { UiState.editCat = null } }
             if (UiState.remSheet) ReminderSheet(rev, UiState.remObj, onClose = { UiState.remSheet = false }, onToast = toast)
             if (showSettings) SettingsSheet(
                 rev, onClose = { showSettings = false }, onToast = toast,

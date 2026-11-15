@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -148,9 +149,9 @@ fun Seg(items: List<SegItem>, sel: String, onSel: (String) -> Unit, modifier: Mo
     }
 }
 
-/** Category chips. Exactly 4 chips are visible per page; swipe sideways to see the next 4. No chip is ever cut off. */
+/** Category chips. Tapping the already-selected chip calls onSelAgain (used to edit / delete a category). Exactly 4 chips are visible per page; swipe sideways to see the next 4. No chip is ever cut off. */
 @Composable
-fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)? = null, onSel: (String) -> Unit) {
+fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)? = null, onSelAgain: ((String) -> Unit)? = null, onSel: (String) -> Unit) {
     val p = LocalPal.current
     val gap = 6.dp
     val perPage = 4
@@ -163,7 +164,14 @@ fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)
             modifier = Modifier.weight(1f),
             beyondViewportPageCount = 1,
         ) { pg ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
+            Row(
+                Modifier.fillMaxWidth().graphicsLayer {
+                    // fade: a page that is sliding in/out of the row gets more transparent, so chips never look cut off
+                    val d = Math.abs(pg - (pagerState.currentPage + pagerState.currentPageOffsetFraction)).coerceIn(0f, 1f)
+                    alpha = (1f - d) * (1f - d)
+                },
+                horizontalArrangement = Arrangement.spacedBy(gap),
+            ) {
                 val page = pages.getOrElse(pg) { emptyList() }
                 for ((k, label) in page) {
                     val on = k == sel
@@ -174,7 +182,7 @@ fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)
                             .clip(shape)
                             .background(if (on) p.ac else p.glass)
                             .border(1.dp, if (on) Color.Transparent else p.edge, shape)
-                            .tap { onSel(k) }
+                            .tap { if (on && onSelAgain != null) onSelAgain(k) else onSel(k) }
                             .padding(horizontal = 6.dp),
                         contentAlignment = Alignment.Center,
                     ) {

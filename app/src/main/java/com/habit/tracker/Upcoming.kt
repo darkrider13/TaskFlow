@@ -71,7 +71,7 @@ fun UpcomingScreen(rev: Int, todayKey: String, bottomPad: Dp, onEditTask: (JSONO
                 Box(Modifier.padding(start = 12.dp).height(40.dp), contentAlignment = Alignment.CenterStart) { Ic("search", size = 18.dp, tint = p.muted) }
             }
             Spacer(Modifier.height(4.dp))
-            ChipsRow(listOf("" to Str.t("cAll")) + Logic.catAll().map { it to Logic.catLbl(it) }, fcat, onAdd = { UiState.showCats = true }) { UiState.fcat = it }
+            ChipsRow(listOf("" to Str.t("cAll")) + Logic.catAll().map { it to Logic.catLbl(it) }, fcat, onAdd = { UiState.showCats = true }, onSelAgain = { k -> if (k.isNotEmpty() && k !in Logic.builtinCats) UiState.editCat = k }) { UiState.fcat = it }
 
             val qq = q.trim().lowercase()
             if (qq.isNotEmpty()) {
@@ -120,7 +120,7 @@ fun UpcomingScreen(rev: Int, todayKey: String, bottomPad: Dp, onEditTask: (JSONO
     }
 }
 
-/** Popup to add / remove your own task categories. */
+/** Popup to add your own task categories (rename / delete is done by tapping a selected chip). */
 @Composable
 fun CatSheet(rev: Int, onClose: () -> Unit) {
     val p = LocalPal.current
@@ -145,16 +145,28 @@ fun CatSheet(rev: Int, onClose: () -> Unit) {
                 if (n.trim().isEmpty()) err = true else { LogicExt.addCat(n.trim()); n = "" }
             }
         }
+    }
+}
+
+/** Popup opened by tapping an already-selected custom category chip: rename it or delete it. */
+@Composable
+fun CatEditSheet(key: String, rev: Int, onClose: () -> Unit) {
+    val p = LocalPal.current
+    val oldName = remember(key) { Logic.catLbl(key) }
+    var n by remember(key) { mutableStateOf(oldName) }
+    var err by remember { mutableStateOf(false) }
+    SheetFrame(Str.t("catEditT"), onClose) {
+        TfInput(n, { n = it; err = false }, Str.t("catNamePh"), Modifier.fillMaxWidth())
         Spacer(Modifier.height(12.dp))
-        for (c in LogicExt.let { Logic.customCats() }) {
-            Row(Modifier.fillMaxWidth().padding(bottom = 8.dp).glass().height(IntrinsicSize.Min)) {
-                Box(Modifier.width(4.dp).fillMaxHeight().background(Color(0xFF0000FF)))
-                Row(Modifier.weight(1f).padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Ic("tag", size = 16.dp)
-                    Spacer(Modifier.width(8.dp))
-                    Tx(c.optString("n"), Modifier.weight(1f), size = 15.sp, weight = FontWeight.Bold)
-                    Box(Modifier.clip(androidx.compose.foundation.shape.CircleShape).tap { LogicExt.delCat(c.optString("k")) }.padding(6.dp)) { Ic("x", size = 18.dp) }
-                }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            RowBtn(Str.t("del"), Modifier.weight(1f), icon = "trash", color = Color(0xFFFF4D4D)) {
+                UiState.dlg = DlgSpec(
+                    Str.t("delT"), oldName, Str.t("del"), cancel = Str.t("cancelT"), kind = "ask", icon = "trash",
+                    onOk = { LogicExt.delCat(key); onClose() },
+                )
+            }
+            RowBtn(Str.t("save"), Modifier.weight(1f)) {
+                if (n.trim().isEmpty()) err = true else { LogicExt.renameCat(key, n.trim()); onClose() }
             }
         }
     }
