@@ -112,11 +112,11 @@ object HolRemote {
             if (ln.startsWith("END:VEVENT")) {
                 val st = s
                 if (inEv && st != null && name.isNotBlank()) {
-                    var last = st
+                    var last: LocalDate = st
                     val en = e
                     if (en != null && en.isAfter(st)) last = if (eHasTime) en else en.minusDays(1)   // all-day DTEND is exclusive
                     if (last.isAfter(st.plusDays(14))) last = st
-                    var d = st
+                    var d: LocalDate = st
                     while (!d.isAfter(last)) { out.add(Ev(d, name)); d = d.plusDays(1) }
                 }
                 inEv = false; continue
