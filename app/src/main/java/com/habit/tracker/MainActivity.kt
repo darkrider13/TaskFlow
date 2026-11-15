@@ -402,7 +402,7 @@ fun SettingsSheet(rev: Int, onClose: () -> Unit, onToast: (String) -> Unit, onEx
             RowBtn(Str.t("expT"), Modifier.weight(1f), icon = "export") { onExport() }
             RowBtn(Str.t("impT"), Modifier.weight(1f), icon = "import") { onImport() }
         }
-        SectionTitle(if (Str.isBn) "অ্যাপ আপডেট" else "App update", center = true)
+        Spacer(Modifier.height(18.dp))
         UpdateBox(onToast)
         Spacer(Modifier.height(22.dp))
         BigBtn(Str.t("save")) {
