@@ -28,7 +28,7 @@ object Backup {
             val nt = Store.s.optJSONArray("todos")?.length() ?: 0
             UiState.dlg = DlgSpec(Str.t("exDoneT"), Str.f("exDoneD", na, nt), Str.t("bkOkB"))
         } catch (e: Exception) {
-            UiState.dlg = DlgSpec(Str.t("bkBadT"), e.message ?: "", Str.t("bkOkB"))
+            UiState.dlg = DlgSpec(Str.t("bkBadT"), e.message ?: "", Str.t("bkOkB"), kind = "err")
         }
     }
 
@@ -36,24 +36,24 @@ object Backup {
         try {
             val bytes = ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: ByteArray(0)
             if (bytes.size > MAXB) {
-                UiState.dlg = DlgSpec(Str.t("bkBadT"), Str.t("imBig"), Str.t("bkOkB"))
+                UiState.dlg = DlgSpec(Str.t("bkBadT"), Str.t("imBig"), Str.t("bkOkB"), kind = "err")
                 return
             }
             doImport(String(bytes, Charsets.UTF_8))
         } catch (e: Exception) {
-            UiState.dlg = DlgSpec(Str.t("bkBadT"), Str.t("bkBad"), Str.t("bkOkB"))
+            UiState.dlg = DlgSpec(Str.t("bkBadT"), Str.t("bkBad"), Str.t("bkOkB"), kind = "err")
         }
     }
 
     private fun bad() {
-        UiState.dlg = DlgSpec(Str.t("bkBadT"), Str.t("bkBad"), Str.t("bkOkB"))
+        UiState.dlg = DlgSpec(Str.t("bkBadT"), Str.t("bkBad"), Str.t("bkOkB"), kind = "err")
     }
 
     fun doImport(txt: String) {
         val o = try { JSONObject(txt) } catch (e: Exception) { bad(); return }
         val d = o.optJSONObject("data") ?: o
         if (d.optJSONArray("acts") == null || d.optJSONArray("todos") == null || d.optJSONObject("marks") == null) { bad(); return }
-        UiState.dlg = DlgSpec(Str.t("bkQT"), Str.t("bkQ"), Str.t("bkImB"), Str.t("cancelT")) {
+        UiState.dlg = DlgSpec(Str.t("bkQT"), Str.t("bkQ"), Str.t("bkImB"), Str.t("cancelT"), kind = "ask", icon = "import") {
             val oldLock = Store.s.optJSONObject("lock")
             Store.s = d
             if (oldLock != null) d.put("lock", oldLock) else d.remove("lock")

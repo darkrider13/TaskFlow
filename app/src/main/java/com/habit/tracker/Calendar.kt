@@ -41,7 +41,8 @@ object UiState {
     }
 }
 
-class DlgSpec(val title: String, val text: String, val ok: String, val cancel: String? = null, val onOk: () -> Unit = {})
+/** kind: "ok" (green tick), "err" (red cross) or "ask" (question with [icon]). */
+class DlgSpec(val title: String, val text: String, val ok: String, val cancel: String? = null, val kind: String = "ok", val icon: String = "import", val onOk: () -> Unit = {})
 
 class FormSpec(val kind: String, val act: JSONObject?, val task: JSONObject?, val dateKey: String? = null)
 
@@ -121,7 +122,7 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
         // below the grid: upcoming holidays / events (only when no habit is picked)
         if (a == null) {
             Row(Modifier.fillMaxWidth().padding(bottom = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                for ((k, lbl) in listOf("evt" to "cxEvt", "hol" to "cxHol")) {
+                for ((k, lbl) in listOf("hol" to "cxHol", "evt" to "cxEvt")) {
                     val on = cxTab == k
                     val shape = RoundedCornerShape(20.dp)
                     Box(

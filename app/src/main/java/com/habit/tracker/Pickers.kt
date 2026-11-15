@@ -1,6 +1,5 @@
 package com.habit.tracker
 
-import android.app.DatePickerDialog
 import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -30,10 +29,6 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-fun pickDate(ctx: Context, cur: String, onPick: (String) -> Unit) {
-    val d = try { LocalDate.parse(cur) } catch (e: Exception) { LocalDate.now() }
-    DatePickerDialog(ctx, { _, y, m, dd -> onPick(LocalDate.of(y, m + 1, dd).toString()) }, d.year, d.monthValue - 1, d.dayOfMonth).show()
-}
 
 /** One scrolling wheel (44dp rows, three visible, middle one selected) - same idea as the original time picker. */
 @OptIn(ExperimentalFoundationApi::class)
@@ -71,7 +66,7 @@ fun WheelColumn(items: List<String>, start: Int, loop: Boolean, modifier: Modifi
 }
 
 @Composable
-fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, body: @Composable ColumnScope.() -> Unit) {
+fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, setColor: Color? = null, body: @Composable ColumnScope.() -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(32.dp)
     // a real popup window on top of everything (so it is never cut off inside the form sheet)
@@ -107,9 +102,9 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
                         contentAlignment = Alignment.Center,
                     ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.SemiBold) }
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.ac).tap(onSet),
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor ?: p.ac).tap(onSet),
                         contentAlignment = Alignment.Center,
-                    ) { Tx(Str.t("setB"), size = 16.sp, color = p.tink, weight = FontWeight.Bold) }
+                    ) { Tx(Str.t("setB"), size = 16.sp, color = if (setColor != null) Color(0xFF041014) else p.tink, weight = FontWeight.Bold) }
                 }
             }
         }
@@ -165,6 +160,39 @@ fun GoalPickerDlg(initial: Int, onCancel: () -> Unit, onSet: (Int) -> Unit) {
         Box(Modifier.fillMaxWidth().padding(horizontal = 6.dp)) {
             WheelBand()
             WheelColumn(items, initial, true, Modifier.fillMaxWidth()) { k = it }
+        }
+    }
+}
+
+/** Date picker with three wheels (date, month, year) - same look as the time picker. Returns "yyyy-MM-dd". */
+@Composable
+fun DatePickerDlg(initial: String, onCancel: () -> Unit, onSet: (String) -> Unit) {
+    val p = LocalPal.current
+    val d0 = try { LocalDate.parse(initial) } catch (e: Exception) { LocalDate.now() }
+    val y0 = 2000
+    val y1 = 2100
+    var d by remember { mutableIntStateOf(d0.dayOfMonth - 1) }
+    var m by remember { mutableIntStateOf(d0.monthValue - 1) }
+    var y by remember { mutableIntStateOf(d0.year.coerceIn(y0, y1) - y0) }
+    val loc = java.util.Locale.forLanguageTag(Str.t("loc"))
+    val months = List(12) { Str.dig(LocalDate.of(2026, it + 1, 1).format(java.time.format.DateTimeFormatter.ofPattern("MMM", loc))) }
+    PickerCard("nav_cal", Str.t("pickD"), onCancel, {
+        val yy = y0 + y
+        val len = java.time.YearMonth.of(yy, m + 1).lengthOfMonth()
+        onSet(LocalDate.of(yy, m + 1, minOf(d + 1, len)).toString())
+    }, setColor = Color(0xFF00FF00)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp)) {
+            Tx(Str.t("dateL"), Modifier.weight(1f), size = 13.sp, color = p.muted, align = TextAlign.Center)
+            Tx(Str.t("monL"), Modifier.weight(1f), size = 13.sp, color = p.muted, align = TextAlign.Center)
+            Tx(Str.t("yrL"), Modifier.weight(1f), size = 13.sp, color = p.muted, align = TextAlign.Center)
+        }
+        Box(Modifier.fillMaxWidth().padding(horizontal = 6.dp)) {
+            WheelBand()
+            Row(Modifier.fillMaxWidth()) {
+                WheelColumn(List(31) { Str.dig((it + 1).toString()) }, d, true, Modifier.weight(1f)) { d = it }
+                WheelColumn(months, m, true, Modifier.weight(1f)) { m = it }
+                WheelColumn(List(y1 - y0 + 1) { Str.dig((y0 + it).toString()) }, y, false, Modifier.weight(1f)) { y = it }
+            }
         }
     }
 }

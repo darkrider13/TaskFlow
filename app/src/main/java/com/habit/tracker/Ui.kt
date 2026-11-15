@@ -54,10 +54,6 @@ fun Modifier.glass(radius: Dp = 18.dp): Modifier {
         .clip(shape)
         .background(p.glass)
         .border(1.dp, p.edge, shape)
-        .drawBehind {
-            val r = radius.toPx()
-            drawLine(p.hi, Offset(r, 0.5f), Offset(size.width - r, 0.5f), strokeWidth = 1f)
-        }
 }
 
 @Composable
@@ -227,7 +223,7 @@ fun EmptyCard(content: @Composable () -> Unit) {
 
 /** Centered popup panel with dimmed background (the original "sheet"). */
 @Composable
-fun SheetFrame(title: String, onClose: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
+fun SheetFrame(title: String, onClose: () -> Unit, centerTitle: Boolean = false, content: @Composable ColumnScope.() -> Unit) {
     val p = LocalPal.current
     BackHandler(onBack = onClose)
     val shape = RoundedCornerShape(22.dp)
@@ -246,7 +242,14 @@ fun SheetFrame(title: String, onClose: () -> Unit, content: @Composable ColumnSc
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
         ) {
-            Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (centerTitle) {
+                Box(Modifier.fillMaxWidth().padding(bottom = 12.dp).heightIn(min = 36.dp), contentAlignment = Alignment.Center) {
+                    Tx(title, size = 18.sp, weight = FontWeight.Bold, align = TextAlign.Center, modifier = Modifier.padding(horizontal = 40.dp))
+                    Box(Modifier.align(Alignment.CenterEnd).size(36.dp).clip(CircleShape).tap { onClose() }, contentAlignment = Alignment.Center) {
+                        Ic("x", size = 22.dp, stroke = 2.2f)
+                    }
+                }
+            } else Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Tx(title, size = 18.sp, weight = FontWeight.Bold, modifier = Modifier.weight(1f))
                 Box(Modifier.size(36.dp).clip(CircleShape).tap { onClose() }, contentAlignment = Alignment.Center) {
                     Ic("x", size = 22.dp, stroke = 2.2f)
@@ -290,7 +293,7 @@ fun TfInput(value: String, onChange: (String) -> Unit, hint: String, modifier: M
 
 /** Small button used in rows (height 34). */
 @Composable
-fun RowBtn(label: String, modifier: Modifier = Modifier, icon: String? = null, onClick: () -> Unit) {
+fun RowBtn(label: String, modifier: Modifier = Modifier, icon: String? = null, color: Color? = null, onClick: () -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
     Row(
@@ -302,7 +305,7 @@ fun RowBtn(label: String, modifier: Modifier = Modifier, icon: String? = null, o
             Ic(icon, size = 16.dp)
             Spacer(Modifier.width(6.dp))
         }
-        Tx(label, size = 13.sp, maxLines = 1)
+        Tx(label, size = 13.sp, maxLines = 1, color = color ?: p.ink, weight = if (color != null) FontWeight.Bold else FontWeight.Normal)
     }
 }
 

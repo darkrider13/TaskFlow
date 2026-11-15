@@ -2,6 +2,17 @@ package com.habit.tracker
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.graphics.Brush
+import kotlin.math.roundToInt
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,7 +56,7 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
             val disabled = (!on && !Logic.canMark(a, k)) || (k < a.optString("start") && !on)
             Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
-                    Modifier.weight(1f).height(42.dp).alpha(if (disabled) .4f else 1f).clip(RoundedCornerShape(12.dp))
+                    Modifier.weight(1f).height(42.dp).alpha(if (disabled) .4f else if (on) .45f else 1f).clip(RoundedCornerShape(12.dp))
                         .background(if (on) p.glass2 else parseColor(a.optString("color")))
                         .tap {
                             if (k < a.optString("start") && !on) return@tap
@@ -97,11 +108,11 @@ private fun IconBox(icon: String, red: Boolean, onClick: () -> Unit) {
 @Composable
 fun ConfirmDlg(title: String, text: String, ok: String, cancel: String, onOk: () -> Unit, onCancel: () -> Unit) {
     val p = LocalPal.current
-    SheetFrame(title, onCancel) {
+    SheetFrame(title, onCancel, centerTitle = true) {
         Tx(text, size = 14.sp, color = p.ink, modifier = Modifier.padding(bottom = 16.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            RowBtn(cancel, Modifier.weight(1f)) { onCancel() }
-            RowBtn(ok, Modifier.weight(1f)) { onOk() }
+            RowBtn(cancel, Modifier.weight(1f), color = Color(0xFF22C55E)) { onCancel() }
+            RowBtn(ok, Modifier.weight(1f), color = Color(0xFFFF0000)) { onOk() }
         }
     }
 }
@@ -166,9 +177,11 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
     val initDays = remember { ea?.optJSONArray("days")?.let { arr -> List(arr.length()) { arr.optInt(it) } } ?: emptyList() }
     var wsel by remember { mutableStateOf(initDays) }
     var strict by remember { mutableStateOf(initDays.isNotEmpty()) }
+    var hcolor by remember { mutableStateOf(ea?.optString("color")?.ifEmpty { null } ?: LogicExt.pickColor(Logic.acts().map { it.optString("color").uppercase() }.toSet())) }
     var errName by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf<String?>(null) } // "task" or "habit"
     var showGoal by remember { mutableStateOf(false) }
+    var showDate by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxWidth()) {
         if (!isEdit) {
@@ -176,7 +189,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
         }
         if (kind == "task") {
             FormInput(text, { text = it; errName = false }, Str.t("taskPh"), errName)
-            FRow(Str.t("dateL")) { ValBtn(LogicExt.shortDate(date)) { pickDate(ctx, date) { date = it } } }
+            FRow(Str.t("dateL")) { ValBtn(LogicExt.shortDate(date)) { showDate = true } }
             FRow(Str.t("timeL")) { ValBtn(if (time == "00:00") Str.dig("00:00") else Str.t12(time)) { showTime = "task" } }
             FRow(Str.t("repL"), wide = true) {
                 Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -187,9 +200,16 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
                 }
             }
             FRow(Str.t("catL"), wide = true) {
-                Row(Modifier.weight(1f).horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    PillBtn(Str.t("cNone"), cat == "", Modifier.widthIn(min = 70.dp)) { cat = "" }
-                    for (c in Logic.catAll()) PillBtn(Logic.catLbl(c), cat == c, Modifier.widthIn(min = 70.dp)) { cat = c }
+                // exactly 3 options visible, swipe moves one option at a time (single snap)
+                BoxWithConstraints(Modifier.weight(1f)) {
+                    val gap = 5.dp
+                    val itemW = (maxWidth - gap * 2) / 3
+                    val opts = listOf("" to Str.t("cNone")) + Logic.catAll().map { it to Logic.catLbl(it) }
+                    val start = opts.indexOfFirst { it.first == cat }.coerceAtLeast(0).coerceAtMost((opts.size - 3).coerceAtLeast(0))
+                    val pager = rememberPagerState(initialPage = start) { opts.size }
+                    HorizontalPager(state = pager, pageSize = PageSize.Fixed(itemW), pageSpacing = gap, modifier = Modifier.fillMaxWidth()) { i ->
+                        PillBtn(opts[i].second, cat == opts[i].first, Modifier.fillMaxWidth()) { cat = opts[i].first }
+                    }
                 }
             }
             Spacer(Modifier.height(8.dp))
@@ -212,15 +232,29 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
                 ValBtn(if (gall) Str.t("gaL") else if (gm > 0) Str.dig(gm.toString()) + " " + Str.t("gdU") else Str.dig("00")) { showGoal = true }
             }
             FRow(Str.t("gtL")) {
+                // Looks exactly like ValBtn above (same size, font size, centred, Bangla digits)
                 val shape = RoundedCornerShape(9.dp)
                 BasicTextField(
-                    value = gt, onValueChange = { v -> if (v.all { it.isDigit() } && v.length <= 6) gt = v },
-                    singleLine = true, textStyle = TextStyle(color = if (p.dark) p.ink else Color.Black, fontSize = 14.sp),
+                    value = gt,
+                    onValueChange = { v ->
+                        // accept Bangla or English digits, store as English digits
+                        val n = v.map { c -> if (c in '০'..'৯') '0' + (c - '০') else c }.joinToString("")
+                        if (n.all { it in '0'..'9' } && n.length <= 6) gt = n
+                    },
+                    singleLine = true,
+                    textStyle = TextStyle(color = p.ink, fontSize = 12.5.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center),
                     cursorBrush = SolidColor(p.ink), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.width(140.dp).height(38.dp).clip(shape).background(if (p.dark) p.glass2 else Color.White).border(1.dp, if (p.dark) p.edge else Color(0x4010253A), shape),
-                    decorationBox = { inner -> Box(Modifier.fillMaxSize().padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart) { inner() } },
+                    visualTransformation = androidx.compose.ui.text.input.VisualTransformation { t ->
+                        androidx.compose.ui.text.input.TransformedText(
+                            androidx.compose.ui.text.AnnotatedString(Str.dig(t.text)),
+                            androidx.compose.ui.text.input.OffsetMapping.Identity,
+                        )
+                    },
+                    modifier = Modifier.width(140.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape),
+                    decorationBox = { inner -> Box(Modifier.fillMaxSize().padding(horizontal = 10.dp), contentAlignment = Alignment.Center) { inner() } },
                 )
             }
+            ColorPick(hcolor) { hcolor = it }
             FRow(Str.t("strL")) { ValBtn(Str.t(if (strict) "strX" else "strF")) { strict = !strict } }
             if (strict) {
                 Spacer(Modifier.height(8.dp))
@@ -260,7 +294,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
                             return@RowBtn
                         }
                     }
-                    LogicExt.saveHabit(ea, name.trim(), atime, gall, gm, goalT, if (!strict || wsel.size == 7) emptyList() else wsel.sorted())
+                    LogicExt.saveHabit(ea, name.trim(), atime, gall, gm, goalT, if (!strict || wsel.size == 7) emptyList() else wsel.sorted(), hcolor)
                     onSaved()
                 }
             }
@@ -274,6 +308,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
             showTime = null
         }
     }
+    if (showDate) DatePickerDlg(date, { showDate = false }) { date = it; showDate = false }
     if (showGoal) {
         GoalPickerDlg(if (gall) 32 else gm, { showGoal = false }) { k ->
             if (k == 32) { gall = true; gm = 31 } else { gall = false; gm = k }
@@ -312,4 +347,95 @@ private fun ValBtn(label: String, onClick: () -> Unit) {
         Modifier.width(140.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape).tap(onClick).padding(horizontal = 10.dp),
         contentAlignment = Alignment.Center,
     ) { Tx(label, size = 12.5.sp, maxLines = 1) }
+}
+
+
+private fun colorHex(c: Color): String =
+    "#%02X%02X%02X".format((c.red * 255).roundToInt(), (c.green * 255).roundToInt(), (c.blue * 255).roundToInt())
+
+/** Returns hue (0..1) and lightness (0..1) of a colour. */
+private fun hueLight(c: Color): Pair<Float, Float> {
+    val r = c.red; val g = c.green; val b = c.blue
+    val mx = maxOf(r, g, b); val mn = minOf(r, g, b)
+    val d = mx - mn
+    val l = (mx + mn) / 2f
+    if (d == 0f) return 0f to l
+    val h = when (mx) {
+        r -> ((g - b) / d) % 6f
+        g -> (b - r) / d + 2f
+        else -> (r - g) / d + 4f
+    }
+    return (((h * 60f) + 360f) % 360f) / 360f to l
+}
+
+/** One draggable gradient bar (0..1). */
+@Composable
+private fun GradBar(frac: Float, colors: List<Color>, onFrac: (Float) -> Unit) {
+    var w by remember { mutableIntStateOf(1) }
+    val cb by rememberUpdatedState(onFrac)
+    val shape = RoundedCornerShape(10.dp)
+    Box(
+        Modifier.fillMaxWidth().height(26.dp).onSizeChanged { w = it.width.coerceAtLeast(1) }
+            .clip(shape).background(Brush.horizontalGradient(colors))
+            .pointerInput(Unit) { detectTapGestures { cb((it.x / w).coerceIn(0f, 1f)) } }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragStart = { cb((it.x / w).coerceIn(0f, 1f)) },
+                    onHorizontalDrag = { ch, _ -> ch.consume(); cb((ch.position.x / w).coerceIn(0f, 1f)) },
+                )
+            },
+    ) {
+        Box(
+            Modifier.offset { IntOffset((frac * w).roundToInt() - 6.dp.roundToPx(), 0) }
+                .width(12.dp).fillMaxHeight().border(2.5.dp, Color.White, RoundedCornerShape(6.dp)),
+        )
+    }
+}
+
+/** Habit colour: ready colours + your own colour (hue and brightness bars). */
+@Composable
+private fun ColorPick(value: String, onChange: (String) -> Unit) {
+    val p = LocalPal.current
+    val cur = parseColor(value)
+    val isPreset = LogicExt.COLORS.any { it.equals(value, ignoreCase = true) }
+    var custom by remember { mutableStateOf(false) }
+    val init = remember { hueLight(cur) }
+    var hue by remember { mutableFloatStateOf(init.first) }
+    var lit by remember { mutableFloatStateOf(init.second.coerceIn(.25f, .75f)) }
+    fun push() = onChange(colorHex(Color.hsl(hue * 360f, 1f, lit)))
+
+    Column(Modifier.fillMaxWidth().padding(top = 10.dp)) {
+        Tx(Str.t("colorL"), size = 13.sp, color = p.ink)
+        Spacer(Modifier.height(8.dp))
+        val items = LogicExt.COLORS + "custom"
+        for (row in items.chunked(7)) {
+            Row(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                for (i in 0 until 7) {
+                    val c = row.getOrNull(i)
+                    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        if (c != null) {
+                            val isCustom = c == "custom"
+                            val sel = if (isCustom) (!isPreset || custom) else c.equals(value, ignoreCase = true)
+                            val fill: Modifier = if (isCustom && isPreset)
+                                Modifier.background(Brush.sweepGradient(listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red)))
+                            else if (isCustom) Modifier.background(cur)
+                            else Modifier.background(parseColor(c))
+                            Box(
+                                Modifier.size(32.dp).clip(CircleShape).then(fill)
+                                    .border(if (sel) 3.dp else 1.dp, if (sel) p.ink else p.edge, CircleShape)
+                                    .tap { if (isCustom) custom = !custom else { custom = false; onChange(c) } },
+                                contentAlignment = Alignment.Center,
+                            ) { if (isCustom && !isPreset) Ic("edit", size = 14.dp, tint = Color.White) }
+                        }
+                    }
+                }
+            }
+        }
+        if (custom) {
+            Spacer(Modifier.height(2.dp))
+            GradBar(hue, List(7) { Color.hsl(it * 60f, 1f, .5f) }) { hue = it; push() }
+            Spacer(Modifier.height(10.dp))
+            GradBar((lit - .25f) / .5f, listOf(Color.hsl(hue * 360f, 1f, .25f), Color.hsl(hue * 360f, 1f, .5f), Color.hsl(hue * 360f, 1f, .75f))) { lit = .25f + it * .5f; push() }
+        }
+    }
 }

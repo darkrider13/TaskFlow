@@ -291,16 +291,56 @@ private fun RemValBtn(label: String, onClick: () -> Unit) {
     Box(Modifier.width(148.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape).tap(onClick), contentAlignment = Alignment.Center) { Tx(label, size = 12.5.sp) }
 }
 
-/** Simple message popup (OK, or Cancel + OK) used for backup messages. */
+/** Message popup: round icon on top, centred title + text, buttons below (backup questions / results). */
 @Composable
 fun AppDlg(d: DlgSpec) {
     val p = LocalPal.current
     val close = { UiState.dlg = null }
-    SheetFrame(d.title, close) {
-        Tx(d.text, size = 14.sp, color = p.ink, modifier = Modifier.padding(bottom = 16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (d.cancel != null) RowBtn(d.cancel, Modifier.weight(1f)) { close() }
-            RowBtn(d.ok, Modifier.weight(1f)) { close(); d.onOk() }
+    androidx.activity.compose.BackHandler(onBack = close)
+    val green = Color(0xFF1AA94C)
+    val red = Color(0xFFFF0000)
+    val (outer, inner, ico) = when (d.kind) {
+        "ok" -> Triple(green.copy(alpha = .18f), green, "check")
+        "err" -> Triple(red.copy(alpha = .18f), Color(0xFFDC2626), "x")
+        else -> Triple(p.glass, p.glass2, d.icon)
+    }
+    val shape = RoundedCornerShape(22.dp)
+    Box(Modifier.fillMaxSize().background(p.shade).tap { close() }.padding(16.dp), contentAlignment = Alignment.Center) {
+        Column(
+            Modifier.fillMaxWidth().clip(shape)
+                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
+                .border(1.dp, p.edge, shape).tap { }
+                .padding(horizontal = 18.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(Modifier.size(75.dp).clip(CircleShape).background(outer), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(60.dp).clip(CircleShape).background(inner), contentAlignment = Alignment.Center) {
+                    Ic(ico, size = 30.dp, tint = if (d.kind == "ask") p.ink else Color.White, stroke = 2.6f)
+                }
+            }
+            Spacer(Modifier.height(14.dp))
+            Tx(d.title, size = 19.sp, weight = FontWeight.Bold, align = TextAlign.Center)
+            Spacer(Modifier.height(8.dp))
+            Tx(d.text, size = 15.sp, color = p.muted, align = TextAlign.Center)
+            Spacer(Modifier.height(20.dp))
+            val bs = RoundedCornerShape(14.dp)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
+                if (d.cancel != null) {
+                    Box(Modifier.weight(1f).height(43.dp).clip(bs).background(p.glass2).tap { close() }, contentAlignment = Alignment.Center) {
+                        Tx(d.cancel, size = 15.sp, weight = FontWeight.Bold)
+                    }
+                }
+                Row(
+                    (if (d.cancel != null) Modifier.weight(1f) else Modifier.width(140.dp)).height(43.dp).clip(bs).background(red).tap { close(); d.onOk() },
+                    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (d.kind == "ask") {
+                        Ic(d.icon, size = 18.dp, tint = Color.White)
+                        Spacer(Modifier.width(8.dp))
+                    }
+                    Tx(d.ok, size = 15.sp, color = Color.White, weight = FontWeight.Bold, maxLines = 1)
+                }
+            }
         }
     }
 }

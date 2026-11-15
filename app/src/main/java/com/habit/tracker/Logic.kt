@@ -325,7 +325,7 @@ object LogicExt {
         Store.touch()
     }
 
-    fun saveHabit(edit: JSONObject?, name: String, time: String, gall: Boolean, gm: Int, gt: Int, days: List<Int>) {
+    fun saveHabit(edit: JSONObject?, name: String, time: String, gall: Boolean, gm: Int, gt: Int, days: List<Int>, color: String = "") {
         val vals = JSONObject()
         vals.put("name", name); vals.put("time", time.ifEmpty { "00:00" })
         vals.put("goalAll", gall); vals.put("goalM", if (gall) 31 else minOf(31, maxOf(0, gm)))
@@ -334,13 +334,14 @@ object LogicExt {
         if (edit != null) {
             a = edit
             for (k in listOf("name", "time", "goalAll", "goalM", "goalT", "days")) a.put(k, vals.get(k))
+            if (color.isNotEmpty()) a.put("color", color)
         } else {
             val nid = Store.s.optInt("nid", 1)
             Store.s.put("nid", nid + 1)
             val used = Logic.acts().map { it.optString("color").uppercase() }.toSet()
             a = JSONObject()
             a.put("id", System.currentTimeMillis()); a.put("nid", nid); a.put("start", Logic.todayKey())
-            a.put("color", pickColor(used))
+            a.put("color", color.ifEmpty { pickColor(used) })
             for (k in listOf("name", "time", "goalAll", "goalM", "goalT", "days")) a.put(k, vals.get(k))
             Store.s.getJSONArray("acts").put(a)
         }
