@@ -302,6 +302,7 @@ fun AppDlg(d: DlgSpec) {
     androidx.activity.compose.BackHandler(onBack = close)
     val green = Color(0xFF1AA94C)
     val red = Color(0xFFFF0000)
+    val green2 = Color(0xFF22C55E)
     val (outer, inner, ico) = when (d.kind) {
         "ok" -> Triple(green.copy(alpha = .18f), green, "check")
         "err" -> Triple(red.copy(alpha = .18f), Color(0xFFDC2626), "x")
@@ -329,8 +330,8 @@ fun AppDlg(d: DlgSpec) {
             val bs = RoundedCornerShape(14.dp)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
                 if (d.cancel != null) {
-                    Box(Modifier.weight(1f).height(43.dp).clip(bs).background(p.glass2).tap { close() }, contentAlignment = Alignment.Center) {
-                        Tx(d.cancel, size = 15.sp, weight = FontWeight.Bold)
+                    Box(Modifier.weight(1f).height(43.dp).clip(bs).background(green2).tap { close() }, contentAlignment = Alignment.Center) {
+                        Tx(d.cancel, size = 15.sp, color = Color.Black, weight = FontWeight.Bold)
                     }
                 }
                 Row(
@@ -338,10 +339,10 @@ fun AppDlg(d: DlgSpec) {
                     horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (d.kind == "ask") {
-                        Ic(d.icon, size = 18.dp, tint = Color.White)
+                        Ic(d.icon, size = 18.dp, tint = Color.Black)
                         Spacer(Modifier.width(8.dp))
                     }
-                    Tx(d.ok, size = 15.sp, color = Color.White, weight = FontWeight.Bold, maxLines = 1)
+                    Tx(d.ok, size = 15.sp, color = Color.Black, weight = FontWeight.Bold, maxLines = 1)
                 }
             }
         }

@@ -150,7 +150,7 @@ fun Root() {
 
     // blur the screen behind while a popup / sheet is open
     val blurOn = UiState.dayKey != null || UiState.edit != null || UiState.showCats || UiState.remSheet ||
-        showSettings || showName || LockState.typeDlg || UiState.dlg != null || UiState.pickers > 0
+        showSettings || showName || LockState.typeDlg || UiState.dlg != null || UiState.pickers > 0 || UiState.delHabit != null
 
     CompositionLocalProvider(LocalPal provides pal) {
         Box(Modifier.fillMaxSize().appBg(pal)) {
@@ -199,6 +199,10 @@ fun Root() {
             if (Focus.fs) FocusFullscreen { Focus.fs = false }
             if (LockState.typeDlg) LockTypeDlg(onClose = { LockState.typeDlg = false }, onToast = toast)
             UiState.dlg?.let { AppDlg(it) }
+            UiState.delHabit?.let { a ->
+                ConfirmDlg(Str.t("delT"), Str.f("confirmDel", a.optString("name")), Str.t("bkOkB"), Str.t("cancelT"),
+                    onOk = { UiState.delHabit = null; LogicExt.deleteHabit(a) }, onCancel = { UiState.delHabit = null })
+            }
             LockState.overlay?.let { LockOverlay(it, toast) }
 
             toastMsg?.let { msg ->

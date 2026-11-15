@@ -34,6 +34,8 @@ object UiState {
     var remSheet by mutableStateOf(false)
     var remObj by mutableStateOf<JSONObject?>(null)
     var showCats by mutableStateOf(false)
+    /** habit waiting for the "delete?" answer after a swipe on the Home tab */
+    var delHabit by mutableStateOf<JSONObject?>(null)
     /** number of picker popups (time / date / goal) currently open - everything behind them gets blurred */
     var pickers by mutableIntStateOf(0)
 

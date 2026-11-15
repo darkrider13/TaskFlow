@@ -58,8 +58,8 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
             val disabled = (!on && !Logic.canMark(a, k)) || (k < a.optString("start") && !on)
             Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
-                    Modifier.weight(1f).height(42.dp).alpha(if (disabled) .4f else if (on) .45f else 1f).clip(RoundedCornerShape(12.dp))
-                        .background(if (on) p.glass2 else parseColor(a.optString("color")))
+                    Modifier.weight(1f).height(42.dp).alpha(if (disabled) .4f else 1f).clip(RoundedCornerShape(12.dp))
+                        .background(p.glass2)
                         .tap {
                             if (k < a.optString("start") && !on) return@tap
                             if (!on && !Logic.canMark(a, k)) { onToast(Str.f("tooEarly", Str.t12(a.optString("time")))); return@tap }
@@ -68,9 +68,9 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
                         }.padding(horizontal = 14.dp),
                     horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Ic(if (on) "x" else "check", size = 20.dp, tint = if (on) p.ink else p.tink)
+                    Ic(if (on) "x" else "check", size = 20.dp, tint = p.ink)
                     Spacer(Modifier.width(6.dp))
-                    Tx(if (on) Str.t("undo") else Str.f("did", a.optString("name")), size = 15.sp, color = if (on) p.ink else p.tink, weight = FontWeight.Bold, maxLines = 1)
+                    Tx(if (on) Str.t("undo") else Str.f("did", a.optString("name")), size = 15.sp, color = p.ink, weight = FontWeight.Bold, maxLines = 1)
                 }
                 IconBox("edit", false) { UiState.backDay = k; UiState.dayKey = null; UiState.edit = FormSpec("habit", a, null) }
                 IconBox("trash", true) { confirmDel = true }
@@ -111,11 +111,36 @@ private fun IconBox(icon: String, red: Boolean, onClick: () -> Unit) {
 @Composable
 fun ConfirmDlg(title: String, text: String, ok: String, cancel: String, onOk: () -> Unit, onCancel: () -> Unit) {
     val p = LocalPal.current
-    SheetFrame(title, onCancel, centerTitle = true) {
-        Tx(text, size = 14.sp, color = p.ink, modifier = Modifier.padding(bottom = 16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            RowBtn(cancel, Modifier.weight(1f), color = Color(0xFF22C55E)) { onCancel() }
-            RowBtn(ok, Modifier.weight(1f), color = Color(0xFFFF0000)) { onOk() }
+    androidx.activity.compose.BackHandler(onBack = onCancel)
+    val red = Color(0xFFFF0000)
+    val shape = RoundedCornerShape(22.dp)
+    val bs = RoundedCornerShape(14.dp)
+    Box(Modifier.fillMaxSize().background(p.shade).tap { onCancel() }.padding(16.dp), contentAlignment = Alignment.Center) {
+        Column(
+            Modifier.fillMaxWidth().clip(shape)
+                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
+                .border(1.dp, p.edge, shape).tap { }
+                .padding(horizontal = 18.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(Modifier.size(75.dp).clip(androidx.compose.foundation.shape.CircleShape).background(red.copy(alpha = .16f)), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(60.dp).clip(androidx.compose.foundation.shape.CircleShape).background(Color(0xFFDC2626)), contentAlignment = Alignment.Center) {
+                    Ic("trash", size = 30.dp, tint = Color.White, stroke = 2.4f)
+                }
+            }
+            Spacer(Modifier.height(14.dp))
+            Tx(title, size = 19.sp, weight = FontWeight.Bold, align = androidx.compose.ui.text.style.TextAlign.Center)
+            Spacer(Modifier.height(8.dp))
+            Tx(text, size = 15.sp, color = p.muted, align = androidx.compose.ui.text.style.TextAlign.Center)
+            Spacer(Modifier.height(20.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(Color(0xFF22C55E)).tap { onCancel() }, contentAlignment = Alignment.Center) {
+                    Tx(cancel, size = 15.sp, color = Color.Black, weight = FontWeight.Bold, maxLines = 1)
+                }
+                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(red).tap { onOk() }, contentAlignment = Alignment.Center) {
+                    Tx(ok, size = 15.sp, color = Color.Black, weight = FontWeight.Bold, maxLines = 1)
+                }
+            }
         }
     }
 }

@@ -123,9 +123,26 @@ fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Un
     } else {
         Str.f("habSub", Str.bn(s.total), Str.bn(Logic.habCnt(a)))
     }
-    val shape = RoundedCornerShape(18.dp)
+    // swipe to the right = delete this habit (asks first, because all its ticks go too)
+    var dx by remember(a) { mutableFloatStateOf(0f) }
+    var widthPx by remember { mutableFloatStateOf(1f) }
+    Box(Modifier.fillMaxWidth().padding(bottom = 8.dp).onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }) {
+    if (dx > 0f) {
+        Box(Modifier.matchParentSize().clip(RoundedCornerShape(18.dp)).background(Color(0x33FF0000)), contentAlignment = Alignment.CenterStart) {
+            Ic("trash", size = 22.dp, tint = p.cross, modifier = Modifier.padding(start = 18.dp))
+        }
+    }
     Row(
-        Modifier.fillMaxWidth().padding(bottom = 8.dp).glass().tap { onOpen(a) }.height(IntrinsicSize.Min),
+        Modifier.fillMaxWidth()
+            .offset { IntOffset(dx.roundToInt(), 0) }
+            .pointerInput(a) {
+                detectHorizontalDragGestures(
+                    onDragEnd = { if (dx > widthPx * .4f) UiState.delHabit = a; dx = 0f },
+                    onDragCancel = { dx = 0f },
+                    onHorizontalDrag = { c, d -> c.consume(); dx = maxOf(0f, dx + d) },
+                )
+            }
+            .glass().tap { onOpen(a) }.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.width(4.dp).fillMaxHeight().background(color))
@@ -155,6 +172,7 @@ fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Un
                 if (on) Ic("check", size = 20.dp, tint = p.mono)
             }
         }
+    }
     }
 }
 
