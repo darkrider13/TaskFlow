@@ -121,7 +121,7 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
         // below the grid: upcoming holidays / events (only when no habit is picked)
         if (a == null) {
             Row(Modifier.fillMaxWidth().padding(bottom = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                for ((k, lbl) in listOf("hol" to "cxHol", "evt" to "cxEvt")) {
+                for ((k, lbl) in listOf("evt" to "cxEvt", "hol" to "cxHol")) {
                     val on = cxTab == k
                     val shape = RoundedCornerShape(20.dp)
                     Box(
