@@ -323,8 +323,8 @@ fun ThemeBackdrop(dark: Boolean) {
         contentScale = androidx.compose.ui.layout.ContentScale.Crop,
         modifier = Modifier.fillMaxSize(),
     )
-    val veil = if (dark) listOf(Color(0x59000000), Color(0x26000000), Color(0x4D000000))
-    else listOf(Color(0x4DFFFFFF), Color(0x1FFFFFFF), Color(0x40FFFFFF))
+    val veil = if (dark) listOf(Color(0x8C000000), Color(0x73000000), Color(0x8C000000))
+    else listOf(Color(0x80FFFFFF), Color(0x66FFFFFF), Color(0x80FFFFFF))
     Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.verticalGradient(veil)))
 }
 
