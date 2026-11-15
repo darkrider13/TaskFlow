@@ -279,9 +279,10 @@ fun SheetFrame(title: String, onClose: () -> Unit, centerTitle: Boolean = false,
 }
 
 @Composable
-fun SectionTitle(text: String, first: Boolean = false) {
+fun SectionTitle(text: String, first: Boolean = false, center: Boolean = false) {
     val p = LocalPal.current
-    Tx(text, size = 15.sp, color = p.muted, weight = FontWeight.SemiBold, modifier = Modifier.padding(start = 2.dp, end = 2.dp, top = if (first) 4.dp else 18.dp, bottom = 8.dp))
+    Tx(text, size = 15.sp, color = p.muted, weight = FontWeight.SemiBold, align = if (center) TextAlign.Center else null,
+        modifier = (if (center) Modifier.fillMaxWidth() else Modifier).padding(start = 2.dp, end = 2.dp, top = if (first) 4.dp else 18.dp, bottom = 8.dp))
 }
 
 /** Small text box (height 34, like the original inputs). */

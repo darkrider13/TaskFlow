@@ -346,8 +346,8 @@ fun UpdateBox(onToast: (String) -> Unit) {
         "error" -> (if (bn) "আপডেট চেক করা যায়নি। একটু পরে আবার চেষ্টা করুন।" else "Could not check for updates. Try again later.") + (if (Updater.errCode != 0) " (${Updater.errCode})" else "")
         else -> ""
     }
-    Tx((if (bn) "বর্তমান ভার্সন: " else "Current version: ") + Updater.versionLabel(ctx), size = 13.sp, color = p.muted)
-    if (info.isNotEmpty()) Tx(info, size = 13.sp, modifier = Modifier.padding(top = 4.dp))
+    Tx((if (bn) "বর্তমান ভার্সন: " else "Current version: ") + Updater.versionLabel(ctx), Modifier.fillMaxWidth(), size = 13.sp, color = p.muted, align = TextAlign.Center)
+    if (info.isNotEmpty()) Tx(info, size = 13.sp, align = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
     if (st == "downloading") {
         val frac by androidx.compose.animation.core.animateFloatAsState(Updater.progress / 100f, label = "dl")
         Box(
@@ -402,7 +402,7 @@ fun SettingsSheet(rev: Int, onClose: () -> Unit, onToast: (String) -> Unit, onEx
             RowBtn(Str.t("expT"), Modifier.weight(1f), icon = "export") { onExport() }
             RowBtn(Str.t("impT"), Modifier.weight(1f), icon = "import") { onImport() }
         }
-        SectionTitle(if (Str.isBn) "অ্যাপ আপডেট" else "App update")
+        SectionTitle(if (Str.isBn) "অ্যাপ আপডেট" else "App update", center = true)
         UpdateBox(onToast)
         Spacer(Modifier.height(22.dp))
         BigBtn(Str.t("save")) {
