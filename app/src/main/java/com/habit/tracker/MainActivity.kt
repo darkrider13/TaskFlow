@@ -117,6 +117,16 @@ fun Root() {
         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { Notifs.scheduleAll(activity.applicationContext, copy) }
     }
 
+    // work out the holiday tables in the background so the Calendar tab opens instantly
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
+            val y0 = java.time.LocalDate.now().year
+            for (yy in listOf(y0, y0 + 1, y0 - 1)) {
+                try { Hol.holYear(yy) } catch (e: Exception) { }
+            }
+        }
+    }
+
     // focus timer keeps running on every screen
     LaunchedEffect(Unit) {
         while (true) {

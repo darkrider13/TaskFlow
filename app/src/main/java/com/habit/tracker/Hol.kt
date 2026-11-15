@@ -248,6 +248,7 @@ object Hol {
     private fun nk(z: String) = z.lowercase().filter { it in 'a'..'z' || it in '\u0980'..'\u09ff' }
     private fun pt(e: String) = e.split(" / ").map { nk(it) }.filter { it.length > 3 }
 
+    @Synchronized
     fun holYear(y: Int): Year {
         cache[y]?.let { return it }
         val g = LinkedHashMap<String, MutableList<Item>>()
