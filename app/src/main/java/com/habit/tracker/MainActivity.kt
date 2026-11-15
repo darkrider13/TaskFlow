@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class MainActivity : FragmentActivity() {
@@ -312,6 +313,47 @@ fun NameSheet(rev: Int, onClose: () -> Unit) {
     }
 }
 
+/** "Check for update" block of the Settings popup. */
+@Composable
+fun UpdateBox(onToast: (String) -> Unit) {
+    val p = LocalPal.current
+    val ctx = LocalContext.current.applicationContext
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val bn = Str.isBn
+    val st = Updater.status
+    val io = kotlinx.coroutines.Dispatchers.IO
+    val info = when (st) {
+        "checking" -> if (bn) "চেক করা হচ্ছে…" else "Checking…"
+        "uptodate" -> if (bn) "আপনি সর্বশেষ ভার্সনে আছেন।" else "You have the latest version."
+        "avail" -> if (bn) "নতুন আপডেট পাওয়া গেছে (বিল্ড ${Updater.remoteBuild})।" else "A new update is available (build ${Updater.remoteBuild})."
+        "downloading" -> if (bn) "ডাউনলোড হচ্ছে… ${Updater.progress}%" else "Downloading… ${Updater.progress}%"
+        "ready" -> if (bn) "ডাউনলোড শেষ। ইনস্টল করুন।" else "Download finished. Tap install."
+        "nonet" -> if (bn) "ইন্টারনেট নেই। নেট চালু করে আবার চেষ্টা করুন।" else "No internet. Turn it on and try again."
+        "error" -> if (bn) "আপডেট চেক করা যায়নি। একটু পরে আবার চেষ্টা করুন।" else "Could not check for updates. Try again later."
+        else -> ""
+    }
+    Tx((if (bn) "বর্তমান ভার্সন: " else "Current version: ") + Updater.versionLabel(ctx), size = 13.sp, color = p.muted)
+    if (info.isNotEmpty()) Tx(info, size = 13.sp, modifier = Modifier.padding(top = 4.dp))
+    Spacer(Modifier.height(8.dp))
+    when (st) {
+        "checking", "downloading" -> {}
+        "avail" -> RowBtn(if (bn) "ডাউনলোড ও ইনস্টল" else "Download & install", Modifier.fillMaxWidth(), icon = "import") {
+            scope.launch(io) {
+                Updater.download(ctx)
+                if (Updater.status == "ready") kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    if (!Updater.install(ctx)) onToast(if (bn) "ইনস্টলের অনুমতি দিয়ে ফিরে এসে আবার ইনস্টল চাপুন" else "Allow installs, come back and tap install again")
+                }
+            }
+        }
+        "ready" -> RowBtn(if (bn) "ইনস্টল করুন" else "Install", Modifier.fillMaxWidth(), icon = "import") {
+            if (!Updater.install(ctx)) onToast(if (bn) "ইনস্টলের অনুমতি দিয়ে ফিরে এসে আবার ইনস্টল চাপুন" else "Allow installs, come back and tap install again")
+        }
+        else -> RowBtn(if (bn) "আপডেট চেক করুন" else "Check for update", Modifier.fillMaxWidth()) {
+            scope.launch(io) { Updater.check(ctx) }
+        }
+    }
+}
+
 @Composable
 fun SettingsSheet(rev: Int, onClose: () -> Unit, onToast: (String) -> Unit, onExport: () -> Unit, onImport: () -> Unit) {
     val p = LocalPal.current
@@ -338,6 +380,8 @@ fun SettingsSheet(rev: Int, onClose: () -> Unit, onToast: (String) -> Unit, onEx
             RowBtn(Str.t("expT"), Modifier.weight(1f), icon = "export") { onExport() }
             RowBtn(Str.t("impT"), Modifier.weight(1f), icon = "import") { onImport() }
         }
+        SectionTitle(if (Str.isBn) "অ্যাপ আপডেট" else "App update")
+        UpdateBox(onToast)
         Spacer(Modifier.height(22.dp))
         BigBtn(Str.t("save")) {
             Store.set.put("name", v.trim())
