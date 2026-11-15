@@ -1,0 +1,393 @@
+package com.habit.tracker
+
+import android.graphics.Color as AColor
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import kotlinx.coroutines.delay
+import org.json.JSONObject
+
+class MainActivity : FragmentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Store.init(applicationContext)
+        LockState.checkBio(this)
+        if (Store.s.optJSONObject("lock") != null) LockState.show("unlock")
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContent { Root() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Notifs.drain(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (LockState.hiddenAt == 0L) LockState.hiddenAt = System.currentTimeMillis()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val h = LockState.hiddenAt
+        if (Store.s.optJSONObject("lock") != null && h != 0L && System.currentTimeMillis() - h > 5000 &&
+            System.currentTimeMillis() - LockState.lastBio > 2000 && LockState.overlay == null
+        ) LockState.show("unlock")
+        else if (LockState.overlay == null) LockState.hiddenAt = 0L
+    }
+}
+
+private val TABS = listOf("home", "cal", "up", "rep", "more")
+
+@Composable
+fun Root() {
+    val rev = Store.rev
+    val pal = if (Store.dark) DarkPal else LightPal
+    val activity = LocalContext.current as ComponentActivity
+
+    SideEffect {
+        val w = activity.window
+        w.statusBarColor = AColor.TRANSPARENT
+        w.navigationBarColor = AColor.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= 29) w.isNavigationBarContrastEnforced = false
+        val c = WindowInsetsControllerCompat(w, w.decorView)
+        c.isAppearanceLightStatusBars = !pal.dark
+        c.isAppearanceLightNavigationBars = !pal.dark
+    }
+
+    var tab by rememberSaveable { mutableStateOf("home") }
+    var showSettings by remember { mutableStateOf(false) }
+    var showName by remember { mutableStateOf(false) }
+    var toastMsg by remember { mutableStateOf<String?>(null) }
+    var todayKey by remember { mutableStateOf(Logic.todayKey()) }
+
+    // if the app stays open past midnight, move "today" forward
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(30_000)
+            val k = Logic.todayKey()
+            if (k != todayKey) todayKey = k
+        }
+    }
+    LaunchedEffect(toastMsg) {
+        if (toastMsg != null) {
+            delay(3500)
+            toastMsg = null
+        }
+    }
+    val toast: (String) -> Unit = { toastMsg = it }
+    val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri -> if (uri != null) Backup.export(activity, uri) }
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) Backup.readFile(activity, uri) }
+
+    // notification permission (Android 13+), asked once the name is set
+    val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    LaunchedEffect(Store.name.isNotBlank()) {
+        if (Store.name.isNotBlank() && Build.VERSION.SDK_INT >= 33 &&
+            androidx.core.content.ContextCompat.checkSelfPermission(activity, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) permLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+    }
+    // keep the phone alarms in step with the data (a short pause lets quick edits settle)
+    LaunchedEffect(rev) {
+        delay(600)
+        val copy = org.json.JSONObject(Store.s.toString())
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { Notifs.scheduleAll(activity.applicationContext, copy) }
+    }
+
+    // focus timer keeps running on every screen
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(500)
+            if (Focus.run) {
+                if (System.currentTimeMillis() >= Focus.end) {
+                    toastMsg = Focus.finish()
+                    try {
+                        @Suppress("DEPRECATION")
+                        val vib = activity.getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+                        if (Build.VERSION.SDK_INT >= 26) vib.vibrate(android.os.VibrationEffect.createWaveform(longArrayOf(0, 300, 150, 300), -1))
+                        else vib.vibrate(longArrayOf(0, 300, 150, 300), -1)
+                    } catch (e: Exception) {
+                    }
+                }
+                Focus.tick = System.currentTimeMillis()
+            }
+        }
+    }
+
+    CompositionLocalProvider(LocalPal provides pal) {
+        Box(Modifier.fillMaxSize().appBg(pal)) {
+            val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            Column(Modifier.fillMaxSize().statusBarsPadding().padding(start = 14.dp, end = 14.dp, top = 12.dp)) {
+                TopBar(rev, onUser = { showName = true }, onGear = { showSettings = true })
+                Box(Modifier.weight(1f).fillMaxWidth()) {
+                    when (tab) {
+                        "home" -> HomeScreen(
+                            rev, todayKey, 134.dp + navBottom,
+                            onGoUp = { tab = "up" },
+                            onToast = toast,
+                            onOpenHabit = { UiState.backDay = null; UiState.edit = FormSpec("habit", it, null) },
+                            onEditTask = { UiState.backDay = null; UiState.edit = FormSpec("task", null, it) },
+                        )
+                        "up" -> UpcomingScreen(
+                            rev, todayKey, 134.dp + navBottom,
+                            onEditTask = { UiState.backDay = null; UiState.edit = FormSpec("task", null, it) },
+                            onEditHabit = { UiState.backDay = null; UiState.edit = FormSpec("habit", it, null) },
+                        )
+                        "rep" -> ReportsScreen(rev, todayKey, 134.dp + navBottom)
+                        "cal" -> CalendarScreen(rev, todayKey, 134.dp + navBottom, onOpenDay = { UiState.dayKey = it })
+                        "more" -> MoreScreen(rev, todayKey, 134.dp + navBottom, toast)
+                        else -> ComingSoon(rev)
+                    }
+                }
+            }
+            NavBar(rev, tab) { tab = it }
+
+            UiState.dayKey?.let { DaySheet(rev, it, onClose = { UiState.dayKey = null }, onToast = toast) }
+            UiState.edit?.let { FormSheet(rev, it, toast) }
+            if (UiState.showCats) CatSheet(rev) { UiState.showCats = false }
+            if (UiState.remSheet) ReminderSheet(rev, UiState.remObj, onClose = { UiState.remSheet = false }, onToast = toast)
+            if (showSettings) SettingsSheet(
+                rev, onClose = { showSettings = false }, onToast = toast,
+                onExport = { exportLauncher.launch(Backup.fileName()) },
+                onImport = { showSettings = false; importLauncher.launch(arrayOf("application/json", "text/*", "*/*")) },
+            )
+            if (showName) NameSheet(rev, onClose = { showName = false })
+            if (Store.name.isBlank()) Onboarding(rev)
+            if (Focus.fs) FocusFullscreen { Focus.fs = false }
+            if (LockState.typeDlg) LockTypeDlg(onClose = { LockState.typeDlg = false }, onToast = toast)
+            UiState.dlg?.let { AppDlg(it) }
+            LockState.overlay?.let { LockOverlay(it, toast) }
+
+            toastMsg?.let { msg ->
+                Box(Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(top = 10.dp)) {
+                    Box(
+                        Modifier.widthIn(max = 340.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(if (pal.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
+                            .border(1.dp, pal.edge, RoundedCornerShape(16.dp))
+                            .padding(horizontal = 18.dp, vertical = 12.dp),
+                    ) { Tx(msg, size = 14.sp, align = TextAlign.Center) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TopBar(rev: Int, onUser: () -> Unit, onGear: () -> Unit) {
+    val p = LocalPal.current
+    Row(Modifier.fillMaxWidth().padding(bottom = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.weight(1f).tap { onUser() }, verticalAlignment = Alignment.CenterVertically) {
+            if (Store.name.isNotEmpty()) {
+                Ic("user", size = 23.dp)
+                Spacer(Modifier.width(8.dp))
+                Tx(Store.name, size = 26.sp, weight = FontWeight.Bold, maxLines = 1)
+            } else {
+                Tx(Str.t("userPh"), size = 15.sp, color = p.muted, weight = FontWeight.Medium)
+            }
+        }
+        Box(Modifier.height(38.dp).widthIn(min = 42.dp).clip(RoundedCornerShape(19.dp)).tap { onGear() }, contentAlignment = Alignment.Center) {
+            Ic("gear", size = 20.dp)
+        }
+    }
+}
+
+@Composable
+fun NavBar(rev: Int, tab: String, onTab: (String) -> Unit) {
+    val p = LocalPal.current
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(start = 14.dp, end = 14.dp, bottom = 12.dp)
+                .glass(22.dp)
+                .padding(4.dp),
+        ) {
+            for (k in TABS) {
+                val on = tab == k
+                val label = Str.t(mapOf("home" to "tHome", "up" to "tUp", "cal" to "tCal", "rep" to "tRep", "more" to "tMore")[k]!!)
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(if (on) p.ac else Color.Transparent)
+                        .tap { onTab(k) }
+                        .padding(top = 5.dp, bottom = 4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    Ic("nav_$k", size = 19.dp, tint = if (on) p.tink else p.muted)
+                    Tx(label, size = 10.5.sp, color = if (on) p.tink else p.muted, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ComingSoon(rev: Int) {
+    val p = LocalPal.current
+    Box(Modifier.fillMaxSize().padding(bottom = 134.dp), contentAlignment = Alignment.Center) {
+        Tx(
+            if (Str.isBn) "এই স্ক্রিনটি পরের ধাপে যোগ হবে" else "This screen will be added in the next step",
+            size = 14.sp, color = p.muted, align = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+fun NameSheet(rev: Int, onClose: () -> Unit) {
+    var v by remember { mutableStateOf(Store.name) }
+    val save = {
+        Store.set.put("name", v.trim())
+        Store.touch()
+        onClose()
+    }
+    SheetFrame(Str.t("nameTitle"), onClose) {
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            TfInput(v, { v = it }, Str.t("userPh2"), Modifier.weight(1f))
+        }
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+            RowBtn(Str.t("start"), Modifier.weight(1f)) { save() }
+        }
+    }
+}
+
+@Composable
+fun SettingsSheet(rev: Int, onClose: () -> Unit, onToast: (String) -> Unit, onExport: () -> Unit, onImport: () -> Unit) {
+    val p = LocalPal.current
+    var v by remember { mutableStateOf(Store.name) }
+    val later = if (Str.isBn) "এই অংশ পরের ধাপে আসছে" else "This part comes in a later step"
+    SheetFrame(Str.t("setT"), onClose) {
+        SectionTitle(Str.t("yourName"), first = true)
+        Row(Modifier.fillMaxWidth()) { TfInput(v, { v = it }, Str.t("userPh2"), Modifier.weight(1f)) }
+        SectionTitle(Str.t("appear"))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            RowBtn(
+                Str.t(if (Store.dark) "thD" else "thL"), Modifier.weight(1f),
+                icon = if (Store.dark) "moon" else "sun",
+            ) {
+                Store.set.put("theme", if (Store.dark) "light" else "dark")
+                Store.touch()
+            }
+            RowBtn(if (Str.isBn) "English" else "বাংলা", Modifier.weight(1f)) {
+                Store.set.put("lang", if (Str.isBn) "en" else "bn")
+                Store.touch()
+            }
+        }
+        SectionTitle(Str.t("dataT"))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            RowBtn(Str.t("expT"), Modifier.weight(1f), icon = "export") { onExport() }
+            RowBtn(Str.t("impT"), Modifier.weight(1f), icon = "import") { onImport() }
+        }
+        Spacer(Modifier.height(22.dp))
+        BigBtn(Str.t("save")) {
+            Store.set.put("name", v.trim())
+            Store.touch()
+            onClose()
+        }
+    }
+}
+
+@Composable
+fun Onboarding(rev: Int) {
+    val p = LocalPal.current
+    var v by remember { mutableStateOf("") }
+    var err by remember { mutableStateOf(false) }
+    val go = {
+        if (v.trim().isEmpty()) err = true
+        else {
+            Store.set.put("name", v.trim())
+            Store.touch()
+        }
+    }
+    Column(
+        Modifier
+            .fillMaxSize()
+            .appBg(p)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding()
+            .verticalScroll(rememberScrollState())
+            .padding(start = 22.dp, end = 22.dp, top = 56.dp, bottom = 22.dp),
+    ) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Tx(Str.t("obHi"), size = 34.sp, color = p.muted, align = TextAlign.Center)
+            Tx("TaskFlow", size = 44.sp, weight = FontWeight.ExtraBold, align = TextAlign.Center, modifier = Modifier.padding(top = 6.dp, bottom = 14.dp))
+            Tx(Str.t("obSub"), size = 17.sp, color = p.muted, weight = FontWeight.Medium, align = TextAlign.Center)
+        }
+        Column(
+            Modifier
+                .padding(top = 56.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(32.dp))
+                .background(if (p.dark) Color(0xFF1C1C1E) else Color(0xBFFFFFFF))
+                .padding(start = 22.dp, end = 22.dp, top = 26.dp, bottom = 28.dp),
+        ) {
+            Tx(Str.t("obProf"), size = 26.sp, weight = FontWeight.Bold, modifier = Modifier.padding(start = 2.dp, bottom = 20.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.size(56.dp).clip(CircleShape).background(p.glass2), contentAlignment = Alignment.Center) {
+                    Ic("user", size = 26.dp, tint = p.muted)
+                }
+                Spacer(Modifier.width(16.dp))
+                BasicTextField(
+                    value = v,
+                    onValueChange = { if (it.length <= 40) { v = it; err = false } },
+                    singleLine = true,
+                    textStyle = TextStyle(color = p.ink, fontSize = 18.sp),
+                    cursorBrush = SolidColor(p.ink),
+                    modifier = Modifier.weight(1f),
+                    decorationBox = { inner ->
+                        Column {
+                            Box(Modifier.padding(vertical = 10.dp)) {
+                                if (v.isEmpty()) Tx(Str.t("nameTitle"), size = 18.sp, color = p.muted)
+                                inner()
+                            }
+                            Box(Modifier.fillMaxWidth().height(1.dp).background(if (err) Color(0xFFFF0000) else p.mono))
+                        }
+                    },
+                )
+            }
+        }
+        Spacer(Modifier.weight(1f))
+        Row(
+            Modifier
+                .padding(top = 28.dp)
+                .fillMaxWidth()
+                .height(66.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.White)
+                .tap { go() },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Ic("checkc", size = 24.dp, tint = Color.Black, stroke = 2.4f)
+            Spacer(Modifier.width(12.dp))
+            Tx(Str.t("start"), size = 20.sp, color = Color.Black, weight = FontWeight.Bold)
+        }
+    }
+}
