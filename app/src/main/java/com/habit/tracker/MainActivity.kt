@@ -165,6 +165,7 @@ fun Root() {
 
     CompositionLocalProvider(LocalPal provides pal) {
         Box(Modifier.fillMaxSize().appBg(pal)) {
+            ThemeBackdrop(pal.dark)
             val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             Box(Modifier.fillMaxSize().then(if (blurOn) Modifier.blur(14.dp) else Modifier)) {
             Column(Modifier.fillMaxSize().statusBarsPadding().padding(start = 14.dp, end = 14.dp, top = 12.dp)) {
@@ -311,6 +312,20 @@ fun NameSheet(rev: Int, onClose: () -> Unit) {
             RowBtn(Str.t("start"), Modifier.weight(1f)) { save() }
         }
     }
+}
+
+/** Photo background shared by every screen: moonlit night in dark mode, sunny misty hills in day mode. A soft veil keeps text and buttons easy to read on top of it. */
+@Composable
+fun ThemeBackdrop(dark: Boolean) {
+    Image(
+        painter = androidx.compose.ui.res.painterResource(if (dark) R.drawable.bg_night else R.drawable.bg_day),
+        contentDescription = null,
+        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+        modifier = Modifier.fillMaxSize(),
+    )
+    val veil = if (dark) listOf(Color(0x59000000), Color(0x26000000), Color(0x4D000000))
+    else listOf(Color(0x4DFFFFFF), Color(0x1FFFFFFF), Color(0x40FFFFFF))
+    Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.verticalGradient(veil)))
 }
 
 /** "Check for update" block of the Settings popup. */
