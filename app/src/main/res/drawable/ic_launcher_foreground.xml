@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vector icon: stays perfectly sharp at any size. Gradient square is 76% of the visible area, so a black border shows around it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="432"
+    android:viewportHeight="432">
+    <group
+        android:pivotX="216"
+        android:pivotY="216"
+        android:scaleX="0.631"
+        android:scaleY="0.631">
+        <!-- gradient rounded square -->
+        <path android:pathData="M137,57 H294 A80,80 0 0 1 374,137 V294 A80,80 0 0 1 294,374 H137 A80,80 0 0 1 57,294 V137 A80,80 0 0 1 137,57 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="216" android:startY="57"
+                    android:endX="216" android:endY="374"
+                    android:startColor="#FF67B270"
+                    android:endColor="#FF4BA0CA" />
+            </aapt:attr>
+        </path>
+        <!-- checkmarks -->
+        <path android:pathData="M125,163 L143,177 L174,142" android:strokeColor="#FF000000" android:strokeWidth="24" android:strokeLineCap="round" android:strokeLineJoin="round" />
+        <path android:pathData="M125,274 L143,288 L174,253" android:strokeColor="#FF000000" android:strokeWidth="24" android:strokeLineCap="round" android:strokeLineJoin="round" />
+        <!-- lines -->
+        <path android:pathData="M221,165.5 L303,165.5" android:strokeColor="#FF000000" android:strokeWidth="24" android:strokeLineCap="round" />
+        <path android:pathData="M221,277 L303,277" android:strokeColor="#FF000000" android:strokeWidth="24" android:strokeLineCap="round" />
+    </group>
+</vector>
