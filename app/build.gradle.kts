@@ -12,11 +12,16 @@ android {
         applicationId = "com.habit.tracker"
         minSdk = 24
         targetSdk = 34
-        versionCode = (project.findProperty("vCode") as String?)?.toInt() ?: 1
+        // time based, so every new build is always newer than any build installed before (no "downgrade" conflict)
+        versionCode = (System.currentTimeMillis() / 60000L).toInt()
         versionName = "2." + ((project.findProperty("vCode") as String?) ?: "1")
     }
 
     buildTypes {
+        debug {
+            // a debuggable app runs much slower (laggy taps); same signing key, so updates still install over the old app
+            isDebuggable = false
+        }
         release {
             isMinifyEnabled = false
         }
