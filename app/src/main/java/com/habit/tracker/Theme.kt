@@ -35,7 +35,7 @@ val DarkPal = Pal(
     true, Color(0xFF000000), Color(0xFFF4F4F5), rgba(244, 244, 245, .56f),
     rgba(255, 255, 255, .08f), rgba(255, 255, 255, .16f), rgba(255, 255, 255, .18f), rgba(255, 255, 255, .2f),
     rgba(0, 0, 0, .5f), rgba(22, 22, 26, .78f), rgba(255, 255, 255, .06f), Color(0xFFFF0000),
-    rgba(0, 0, 0, .6f), Color(0xFF00FFFF), Color(0xFF041014), Color(0xFFFFFFFF),
+    rgba(0, 0, 0, .6f), Color(0xFFFFFFFF), Color(0xFF041014), Color(0xFFFFFFFF),
 )
 
 val LightPal = Pal(
