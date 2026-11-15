@@ -201,7 +201,7 @@ fun Root() {
             UiState.dlg?.let { AppDlg(it) }
             UiState.delHabit?.let { a ->
                 ConfirmDlg(Str.t("delT"), Str.f("confirmDel", a.optString("name")), Str.t("bkOkB"), Str.t("cancelT"),
-                    onOk = { UiState.delHabit = null; LogicExt.deleteHabit(a) }, onCancel = { UiState.delHabit = null })
+                    onOk = { UiState.delHabit = null; UiState.removingHabit = a }, onCancel = { UiState.delHabit = null })
             }
             LockState.overlay?.let { LockOverlay(it, toast) }
 

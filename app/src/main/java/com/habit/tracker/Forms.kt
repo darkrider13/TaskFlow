@@ -38,10 +38,9 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
     val p = LocalPal.current
     val a = UiState.act()
     val openT = remember { mutableStateListOf<Long>() }
-    var confirmDel by remember { mutableStateOf(false) }
     var formKey by remember { mutableIntStateOf(0) }
 
-    Box(Modifier.fillMaxSize().then(if (confirmDel) Modifier.blur(14.dp) else Modifier)) {
+    Box(Modifier.fillMaxSize()) {
     SheetFrame(LogicExt.longDate(k), onClose) {
         val hi = Hol.info(k)
         val banners = (if (hi.g.isNotEmpty()) hi.gx else emptyList()).map { it to false } + hi.o.map { it to true }
@@ -73,7 +72,6 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
                     Tx(if (on) Str.t("undo") else Str.f("did", a.optString("name")), size = 15.sp, color = p.ink, weight = FontWeight.Bold, maxLines = 1)
                 }
                 IconBox("edit", false) { UiState.backDay = k; UiState.dayKey = null; UiState.edit = FormSpec("habit", a, null) }
-                IconBox("trash", true) { confirmDel = true }
             }
         } else {
             val tl = Logic.todos().filter { it.optString("date") == k }
@@ -89,10 +87,6 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
             }
         }
     }
-    }
-    if (confirmDel && a != null) {
-        ConfirmDlg(Str.t("delT"), Str.f("confirmDel", a.optString("name")), Str.t("bkOkB"), Str.t("cancelT"),
-            onOk = { confirmDel = false; LogicExt.deleteHabit(a); onClose() }, onCancel = { confirmDel = false })
     }
 }
 

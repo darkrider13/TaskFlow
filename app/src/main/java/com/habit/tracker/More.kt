@@ -330,12 +330,12 @@ fun AppDlg(d: DlgSpec) {
             val bs = RoundedCornerShape(14.dp)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
                 if (d.cancel != null) {
-                    Box(Modifier.weight(1f).height(43.dp).clip(bs).background(green2).tap { close() }, contentAlignment = Alignment.Center) {
+                    Box(Modifier.weight(1f).height(43.dp).clip(bs).background(red).tap { close() }, contentAlignment = Alignment.Center) {
                         Tx(d.cancel, size = 15.sp, color = Color.Black, weight = FontWeight.Bold)
                     }
                 }
                 Row(
-                    (if (d.cancel != null) Modifier.weight(1f) else Modifier.width(140.dp)).height(43.dp).clip(bs).background(red).tap { close(); d.onOk() },
+                    (if (d.cancel != null) Modifier.weight(1f) else Modifier.width(140.dp)).height(43.dp).clip(bs).background(if (d.kind == "ask") green2 else red).tap { close(); d.onOk() },
                     horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (d.kind == "ask") {

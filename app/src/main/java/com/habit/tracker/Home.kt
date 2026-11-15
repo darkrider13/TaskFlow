@@ -123,25 +123,16 @@ fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Un
     } else {
         Str.f("habSub", Str.bn(s.total), Str.bn(Logic.habCnt(a)))
     }
-    // swipe to the right = delete this habit (asks first, because all its ticks go too)
-    var dx by remember(a) { mutableFloatStateOf(0f) }
-    var widthPx by remember { mutableFloatStateOf(1f) }
-    Box(Modifier.fillMaxWidth().padding(bottom = 8.dp).onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }) {
-    if (dx > 0f) {
-        Box(Modifier.matchParentSize().clip(RoundedCornerShape(18.dp)).background(Color(0x33FF0000)), contentAlignment = Alignment.CenterStart) {
-            Ic("trash", size = 22.dp, tint = p.cross, modifier = Modifier.padding(start = 18.dp))
-        }
-    }
+    // swipe to the LEFT = delete this habit (asks first, because all its ticks go too)
+    SwipeToDelete(
+        key = a, radius = 18.dp,
+        onSwiped = { UiState.delHabit = a },
+        holdOpen = UiState.delHabit === a,
+        exit = UiState.removingHabit === a,
+        onExited = { UiState.removingHabit = null; LogicExt.deleteHabit(a) },
+    ) {
     Row(
         Modifier.fillMaxWidth()
-            .offset { IntOffset(dx.roundToInt(), 0) }
-            .pointerInput(a) {
-                detectHorizontalDragGestures(
-                    onDragEnd = { if (dx > widthPx * .4f) UiState.delHabit = a; dx = 0f },
-                    onDragCancel = { dx = 0f },
-                    onHorizontalDrag = { c, d -> c.consume(); dx = maxOf(0f, dx + d) },
-                )
-            }
             .glass().tap { onOpen(a) }.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -189,25 +180,16 @@ fun TaskRow(
     val cat = x.optString("cat")
     val rep = x.optString("rep")
     val repKey = when (rep) { "daily" -> "r1"; "weekly" -> "r2"; "monthly" -> "r3"; else -> "" }
-    var dx by remember(x) { mutableFloatStateOf(0f) }
-    var widthPx by remember { mutableFloatStateOf(1f) }
+    var gone by remember(x) { mutableStateOf(false) }
 
-    Box(Modifier.fillMaxWidth().padding(bottom = 8.dp).onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }) {
-        if (dx < 0f) {
-            Box(Modifier.matchParentSize().clip(RoundedCornerShape(14.dp)).background(Color(0x33FF0000)), contentAlignment = Alignment.CenterEnd) {
-                Ic("trash", size = 22.dp, tint = p.cross, modifier = Modifier.padding(end = 18.dp))
-            }
-        }
+    SwipeToDelete(
+        key = x, radius = 14.dp,
+        onSwiped = { gone = true },
+        exit = gone,
+        onExited = { LogicExt.deleteTask(x) },
+    ) {
         Row(
             Modifier.fillMaxWidth()
-                .offset { IntOffset(dx.roundToInt(), 0) }
-                .pointerInput(x) {
-                    detectHorizontalDragGestures(
-                        onDragEnd = { if (dx < -widthPx * .4f) LogicExt.deleteTask(x) else dx = 0f },
-                        onDragCancel = { dx = 0f },
-                        onHorizontalDrag = { c, d -> c.consume(); dx = minOf(0f, dx + d) },
-                    )
-                }
                 .glass(14.dp)
                 .let { if (expandable && hasSubs) it.tap { onToggleOpen() } else it }
                 .padding(horizontal = 12.dp, vertical = 11.dp),

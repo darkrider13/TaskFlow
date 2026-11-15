@@ -99,9 +99,9 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
                 body()
                 Row(Modifier.padding(top = 24.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.glass2).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onCancel),
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(Color(0xFFFF0000)).tap(onCancel),
                         contentAlignment = Alignment.Center,
-                    ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.SemiBold) }
+                    ) { Tx(Str.t("cancelT"), size = 16.sp, color = Color.Black, weight = FontWeight.Bold) }
                     Box(
                         Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor).tap(onSet),
                         contentAlignment = Alignment.Center,

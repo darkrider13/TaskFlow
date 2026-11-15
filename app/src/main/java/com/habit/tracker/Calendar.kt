@@ -36,6 +36,8 @@ object UiState {
     var showCats by mutableStateOf(false)
     /** habit waiting for the "delete?" answer after a swipe on the Home tab */
     var delHabit by mutableStateOf<JSONObject?>(null)
+    /** habit the user confirmed to delete - its card plays the slide-out animation, then deletes it */
+    var removingHabit by mutableStateOf<JSONObject?>(null)
     /** number of picker popups (time / date / goal) currently open - everything behind them gets blurred */
     var pickers by mutableIntStateOf(0)
 
