@@ -19,6 +19,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,30 +73,44 @@ fun WheelColumn(items: List<String>, start: Int, loop: Boolean, modifier: Modifi
 @Composable
 fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, body: @Composable ColumnScope.() -> Unit) {
     val p = LocalPal.current
-    BackHandler(onBack = onCancel)
     val shape = RoundedCornerShape(32.dp)
-    Box(Modifier.fillMaxSize().background(p.shade).tap { onCancel() }.padding(16.dp), contentAlignment = Alignment.Center) {
-        Column(
-            Modifier.widthIn(max = 400.dp).fillMaxWidth().clip(shape)
-                .background(if (p.dark) Color(0xFF1C1C1E) else Color(0xFAFFFFFF))
-                .border(1.dp, p.edge, shape).tap { }
-                .padding(start = 22.dp, end = 22.dp, top = 26.dp, bottom = 22.dp),
-        ) {
-            Row(Modifier.padding(start = 6.dp, bottom = 18.dp), verticalAlignment = Alignment.CenterVertically) {
-                Ic(icon, size = 22.dp)
-                Spacer(Modifier.width(12.dp))
-                Tx(title, size = 18.sp, weight = FontWeight.Bold)
+    // a real popup window on top of everything (so it is never cut off inside the form sheet)
+    Dialog(onDismissRequest = onCancel, properties = DialogProperties(dismissOnClickOutside = false, usePlatformDefaultWidth = false)) {
+        val view = LocalView.current
+        SideEffect {
+            val w = (view.parent as? DialogWindowProvider)?.window
+            w?.addFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            w?.setDimAmount(0.6f)
+            if (w != null && android.os.Build.VERSION.SDK_INT >= 31) {
+                w.addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                val lp = w.attributes
+                lp.blurBehindRadius = 28
+                w.attributes = lp
             }
-            body()
-            Row(Modifier.padding(top = 24.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                Box(
-                    Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.glass2).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onCancel),
-                    contentAlignment = Alignment.Center,
-                ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.SemiBold) }
-                Box(
-                    Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.ac).tap(onSet),
-                    contentAlignment = Alignment.Center,
-                ) { Tx(Str.t("setB"), size = 16.sp, color = p.tink, weight = FontWeight.Bold) }
+        }
+        Box(Modifier.fillMaxSize().tap { onCancel() }.padding(16.dp), contentAlignment = Alignment.Center) {
+            Column(
+                Modifier.widthIn(max = 400.dp).fillMaxWidth().clip(shape)
+                    .background(if (p.dark) Color(0xFF1C1C1E) else Color(0xFAFFFFFF))
+                    .border(1.dp, p.edge, shape).tap { }
+                    .padding(start = 22.dp, end = 22.dp, top = 26.dp, bottom = 22.dp),
+            ) {
+                Row(Modifier.padding(start = 6.dp, bottom = 18.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Ic(icon, size = 22.dp)
+                    Spacer(Modifier.width(12.dp))
+                    Tx(title, size = 18.sp, weight = FontWeight.Bold)
+                }
+                body()
+                Row(Modifier.padding(top = 24.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Box(
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.glass2).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onCancel),
+                        contentAlignment = Alignment.Center,
+                    ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.SemiBold) }
+                    Box(
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.ac).tap(onSet),
+                        contentAlignment = Alignment.Center,
+                    ) { Tx(Str.t("setB"), size = 16.sp, color = p.tink, weight = FontWeight.Bold) }
+                }
             }
         }
     }

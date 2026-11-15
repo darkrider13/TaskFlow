@@ -57,16 +57,21 @@ object Store {
         if (s.optJSONArray("rems") == null) s.put("rems", JSONArray())
     }
 
+    private val io = java.util.concurrent.Executors.newSingleThreadExecutor()
+
     fun save() {
         val f = file ?: return
-        try {
-            val tmp = File(f.path + ".tmp")
-            tmp.writeText(s.toString())
-            if (!tmp.renameTo(f)) {
-                f.writeText(s.toString())
-                tmp.delete()
+        val text = try { s.toString() } catch (e: Exception) { return }
+        io.execute {
+            try {
+                val tmp = File(f.path + ".tmp")
+                tmp.writeText(text)
+                if (!tmp.renameTo(f)) {
+                    f.writeText(text)
+                    tmp.delete()
+                }
+            } catch (e: Exception) {
             }
-        } catch (e: Exception) {
         }
     }
 

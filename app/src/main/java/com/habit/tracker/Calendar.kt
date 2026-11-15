@@ -274,7 +274,7 @@ fun HabitInfo(a: JSONObject, vy: Int, vm: Int, todayKey: String) {
     Column(Modifier.fillMaxWidth().padding(bottom = 12.dp).glass().padding(14.dp)) {
         if (gm == 0) {
             Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) { Cnt("check", ck, p.ink) }
+                Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) { Cnt("check", ck, Color(0xFF00C000)) }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Tx(Str.bn(rt ?: s.total), size = 20.sp, weight = FontWeight.Bold)
                     Tx(Str.t("total"), size = 12.sp, color = p.muted)
@@ -294,7 +294,7 @@ fun HabitInfo(a: JSONObject, vy: Int, vm: Int, todayKey: String) {
             }
             Row(Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 5.dp), verticalAlignment = Alignment.CenterVertically) {
                 Tx(Str.f("monthGoal", Str.bn(minOf(s.month, gm)), Str.bn(gm)), Modifier.weight(1f), size = 13.5.sp)
-                Cnt("check", ck, p.ink); Spacer(Modifier.width(12.dp)); Cnt("x", cx, Color(0xFFFF0000))
+                Cnt("check", ck, Color(0xFF00C000)); Spacer(Modifier.width(12.dp)); Cnt("x", cx, Color(0xFFFF0000))
                 Spacer(Modifier.width(10.dp))
                 Tx(Str.bn(Logic.pct(s.month, gm)) + "%", size = 13.5.sp)
             }

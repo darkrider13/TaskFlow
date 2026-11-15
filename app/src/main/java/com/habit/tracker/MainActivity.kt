@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -113,8 +114,8 @@ fun Root() {
     // keep the phone alarms in step with the data (a short pause lets quick edits settle)
     LaunchedEffect(rev) {
         delay(600)
-        val copy = org.json.JSONObject(Store.s.toString())
-        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { Notifs.scheduleAll(activity.applicationContext, copy) }
+        val text = Store.s.toString()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { Notifs.scheduleAll(activity.applicationContext, org.json.JSONObject(text)) }
     }
 
     // work out the holiday tables in the background so the Calendar tab opens instantly
@@ -147,9 +148,14 @@ fun Root() {
         }
     }
 
+    // blur the screen behind while a popup / sheet is open
+    val blurOn = UiState.dayKey != null || UiState.edit != null || UiState.showCats || UiState.remSheet ||
+        showSettings || showName || LockState.typeDlg || UiState.dlg != null
+
     CompositionLocalProvider(LocalPal provides pal) {
         Box(Modifier.fillMaxSize().appBg(pal)) {
             val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            Box(Modifier.fillMaxSize().then(if (blurOn) Modifier.blur(14.dp) else Modifier)) {
             Column(Modifier.fillMaxSize().statusBarsPadding().padding(start = 14.dp, end = 14.dp, top = 12.dp)) {
                 TopBar(rev, onUser = { showName = true }, onGear = { showSettings = true })
                 Box(Modifier.weight(1f).fillMaxWidth()) {
@@ -174,6 +180,7 @@ fun Root() {
                 }
             }
             NavBar(rev, tab) { tab = it }
+            }
 
             UiState.dayKey?.let { DaySheet(rev, it, onClose = { UiState.dayKey = null }, onToast = toast) }
             UiState.edit?.let { FormSheet(rev, it, toast) }
