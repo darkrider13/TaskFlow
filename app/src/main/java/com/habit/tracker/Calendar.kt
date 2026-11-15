@@ -34,6 +34,8 @@ object UiState {
     var remSheet by mutableStateOf(false)
     var remObj by mutableStateOf<JSONObject?>(null)
     var showCats by mutableStateOf(false)
+    /** number of picker popups (time / date / goal) currently open - everything behind them gets blurred */
+    var pickers by mutableIntStateOf(0)
 
     fun act(): JSONObject? = Logic.acts().find { it.optLong("id") == sel }
     fun resetToToday() {
@@ -123,6 +125,7 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
         if (a == null) {
             Row(Modifier.fillMaxWidth().padding(bottom = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 for ((k, lbl) in listOf("hol" to "cxHol", "evt" to "cxEvt")) {
+                    if (k == "evt") Spacer(Modifier.weight(1f)) // pushes "upcoming events" to the far right
                     val on = cxTab == k
                     val shape = RoundedCornerShape(20.dp)
                     Box(
@@ -161,8 +164,7 @@ fun EventCard(k: String, title: String, todayKey: String, onOpenDay: (String) ->
     val p = LocalPal.current
     val n = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(todayKey), LocalDate.parse(k)).toInt()
     val left = if (n <= 0) Str.t("cxToday") else Str.f("cxLeft", Str.bn(n))
-    val loc = java.util.Locale.forLanguageTag(Str.t("loc"))
-    val ds = Str.dig(LocalDate.parse(k).format(java.time.format.DateTimeFormatter.ofPattern("EEE d MMM", loc)))
+    val ds = Str.dig(LocalDate.parse(k).format(Str.fmt("EEE d MMM")))
     val shape = RoundedCornerShape(16.dp)
     Row(
         Modifier.fillMaxWidth().padding(bottom = 8.dp).glass(16.dp)

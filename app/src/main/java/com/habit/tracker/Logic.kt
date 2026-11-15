@@ -197,8 +197,7 @@ object Logic {
 
     /** e.g. "Wednesday, November 11" / "বুধবার, ১১ নভেম্বর" */
     fun heroDate(k: String): String {
-        val loc = Locale.forLanguageTag(Str.t("loc"))
-        val s = LocalDate.parse(k).format(DateTimeFormatter.ofPattern("EEEE, d MMMM", loc))
+        val s = LocalDate.parse(k).format(Str.fmt("EEEE, d MMMM"))
         return Str.dig(s)
     }
 }
@@ -264,23 +263,19 @@ object LogicExt {
     }
 
     fun longDate(k: String): String {
-        val loc = Locale.forLanguageTag(Str.t("loc"))
-        return Str.dig(LocalDate.parse(k).format(DateTimeFormatter.ofPattern("EEEE, d MMMM", loc)))
+        return Str.dig(LocalDate.parse(k).format(Str.fmt("EEEE, d MMMM")))
     }
 
     fun monthName(y: Int, m0: Int): String {
-        val loc = Locale.forLanguageTag(Str.t("loc"))
-        return Str.dig(java.time.YearMonth.of(y, m0 + 1).format(DateTimeFormatter.ofPattern("LLLL yyyy", loc)))
+        return Str.dig(java.time.YearMonth.of(y, m0 + 1).format(Str.fmt("LLLL yyyy")))
     }
 
     fun dayMonth(k: String): String {
-        val loc = Locale.forLanguageTag(Str.t("loc"))
-        return Str.dig(LocalDate.parse(k).format(DateTimeFormatter.ofPattern("d MMM", loc)))
+        return Str.dig(LocalDate.parse(k).format(Str.fmt("d MMM")))
     }
 
     fun shortDate(k: String): String {
-        val loc = Locale.forLanguageTag(Str.t("loc"))
-        return Str.dig(LocalDate.parse(k).format(DateTimeFormatter.ofPattern("d MMM yyyy", loc)))
+        return Str.dig(LocalDate.parse(k).format(Str.fmt("d MMM yyyy")))
     }
 
     fun deleteHabit(a: JSONObject) {

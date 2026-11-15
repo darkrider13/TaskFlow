@@ -1,8 +1,32 @@
 package com.habit.tracker
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+
 /** Language helper: same texts as the original app (Bangla + English). */
 object Str {
-    val isBn: Boolean get() = Store.set.optString("lang", "bn") == "bn"
+    /** Compose state: every screen that reads a text refreshes the moment the language is switched. */
+    private var langTick by mutableIntStateOf(0)
+
+    val isBn: Boolean get() {
+        @Suppress("UNUSED_VARIABLE") val subscribe = langTick
+        return Store.set.optString("lang", "bn") == "bn"
+    }
+
+    fun setLang(l: String) {
+        Store.set.put("lang", l)
+        langTick++
+        Store.touch()
+    }
+
+    private val fmtCache = java.util.concurrent.ConcurrentHashMap<String, java.time.format.DateTimeFormatter>()
+
+    /** Date formatter for the current language, built once and reused (building one each time was slow). */
+    fun fmt(pattern: String): java.time.format.DateTimeFormatter {
+        val tag = t("loc")
+        return fmtCache.getOrPut("$pattern|$tag") { java.time.format.DateTimeFormatter.ofPattern(pattern, java.util.Locale.forLanguageTag(tag)) }
+    }
 
     fun t(k: String): String {
         val m = if (isBn) StrData.bn else StrData.en

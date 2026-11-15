@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -204,6 +205,7 @@ fun ReminderSheet(rev: Int, r: JSONObject?, onClose: () -> Unit, onToast: (Strin
 
     fun toLat(s: String): Int = s.map { c -> if (c in '০'..'৯') ('0' + (c - '০')) else c }.filter { it.isDigit() }.joinToString("").toIntOrNull() ?: 0
 
+    Box(Modifier.fillMaxSize().then(if (confirmDel) Modifier.blur(14.dp) else Modifier)) {
     SheetFrame(Str.t(if (r != null) "remEdit" else "remNew"), onClose) {
         RemBox(name, { name = it; errName = false }, Str.t("remNamePh"), Modifier.fillMaxWidth(), err = errName)
         Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -246,6 +248,7 @@ fun ReminderSheet(rev: Int, r: JSONObject?, onClose: () -> Unit, onToast: (Strin
             }
             if (r != null) RowBtn(Str.t("del"), Modifier.weight(1f)) { confirmDel = true }
         }
+    }
     }
     if (pick != null) {
         val w = pick

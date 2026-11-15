@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -40,6 +41,7 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
     var confirmDel by remember { mutableStateOf(false) }
     var formKey by remember { mutableIntStateOf(0) }
 
+    Box(Modifier.fillMaxSize().then(if (confirmDel) Modifier.blur(14.dp) else Modifier)) {
     SheetFrame(LogicExt.longDate(k), onClose) {
         val hi = Hol.info(k)
         val banners = (if (hi.g.isNotEmpty()) hi.gx else emptyList()).map { it to false } + hi.o.map { it to true }
@@ -86,6 +88,7 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
                 TfForm(FormSpec("task", null, null, k), inline = true, onToast = onToast, onSaved = { formKey++ })
             }
         }
+    }
     }
     if (confirmDel && a != null) {
         ConfirmDlg(Str.t("delT"), Str.f("confirmDel", a.optString("name")), Str.t("bkOkB"), Str.t("cancelT"),

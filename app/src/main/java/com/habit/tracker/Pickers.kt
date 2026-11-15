@@ -66,9 +66,10 @@ fun WheelColumn(items: List<String>, start: Int, loop: Boolean, modifier: Modifi
 }
 
 @Composable
-fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, setColor: Color? = null, body: @Composable ColumnScope.() -> Unit) {
+fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, setColor: Color = Color(0xFF00FF00), body: @Composable ColumnScope.() -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(32.dp)
+    DisposableEffect(Unit) { UiState.pickers++; onDispose { UiState.pickers-- } }
     // a real popup window on top of everything (so it is never cut off inside the form sheet)
     Dialog(onDismissRequest = onCancel, properties = DialogProperties(dismissOnClickOutside = false, usePlatformDefaultWidth = false)) {
         val view = LocalView.current
@@ -102,9 +103,9 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
                         contentAlignment = Alignment.Center,
                     ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.SemiBold) }
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor ?: p.ac).tap(onSet),
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor).tap(onSet),
                         contentAlignment = Alignment.Center,
-                    ) { Tx(Str.t("setB"), size = 16.sp, color = if (setColor != null) Color(0xFF041014) else p.tink, weight = FontWeight.Bold) }
+                    ) { Tx(Str.t("setB"), size = 16.sp, color = Color(0xFF041014), weight = FontWeight.Bold) }
                 }
             }
         }
@@ -174,13 +175,12 @@ fun DatePickerDlg(initial: String, onCancel: () -> Unit, onSet: (String) -> Unit
     var d by remember { mutableIntStateOf(d0.dayOfMonth - 1) }
     var m by remember { mutableIntStateOf(d0.monthValue - 1) }
     var y by remember { mutableIntStateOf(d0.year.coerceIn(y0, y1) - y0) }
-    val loc = java.util.Locale.forLanguageTag(Str.t("loc"))
-    val months = List(12) { Str.dig(LocalDate.of(2026, it + 1, 1).format(java.time.format.DateTimeFormatter.ofPattern("MMM", loc))) }
+    val months = List(12) { Str.dig(LocalDate.of(2026, it + 1, 1).format(Str.fmt("MMM"))) }
     PickerCard("nav_cal", Str.t("pickD"), onCancel, {
         val yy = y0 + y
         val len = java.time.YearMonth.of(yy, m + 1).lengthOfMonth()
         onSet(LocalDate.of(yy, m + 1, minOf(d + 1, len)).toString())
-    }, setColor = Color(0xFF00FF00)) {
+    }) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp)) {
             Tx(Str.t("dateL"), Modifier.weight(1f), size = 13.sp, color = p.muted, align = TextAlign.Center)
             Tx(Str.t("monL"), Modifier.weight(1f), size = 13.sp, color = p.muted, align = TextAlign.Center)

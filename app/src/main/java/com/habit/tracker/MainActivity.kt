@@ -150,7 +150,7 @@ fun Root() {
 
     // blur the screen behind while a popup / sheet is open
     val blurOn = UiState.dayKey != null || UiState.edit != null || UiState.showCats || UiState.remSheet ||
-        showSettings || showName || LockState.typeDlg || UiState.dlg != null
+        showSettings || showName || LockState.typeDlg || UiState.dlg != null || UiState.pickers > 0
 
     CompositionLocalProvider(LocalPal provides pal) {
         Box(Modifier.fillMaxSize().appBg(pal)) {
@@ -182,6 +182,8 @@ fun Root() {
             NavBar(rev, tab) { tab = it }
             }
 
+            // popups that sit under a picker / second popup are blurred too
+            Box(Modifier.fillMaxSize().then(if (UiState.pickers > 0) Modifier.blur(14.dp) else Modifier)) {
             UiState.dayKey?.let { DaySheet(rev, it, onClose = { UiState.dayKey = null }, onToast = toast) }
             UiState.edit?.let { FormSheet(rev, it, toast) }
             if (UiState.showCats) CatSheet(rev) { UiState.showCats = false }
@@ -192,6 +194,7 @@ fun Root() {
                 onImport = { showSettings = false; importLauncher.launch(arrayOf("application/json", "text/*", "*/*")) },
             )
             if (showName) NameSheet(rev, onClose = { showName = false })
+            }
             if (Store.name.isBlank()) Onboarding(rev)
             if (Focus.fs) FocusFullscreen { Focus.fs = false }
             if (LockState.typeDlg) LockTypeDlg(onClose = { LockState.typeDlg = false }, onToast = toast)
@@ -312,8 +315,7 @@ fun SettingsSheet(rev: Int, onClose: () -> Unit, onToast: (String) -> Unit, onEx
                 Store.touch()
             }
             RowBtn(if (Str.isBn) "English" else "বাংলা", Modifier.weight(1f)) {
-                Store.set.put("lang", if (Str.isBn) "en" else "bn")
-                Store.touch()
+                Str.setLang(if (Str.isBn) "en" else "bn")
             }
         }
         SectionTitle(Str.t("dataT"))

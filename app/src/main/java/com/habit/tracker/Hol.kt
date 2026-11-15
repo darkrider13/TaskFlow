@@ -320,14 +320,28 @@ object Hol {
     private val MN = Regex("barat|qadr|jumatul|wida|bida|fitr|adha|azha|ashura|milad", RegexOption.IGNORE_CASE)
 
     /** Holidays of one day: g = government, o = other observances, gx = government with "(unconfirmed)" notes. */
+    private val infoCache = HashMap<String, Info>()
+    private val RX_WIDA = Regex("Jumatul\\s+(?:Bida|Vida)", RegexOption.IGNORE_CASE)
+    private val RX_PAREN = Regex("\\s*[(（][^)）]*[)）]")
+    private val RX_SPACES = Regex("\\s{2,}")
+
     fun info(k: String): Info {
+        val ck = k + "|" + Str.isBn + "|" + LocalDate.now()
+        infoCache[ck]?.let { return it }
+        val r = infoCalc(k)
+        if (infoCache.size > 4000) infoCache.clear()
+        infoCache[ck] = r
+        return r
+    }
+
+    private fun infoCalc(k: String): Info {
         val y = k.substring(0, 4).toInt()
         val md = k.substring(5)
         val bn = Str.isBn
         val Y = holYear(y)
         fun nmf(x: Item): String {
-            val n = (if (bn) bnFix(x.en, x.bn) else x.en).replace(Regex("Jumatul\\s+(?:Bida|Vida)", RegexOption.IGNORE_CASE), "Jumatul Wida")
-            val c = n.replace(Regex("\\s*[(（][^)）]*[)）]"), "").replace(Regex("\\s{2,}"), " ").trim()
+            val n = (if (bn) bnFix(x.en, x.bn) else x.en).replace(RX_WIDA, "Jumatul Wida")
+            val c = n.replace(RX_PAREN, "").replace(RX_SPACES, " ").trim()
             return c.ifEmpty { n }
         }
         val dd = try { java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(k)).toInt() } catch (e: Exception) { 0 }

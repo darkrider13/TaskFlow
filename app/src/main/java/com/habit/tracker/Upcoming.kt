@@ -99,8 +99,7 @@ fun UpcomingScreen(rev: Int, todayKey: String, bottomPad: Dp, onEditTask: (JSONO
                 val groups = rest.groupBy { it.optString("date") }
                 for ((k, list) in groups) {
                     val title = if (k == todayKey) Str.t("today") else if (k == tmrKey) Str.t("tmr") else {
-                        val loc = java.util.Locale.forLanguageTag(Str.t("loc"))
-                        Str.dig(LocalDate.parse(k).format(java.time.format.DateTimeFormatter.ofPattern("EEE, d MMM", loc)))
+                        Str.dig(LocalDate.parse(k).format(Str.fmt("EEE, d MMM")))
                     }
                     SectionTitle(title)
                     for (x in list) {
