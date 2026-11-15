@@ -34,7 +34,7 @@ object Focus {
         }
     }
 
-    fun setMode(m: String) {
+    fun switchMode(m: String) {
         mode = m; tot = 0; left = (FM[m] ?: 25) * 60; run = false
     }
 

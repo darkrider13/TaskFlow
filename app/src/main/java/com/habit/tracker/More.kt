@@ -61,7 +61,7 @@ fun MoreScreen(rev: Int, todayKey: String, bottomPad: Dp, onToast: (String) -> U
         Column(Modifier.fillMaxWidth().glass().padding(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Seg(
                 listOf("focus" to "fFocus", "short" to "fShort", "long" to "fLong").map { (k, l) -> SegItem(k, Str.t(l) + " " + Str.bn(Focus.FM[k] ?: 0)) },
-                Focus.mode, { Focus.setMode(it); syncAlarm() },
+                Focus.mode, { Focus.switchMode(it); syncAlarm() },
             )
             val r = Focus.remaining()
             Box(Modifier.fillMaxWidth()) {
