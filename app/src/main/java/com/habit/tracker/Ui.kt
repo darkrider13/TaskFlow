@@ -148,39 +148,62 @@ fun Seg(items: List<SegItem>, sel: String, onSel: (String) -> Unit, modifier: Mo
     }
 }
 
-/** Category chips (scrolls sideways). */
+/** Category chips. They share the full row width when they fit, and scroll sideways when they do not. */
 @Composable
 fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)? = null, onSel: (String) -> Unit) {
     val p = LocalPal.current
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(bottom = 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        for ((k, label) in items) {
-            val on = k == sel
-            val shape = RoundedCornerShape(20.dp)
-            Box(
-                Modifier
-                    .height(28.dp)
-                    .clip(shape)
-                    .background(if (on) p.ac else p.glass)
-                    .border(1.dp, if (on) Color.Transparent else p.edge, shape)
-                    .tap { onSel(k) }
-                    .padding(horizontal = 12.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Tx(label, size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
+    val gap = 6.dp
+    val hasAdd = onAdd != null
+    androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
+        val avail = constraints.maxWidth
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+            androidx.compose.ui.layout.Layout(
+                modifier = Modifier.widthIn(min = maxWidth),
+                content = {
+                    for ((k, label) in items) {
+                        val on = k == sel
+                        val shape = RoundedCornerShape(20.dp)
+                        Box(
+                            Modifier
+                                .height(28.dp)
+                                .clip(shape)
+                                .background(if (on) p.ac else p.glass)
+                                .border(1.dp, if (on) Color.Transparent else p.edge, shape)
+                                .tap { onSel(k) }
+                                .padding(horizontal = 12.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Tx(label, size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
+                        }
+                    }
+                    if (onAdd != null) {
+                        val shape = RoundedCornerShape(20.dp)
+                        Box(
+                            Modifier.height(28.dp).clip(shape).background(p.glass).border(1.dp, p.edge, shape).tap { onAdd() }.padding(horizontal = 12.dp),
+                            contentAlignment = Alignment.Center,
+                        ) { Ic("plus", size = 14.dp) }
+                    }
+                },
+            ) { measurables, cons ->
+                val g = gap.roundToPx()
+                val nat = measurables.map { it.measure(androidx.compose.ui.unit.Constraints()) }
+                val total = nat.sumOf { it.width } + g * (nat.size - 1).coerceAtLeast(0)
+                val width = maxOf(total, cons.minWidth)
+                // extra space is shared by the label chips only (the "+" button keeps its own size)
+                val grow = if (hasAdd) nat.size - 1 else nat.size
+                val extra = if (grow > 0) (width - total).coerceAtLeast(0) / grow else 0
+                val placed = nat.mapIndexed { i, pl ->
+                    if (i < grow && extra > 0)
+                        measurables[i].measure(androidx.compose.ui.unit.Constraints.fixed(pl.width + extra, pl.height))
+                    else pl
+                }
+                val h = placed.maxOfOrNull { it.height } ?: 0
+                val used = placed.sumOf { it.width } + g * (placed.size - 1).coerceAtLeast(0)
+                layout(maxOf(used, if (extra > 0) width else used), h) {
+                    var x = 0
+                    placed.forEach { it.placeRelative(x, 0); x += it.width + g }
+                }
             }
-        }
-        if (onAdd != null) {
-            val shape = RoundedCornerShape(20.dp)
-            Box(
-                Modifier.height(28.dp).clip(shape).background(p.glass).border(1.dp, p.edge, shape).tap { onAdd() }.padding(horizontal = 12.dp),
-                contentAlignment = Alignment.Center,
-            ) { Ic("plus", size = 14.dp) }
         }
     }
 }
