@@ -13,7 +13,7 @@ import kotlin.math.sin
  * Holiday engine, ported from the original app (offline part):
  * fixed government holidays, the 2026 gazette list, Hijri dates, Easter, and Hindu / Buddhist
  * festivals worked out from the real sun and moon positions.
- * (The online feed / gazette checking of the old app is not included yet.)
+ * (Online list: see HolRemote.kt - holidays.json from GitHub overrides the guessed dates.)
  */
 object Hol {
     class Item(val en: String, val bn: String, val u: Int = 0)
@@ -248,6 +248,10 @@ object Hol {
     private fun nk(z: String) = z.lowercase().filter { it in 'a'..'z' || it in '\u0980'..'\u09ff' }
     private fun pt(e: String) = e.split(" / ").map { nk(it) }.filter { it.length > 3 }
 
+    /** Forget the worked-out tables (used after a new online list arrives). */
+    @Synchronized
+    fun reset() { cache.clear(); infoCache.clear() }
+
     @Synchronized
     fun holYear(y: Int): Year {
         cache[y]?.let { return it }
@@ -262,10 +266,13 @@ object Hol {
             add(g, md, v.en, v.bn)
         }
         val yb = HolData.YEARLY[y]
-        if (yb != null) for ((md, v) in yb) add(g, md, v.en, v.bn)
+        val rg = HolRemote.g(y)
+        if (rg != null) for (x in rg) add(g, x.md, x.en, x.bn)          // online list for this year: exact dates, never "unconfirmed"
+        else if (yb != null) for ((md, v) in yb) add(g, md, v.en, v.bn)
         else for (x in holCalc(y, true).g) add(g, x.first, x.second, x.third, 1)
         for ((md, v) in HolData.OTHER_FIXED) add(o, md, v.en, v.bn)
         for (x in holCalc(y, false).o) add(o, x.first, x.second, x.third)
+        HolRemote.o(y)?.forEach { add(o, it.md, it.en, it.bn) }
         // an observance that is also a government holiday moves out of "other"
         val gk = ArrayList<String>()
         for (list in g.values) for (x in list) { gk.addAll(pt(x.en)); gk.addAll(pt(x.bn)) }

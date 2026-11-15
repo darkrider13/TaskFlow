@@ -36,6 +36,7 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Store.init(applicationContext)
+        HolRemote.init(applicationContext)
         LockState.checkBio(this)
         if (Store.s.optJSONObject("lock") != null) LockState.show("unlock")
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -116,6 +117,15 @@ fun Root() {
         delay(600)
         val text = Store.s.toString()
         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { Notifs.scheduleAll(activity.applicationContext, org.json.JSONObject(text)) }
+    }
+
+    // check the online holiday list now, then again every 6 hours while the app stays open
+    LaunchedEffect(Unit) {
+        while (true) {
+            val changed = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { HolRemote.fetch() }
+            if (changed) Store.refresh()
+            delay(6 * 60 * 60 * 1000L)
+        }
     }
 
     // work out the holiday tables in the background so the Calendar tab opens instantly

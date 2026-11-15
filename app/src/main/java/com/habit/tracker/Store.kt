@@ -75,6 +75,9 @@ object Store {
         }
     }
 
+    /** Redraw the screens without saving anything (e.g. a new holiday list arrived). */
+    fun refresh() { rev++ }
+
     /** Call after any change: saves to disk and redraws the screens. */
     fun touch() {
         save()
