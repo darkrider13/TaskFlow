@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unpack project.zip
-        run: unzip -oq project.zip
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -21,20 +19,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.9
-      - name: Use the fixed signing key
+      - name: Use the fixed signing key (keeps your data when updating)
         run: |
           mkdir -p ~/.android
-          cp TaskFlowNative/debug.keystore ~/.android/debug.keystore
+          cp debug.keystore ~/.android/debug.keystore
       - name: Build APK
-        working-directory: TaskFlowNative
         run: gradle assembleDebug -PvCode=${{ github.run_number }} --no-daemon --stacktrace
       - name: Publish APK to Releases
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp TaskFlowNative/app/build/outputs/apk/debug/app-debug.apk TaskFlow.apk
+          cp app/build/outputs/apk/debug/app-debug.apk TaskFlow.apk
           gh release delete latest --cleanup-tag --yes || true
           gh release create latest TaskFlow.apk \
             --title "TaskFlow (build ${{ github.run_number }})" \
-            --notes "Download TaskFlow.apk and install it over the old version." \
+            --notes "TaskFlow latest build. Download TaskFlow.apk and install it over the old version." \
             --target ${{ github.sha }}
