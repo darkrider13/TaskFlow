@@ -17,12 +17,27 @@ android {
         versionName = "2." + ((project.findProperty("vCode") as String?) ?: "1")
     }
 
+    // One fixed signing key for every build, so a new APK always installs over the old one (no "package conflict").
+    // If you add the GitHub secrets KEYSTORE_BASE64 / KEYSTORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD they are used,
+    // otherwise the debug.keystore stored in the project is used (same key as before).
+    signingConfigs {
+        create("fixed") {
+            fun env(n: String) = System.getenv(n)?.takeIf { it.isNotBlank() }
+            storeFile = env("KEYSTORE_FILE")?.let { file(it) } ?: rootProject.file("debug.keystore")
+            storePassword = env("KEYSTORE_PASSWORD") ?: "android"
+            keyAlias = env("KEY_ALIAS") ?: "androiddebugkey"
+            keyPassword = env("KEY_PASSWORD") ?: "android"
+        }
+    }
+
     buildTypes {
         debug {
+            signingConfig = signingConfigs.getByName("fixed")
             // a debuggable app runs much slower (laggy taps); same signing key, so updates still install over the old app
             isDebuggable = false
         }
         release {
+            signingConfig = signingConfigs.getByName("fixed")
             isMinifyEnabled = false
         }
     }
