@@ -148,63 +148,49 @@ fun Seg(items: List<SegItem>, sel: String, onSel: (String) -> Unit, modifier: Mo
     }
 }
 
-/** Category chips. They share the full row width when they fit, and scroll sideways when they do not. */
+/** Category chips. Exactly 4 chips are visible per page; swipe sideways to see the next 4. No chip is ever cut off. */
 @Composable
 fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)? = null, onSel: (String) -> Unit) {
     val p = LocalPal.current
     val gap = 6.dp
-    val hasAdd = onAdd != null
-    androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
-        val maxW = this.maxWidth
-        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
-            androidx.compose.ui.layout.Layout(
-                modifier = Modifier.widthIn(min = maxW),
-                content = {
-                    for ((k, label) in items) {
-                        val on = k == sel
-                        val shape = RoundedCornerShape(20.dp)
-                        Box(
-                            Modifier
-                                .height(28.dp)
-                                .clip(shape)
-                                .background(if (on) p.ac else p.glass)
-                                .border(1.dp, if (on) Color.Transparent else p.edge, shape)
-                                .tap { onSel(k) }
-                                .padding(horizontal = 12.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Tx(label, size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
-                        }
+    val perPage = 4
+    val pages = items.chunked(perPage)
+    val shape = RoundedCornerShape(20.dp)
+    Row(Modifier.fillMaxWidth().padding(bottom = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        val pagerState = androidx.compose.foundation.pager.rememberPagerState { pages.size.coerceAtLeast(1) }
+        androidx.compose.foundation.pager.HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.weight(1f),
+            beyondViewportPageCount = 1,
+        ) { pg ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                val page = pages.getOrElse(pg) { emptyList() }
+                for ((k, label) in page) {
+                    val on = k == sel
+                    Box(
+                        Modifier
+                            .weight(1f)
+                            .height(28.dp)
+                            .clip(shape)
+                            .background(if (on) p.ac else p.glass)
+                            .border(1.dp, if (on) Color.Transparent else p.edge, shape)
+                            .tap { onSel(k) }
+                            .padding(horizontal = 6.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Tx(label, size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
                     }
-                    if (onAdd != null) {
-                        val shape = RoundedCornerShape(20.dp)
-                        Box(
-                            Modifier.height(28.dp).clip(shape).background(p.glass).border(1.dp, p.edge, shape).tap { onAdd() }.padding(horizontal = 12.dp),
-                            contentAlignment = Alignment.Center,
-                        ) { Ic("plus", size = 14.dp) }
-                    }
-                },
-            ) { measurables, cons ->
-                val g = gap.roundToPx()
-                val hPx = 28.dp.roundToPx()
-                // natural widths come from intrinsics, so every chip is measured exactly ONCE (Compose forbids measuring twice)
-                val nat = measurables.map { it.maxIntrinsicWidth(hPx) }
-                val total = nat.sum() + g * (nat.size - 1).coerceAtLeast(0)
-                val width = maxOf(total, cons.minWidth)
-                // extra space is shared by the label chips only (the "+" button keeps its own size)
-                val grow = if (hasAdd) nat.size - 1 else nat.size
-                val extra = if (grow > 0) (width - total).coerceAtLeast(0) / grow else 0
-                val placed = measurables.mapIndexed { i, m ->
-                    val w = nat[i] + if (i < grow) extra else 0
-                    m.measure(androidx.compose.ui.unit.Constraints.fixedWidth(w))
                 }
-                val h = placed.maxOfOrNull { it.height } ?: 0
-                val used = placed.sumOf { it.width } + g * (placed.size - 1).coerceAtLeast(0)
-                layout(maxOf(used, width), h) {
-                    var x = 0
-                    placed.forEach { it.placeRelative(x, 0); x += it.width + g }
-                }
+                // last page may have fewer than 4 chips: keep each chip the same width as on the other pages
+                repeat(perPage - page.size) { Spacer(Modifier.weight(1f)) }
             }
+        }
+        if (onAdd != null) {
+            Spacer(Modifier.width(gap))
+            Box(
+                Modifier.height(28.dp).clip(shape).background(p.glass).border(1.dp, p.edge, shape).tap { onAdd() }.padding(horizontal = 12.dp),
+                contentAlignment = Alignment.Center,
+            ) { Ic("plus", size = 14.dp) }
         }
     }
 }
