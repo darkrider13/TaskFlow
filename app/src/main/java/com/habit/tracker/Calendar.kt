@@ -212,7 +212,7 @@ fun DayCell(date: LocalDate, a: JSONObject?, todayKey: String, modifier: Modifie
     ) {
         Tx(
             Str.bn(date.dayOfMonth), size = 14.sp,
-            color = if (pending) Color(0xFF38BDF8) else if (isHol) Color(0xFFFF0000) else p.ink,
+            color = if (pending) Color(0xFF38BDF8) else if (isHol) Color(0xFFFF0000) else if (hinfo.o.isNotEmpty()) Color(0xFFFFB800) else p.ink,
             weight = if (tick) FontWeight.Bold else FontWeight.Normal,
         )
         when (shownMark) {
