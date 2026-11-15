@@ -12,7 +12,8 @@ android {
         applicationId = "com.habit.tracker"
         minSdk = 24
         targetSdk = 34
-        versionCode = (project.findProperty("vCode") as String?)?.toInt() ?: 1
+        // time based, so every new build is always newer than any build installed before (no "downgrade" conflict)
+        versionCode = (System.currentTimeMillis() / 60000L).toInt()
         versionName = "2." + ((project.findProperty("vCode") as String?) ?: "1")
     }
 
