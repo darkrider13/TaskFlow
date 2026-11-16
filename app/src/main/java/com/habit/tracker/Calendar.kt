@@ -145,23 +145,45 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
                 val items = Logic.todos().filter { !it.optBoolean("done") && it.optString("date") >= todayKey }
                     .sortedBy { it.optString("date") + it.optString("time").ifEmpty { "99" } }
                 if (items.isEmpty()) EmptyCard { Tx(Str.t("cxNoE"), size = 14.sp, color = p.muted, align = TextAlign.Center) }
-                else for (x in items.take(60)) EventCard(x.optString("date"), x.optString("text"), todayKey, onOpenDay)
+                else EventList(items.take(60).map { Triple(it.optString("date"), it.optString("text"), false) }, todayKey, onOpenDay, "evt")
             } else {
                 val ymv = YearMonth.of(vy, vm + 1)
                 val t0 = LocalDate.parse(todayKey)
                 var d = if (ymv.atDay(1).isBefore(t0)) t0 else ymv.atDay(1)
                 val end = ymv.atEndOfMonth()
-                var first = true
-                var any = false
+                val hols = ArrayList<Triple<String, String, Boolean>>()
                 while (!d.isAfter(end)) {
                     val n = Hol.info(d.toString()).gx
-                    if (n.isNotEmpty()) { EventCard(d.toString(), n.joinToString(" / "), todayKey, onOpenDay, hol = true, first = first); first = false; any = true }
+                    if (n.isNotEmpty()) hols.add(Triple(d.toString(), n.joinToString(" / "), true))
                     d = d.plusDays(1)
                 }
-                if (!any) EmptyCard { Tx(Str.t("cxNoH"), size = 14.sp, color = p.muted, align = TextAlign.Center) }
+                if (hols.isEmpty()) EmptyCard { Tx(Str.t("cxNoH"), size = 14.sp, color = p.muted, align = TextAlign.Center) }
+                else EventList(hols, todayKey, onOpenDay, "hol$vy-$vm")
             }
         }
         Spacer(Modifier.height(bottomPad))
+    }
+}
+
+private val EV_CARD_H = 60.dp
+private val EV_GAP = 8.dp
+private const val EV_SHOWN = 3
+
+/** Upcoming holidays / events: exactly 3 full cards are visible; the rest scroll inside the list and always settle on a whole card. */
+@Composable
+fun EventList(items: List<Triple<String, String, Boolean>>, todayKey: String, onOpenDay: (String) -> Unit, listKey: String) {
+    key(listKey) {
+        val state = androidx.compose.foundation.lazy.rememberLazyListState()
+        val fling = androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior(state)
+        val n = minOf(items.size, EV_SHOWN)
+        androidx.compose.foundation.lazy.LazyColumn(
+            Modifier.fillMaxWidth().height(EV_CARD_H * n + EV_GAP * (n - 1)),
+            state = state, flingBehavior = fling, verticalArrangement = Arrangement.spacedBy(EV_GAP),
+        ) {
+            androidx.compose.foundation.lazy.itemsIndexed(items) { i, it ->
+                EventCard(it.first, it.second, todayKey, onOpenDay, hol = it.third, first = i == 0)
+            }
+        }
     }
 }
 
@@ -173,15 +195,15 @@ fun EventCard(k: String, title: String, todayKey: String, onOpenDay: (String) ->
     val ds = Str.wdDate(LocalDate.parse(k))
     val shape = RoundedCornerShape(16.dp)
     Row(
-        Modifier.fillMaxWidth().padding(bottom = 8.dp).glass(16.dp)
+        Modifier.fillMaxWidth().height(EV_CARD_H).glass(16.dp)
             .let { if (first && hol) it.border(1.dp, Color(0x99FF6B6B), shape) else it }
             .tap { val d = LocalDate.parse(k); UiState.vy = d.year; UiState.vm = d.monthValue - 1; UiState.pickKey = k; onOpenDay(k) }
-            .padding(horizontal = 14.dp, vertical = 8.dp).heightIn(min = 44.dp),
+            .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Tx(ds, Modifier.weight(1f), size = 13.sp, color = if (hol) Color(0xFFFF6B6B) else Color(0xFF60A5FA))
-        Tx(title, Modifier.widthIn(max = 130.dp), size = 13.sp, weight = FontWeight.SemiBold, align = TextAlign.Center)
+        Tx(title, Modifier.widthIn(max = 130.dp), size = 13.sp, weight = FontWeight.SemiBold, align = TextAlign.Center, maxLines = 2)
         Tx(left, Modifier.weight(1f), size = 13.sp, color = p.muted, align = TextAlign.End)
     }
 }
