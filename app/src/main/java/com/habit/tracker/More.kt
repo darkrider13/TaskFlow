@@ -348,3 +348,51 @@ fun AppDlg(d: DlgSpec) {
         }
     }
 }
+
+
+/** Export chooser: "Save to folder" and "Share" side by side. */
+@Composable
+fun ExportDlg(onSave: () -> Unit, onShare: () -> Unit, onClose: () -> Unit) {
+    val p = LocalPal.current
+    androidx.activity.compose.BackHandler(onBack = onClose)
+    val shape = RoundedCornerShape(22.dp)
+    val bs = RoundedCornerShape(14.dp)
+    Box(Modifier.fillMaxSize().background(p.shade).tap { onClose() }.padding(16.dp), contentAlignment = Alignment.Center) {
+        Column(
+            Modifier.fillMaxWidth().clip(shape)
+                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
+                .border(1.dp, p.edge, shape).tap { }
+                .padding(horizontal = 18.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(Modifier.size(75.dp).clip(CircleShape).background(p.glass), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(60.dp).clip(CircleShape).background(p.glass2), contentAlignment = Alignment.Center) {
+                    Ic("export", size = 30.dp, tint = p.ink, stroke = 2.6f)
+                }
+            }
+            Spacer(Modifier.height(14.dp))
+            Tx(Str.t("expChT"), size = 19.sp, weight = FontWeight.Bold, align = TextAlign.Center)
+            Spacer(Modifier.height(8.dp))
+            Tx(Str.t("expChD"), size = 15.sp, color = p.muted, align = TextAlign.Center)
+            Spacer(Modifier.height(20.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(
+                    Modifier.weight(1f).height(46.dp).clip(bs).background(p.glass2).border(1.dp, p.edge, bs).tap { onSave() },
+                    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Ic("save", size = 18.dp)
+                    Spacer(Modifier.width(8.dp))
+                    Tx(Str.t("expSaveB"), size = 14.sp, weight = FontWeight.Bold, maxLines = 1)
+                }
+                Row(
+                    Modifier.weight(1f).height(46.dp).clip(bs).background(Color.White).border(1.dp, p.edge, bs).tap { onShare() },
+                    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Ic("share", size = 18.dp, tint = Color.Black)
+                    Spacer(Modifier.width(8.dp))
+                    Tx(Str.t("expShareB"), size = 14.sp, color = Color.Black, weight = FontWeight.Bold, maxLines = 1)
+                }
+            }
+        }
+    }
+}

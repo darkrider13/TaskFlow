@@ -32,6 +32,27 @@ object Backup {
         }
     }
 
+    /** Write the backup to a cache file and open the system share sheet (Google Drive, WhatsApp, Gmail ...). */
+    fun share(ctx: Context) {
+        try {
+            val dir = java.io.File(ctx.cacheDir, "backup").apply { mkdirs() }
+            dir.listFiles()?.forEach { it.delete() }
+            val f = java.io.File(dir, fileName())
+            f.writeText(dump(), Charsets.UTF_8)
+            val uri = androidx.core.content.FileProvider.getUriForFile(ctx, ctx.packageName + ".fileprovider", f)
+            val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "application/json"
+                putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                putExtra(android.content.Intent.EXTRA_SUBJECT, f.name)
+                clipData = android.content.ClipData.newRawUri(f.name, uri)
+                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            ctx.startActivity(android.content.Intent.createChooser(send, Str.t("expShareB")).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (e: Exception) {
+            UiState.dlg = DlgSpec(Str.t("bkBadT"), e.message ?: "", Str.t("bkOkB"), kind = "err")
+        }
+    }
+
     fun readFile(ctx: Context, uri: Uri) {
         try {
             val bytes = ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: ByteArray(0)

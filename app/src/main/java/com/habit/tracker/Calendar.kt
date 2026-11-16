@@ -43,6 +43,8 @@ object UiState {
     var removingHabit by mutableStateOf<JSONObject?>(null)
     /** number of picker popups (time / date / goal) currently open - everything behind them gets blurred */
     var pickers by mutableIntStateOf(0)
+    /** the "Save to folder / Share" export chooser popup */
+    var exportChoose by mutableStateOf(false)
 
     fun act(): JSONObject? = Logic.acts().find { it.optLong("id") == sel }
     fun resetToToday() {

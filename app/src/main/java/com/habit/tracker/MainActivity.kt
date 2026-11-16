@@ -202,7 +202,7 @@ fun Root() {
             }
 
             // popups that sit under a picker / second popup are blurred too
-            Box(Modifier.fillMaxSize().then(if (UiState.pickers > 0 || UiState.dlg != null) Modifier.blur(14.dp) else Modifier)) {
+            Box(Modifier.fillMaxSize().then(if (UiState.pickers > 0 || UiState.dlg != null || UiState.exportChoose) Modifier.blur(14.dp) else Modifier)) {
             UiState.dayKey?.let { DaySheet(rev, it, onClose = { UiState.dayKey = null }, onToast = toast) }
             UiState.edit?.let { FormSheet(rev, it, toast) }
             if (UiState.showCats) CatSheet(rev) { UiState.showCats = false }
@@ -210,7 +210,7 @@ fun Root() {
             if (UiState.remSheet) ReminderSheet(rev, UiState.remObj, onClose = { UiState.remSheet = false }, onToast = toast)
             if (showSettings) SettingsSheet(
                 rev, onClose = { showSettings = false }, onToast = toast,
-                onExport = { exportLauncher.launch(Backup.fileName()) },
+                onExport = { UiState.exportChoose = true },
                 onImport = { showSettings = false; importLauncher.launch(arrayOf("application/json", "text/*", "*/*")) },
             )
             if (showName) NameSheet(rev, onClose = { showName = false })
@@ -218,6 +218,11 @@ fun Root() {
             if (Store.name.isBlank()) Onboarding(rev)
             if (Focus.fs) FocusFullscreen { Focus.fs = false }
             if (LockState.typeDlg) LockTypeDlg(onClose = { LockState.typeDlg = false }, onToast = toast)
+            if (UiState.exportChoose) ExportDlg(
+                onSave = { UiState.exportChoose = false; exportLauncher.launch(Backup.fileName()) },
+                onShare = { UiState.exportChoose = false; Backup.share(activity) },
+                onClose = { UiState.exportChoose = false },
+            )
             UiState.dlg?.let { AppDlg(it) }
             UiState.delHabit?.let { a ->
                 ConfirmDlg(Str.t("delT"), Str.f("confirmDel", a.optString("name")), Str.t("bkOkB"), Str.t("cancelT"),
