@@ -314,7 +314,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
 
         Spacer(Modifier.height(12.dp))
         Row(Modifier.fillMaxWidth()) {
-            RowBtn(Str.t("save"), Modifier.weight(1f)) {
+            RowBtn(Str.t("save"), Modifier.weight(1f), white = true) {
                 if (kind == "task") {
                     if (text.trim().isEmpty()) { errName = true; return@RowBtn }
                     if (alert == "rem" && time != "00:00") Notifs.askFullScreen(ctx, onToast)

@@ -222,7 +222,7 @@ fun ReminderSheet(rev: Int, r: JSONObject?, onClose: () -> Unit, onToast: (Strin
             RemValBtn(Str.t12(to)) { pick = "to" }
         }
         Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            RowBtn(Str.t("save"), Modifier.weight(1f)) {
+            RowBtn(Str.t("save"), Modifier.weight(1f), white = true) {
                 if (name.trim().isEmpty()) { errName = true; return@RowBtn }
                 val h = minOf(23, maxOf(0, toLat(hh)))
                 val m = minOf(59, maxOf(0, toLat(mm)))

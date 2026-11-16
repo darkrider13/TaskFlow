@@ -313,30 +313,33 @@ fun TfInput(value: String, onChange: (String) -> Unit, hint: String, modifier: M
 
 /** Small button used in rows (height 34). */
 @Composable
-fun RowBtn(label: String, modifier: Modifier = Modifier, icon: String? = null, color: Color? = null, onClick: () -> Unit) {
+fun RowBtn(label: String, modifier: Modifier = Modifier, icon: String? = null, color: Color? = null, white: Boolean = false, onClick: () -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
+    val ink = Color(0xFF041014)
     Row(
-        modifier.height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape).tap(onClick).padding(horizontal = 14.dp),
+        modifier.height(34.dp).clip(shape)
+            .background(if (white) Color.White else p.glass2)
+            .border(1.dp, if (white) (if (p.dark) Color.Transparent else Color(0x3310253A)) else p.edge, shape)
+            .tap(onClick).padding(horizontal = 14.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {
-            Ic(icon, size = 16.dp)
+            Ic(icon, size = 16.dp, tint = if (white) ink else p.ink)
             Spacer(Modifier.width(6.dp))
         }
-        Tx(label, size = 13.sp, maxLines = 1, color = color ?: p.ink, weight = if (color != null) FontWeight.Bold else FontWeight.Normal)
+        Tx(label, size = 13.sp, maxLines = 1, color = if (white) ink else (color ?: p.ink), weight = if (white || color != null) FontWeight.Bold else FontWeight.Normal)
     }
 }
 
-/** Big coloured button (accent colour). */
 @Composable
 fun BigBtn(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val p = LocalPal.current
     Box(
-        modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(p.ac).tap(onClick).padding(13.dp),
+        modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color.White).tap(onClick).padding(13.dp),
         contentAlignment = Alignment.Center,
-    ) { Tx(label, size = 16.sp, color = p.tink, weight = FontWeight.Bold) }
+    ) { Tx(label, size = 16.sp, color = Color(0xFF041014), weight = FontWeight.Bold) }
 }
 
 /** Footer social icons (not part of the main icon set). */

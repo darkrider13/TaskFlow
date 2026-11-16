@@ -141,7 +141,7 @@ fun CatSheet(rev: Int, onClose: () -> Unit) {
                     }
                 },
             )
-            RowBtn(Str.t("save")) {
+            RowBtn(Str.t("save"), white = true) {
                 if (n.trim().isEmpty()) err = true else { LogicExt.addCat(n.trim()); n = "" }
             }
         }
@@ -165,7 +165,7 @@ fun CatEditSheet(key: String, rev: Int, onClose: () -> Unit) {
                     onOk = { LogicExt.delCat(key); onClose() },
                 )
             }
-            RowBtn(Str.t("save"), Modifier.weight(1f)) {
+            RowBtn(Str.t("save"), Modifier.weight(1f), white = true) {
                 if (n.trim().isEmpty()) err = true else { LogicExt.renameCat(key, n.trim()); onClose() }
             }
         }
