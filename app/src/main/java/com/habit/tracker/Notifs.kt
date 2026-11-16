@@ -112,9 +112,19 @@ object Notifs {
     private fun fireIntent(ctx: Context, kind: String, eid: Long): Intent =
         Intent(ctx, AlarmReceiver::class.java).setAction(ACT_FIRE).putExtra("kind", kind).putExtra("eid", eid)
 
-    private fun setAlarm(ctx: Context, code: Int, atMs: Long, intent: Intent) {
+    /**
+     * clock = true: set as a real "alarm clock" alarm (same kind the phone's own Clock app uses).
+     * The system treats it as top priority: it rings on time even in sleep/Doze, nothing has to run in the background.
+     */
+    private fun setAlarm(ctx: Context, code: Int, atMs: Long, intent: Intent, clock: Boolean = false) {
         val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pi = PendingIntent.getBroadcast(ctx, code, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        if (clock) {
+            val show = openPi(ctx, code)
+            if (show != null) {
+                try { am.setAlarmClock(AlarmManager.AlarmClockInfo(atMs, show), pi); return } catch (e: SecurityException) { }
+            }
+        }
         try {
             if (Build.VERSION.SDK_INT >= 31 && !am.canScheduleExactAlarms()) am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMs, pi)
             else am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMs, pi)
@@ -187,7 +197,7 @@ object Notifs {
         for (a in d.optJSONArray("acts").list()) {
             val t = nextHabit(a, now) ?: continue
             val code = 1_000_000 + a.optInt("nid")
-            setAlarm(ctx, code, ms(t), fireIntent(ctx, "habit", a.optLong("id")))
+            setAlarm(ctx, code, ms(t), fireIntent(ctx, "habit", a.optLong("id")), a.optString("alert") == "rem")
             codes.add(code.toString())
         }
         for (x in d.optJSONArray("todos").list()) {
@@ -196,7 +206,7 @@ object Notifs {
             val t = try { LocalDate.parse(x.optString("date")).atTime(LocalTime.parse(x.optString("time"))) } catch (e: Exception) { continue }
             if (!t.isAfter(LocalDateTime.now())) continue
             val code = 2_000_000 + x.optInt("nid")
-            setAlarm(ctx, code, ms(t), fireIntent(ctx, "todo", x.optLong("id")))
+            setAlarm(ctx, code, ms(t), fireIntent(ctx, "todo", x.optLong("id")), x.optString("alert") == "rem")
             codes.add(code.toString())
         }
         for (x in d.optJSONArray("rems").list()) {
@@ -305,7 +315,8 @@ object Notifs {
             q.put(item)
             sp.edit().putString(KEY_Q, q.toString()).commit()
         } else if (aid == "snooze") {
-            setAlarm(ctx, 6_000_000 + nid, System.currentTimeMillis() + SNOOZE_MS, fireIntent(ctx, "todo_snooze", eid))
+            val isRem = Store.readFile(ctx).optJSONArray("todos").list().find { it.optLong("id") == eid }?.optString("alert") == "rem"
+            setAlarm(ctx, 6_000_000 + nid, System.currentTimeMillis() + SNOOZE_MS, fireIntent(ctx, "todo_snooze", eid), isRem)
         }
     }
 

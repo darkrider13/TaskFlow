@@ -106,12 +106,19 @@ fun Root() {
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri -> if (uri != null) Backup.export(activity, uri) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) Backup.readFile(activity, uri) }
 
-    // notification permission (Android 13+), asked once the name is set
-    val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
-    LaunchedEffect(Store.name.isNotBlank()) {
-        if (Store.name.isNotBlank() && Build.VERSION.SDK_INT >= 33 &&
-            androidx.core.content.ContextCompat.checkSelfPermission(activity, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
-        ) permLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+    // first launch: ask for every permission the app needs, one after another
+    var permStep by rememberSaveable { mutableIntStateOf(if (Perms.done(activity)) Perms.LAST + 1 else 0) }
+    val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { permStep++ }
+    val settingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { permStep++ }
+    LaunchedEffect(permStep) {
+        if (permStep > Perms.LAST) { Perms.markDone(activity); return@LaunchedEffect }
+        if (permStep == 0) {
+            if (Perms.needNotif(activity)) permLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) else permStep++
+        } else {
+            val i = Perms.intent(activity, permStep)
+            if (i == null) permStep++
+            else try { settingsLauncher.launch(i) } catch (e: Exception) { permStep++ }
+        }
     }
     // keep the phone alarms in step with the data (a short pause lets quick edits settle)
     LaunchedEffect(rev) {

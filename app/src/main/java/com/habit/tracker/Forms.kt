@@ -163,25 +163,21 @@ private fun FRow(label: String, wide: Boolean = false, content: @Composable RowS
     }
 }
 
-/** "Alert" row: Notification (bell) or Reminder (alarm screen). */
+/** "Alert" row: one button, same size as the time button. Tap to switch Notification (bell) <-> Reminder (alarm). */
 @Composable
 private fun AlertRow(alert: String, onPick: (String) -> Unit) {
     val p = LocalPal.current
-    FRow(Str.t("alertL"), wide = true) {
-        Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            for ((k, ic, lb) in listOf(Triple("notif", "bell", "alNotif"), Triple("rem", "alarm", "alRem"))) {
-                val on = alert == k
-                val shape = RoundedCornerShape(9.dp)
-                Row(
-                    Modifier.weight(1f).height(34.dp).clip(shape).background(if (on) p.ac else p.glass2)
-                        .border(1.dp, if (on) Color.Transparent else p.edge, shape).tap { onPick(k) }.padding(horizontal = 6.dp),
-                    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Ic(ic, size = 16.dp, tint = if (on) p.tink else p.ink)
-                    Spacer(Modifier.width(5.dp))
-                    Tx(Str.t(lb), size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
-                }
-            }
+    val rem = alert == "rem"
+    FRow(Str.t("alertL")) {
+        val shape = RoundedCornerShape(9.dp)
+        Row(
+            Modifier.width(140.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape)
+                .tap { onPick(if (rem) "notif" else "rem") }.padding(horizontal = 10.dp),
+            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Ic(if (rem) "alarm" else "bell", size = 16.dp, tint = p.ink)
+            Spacer(Modifier.width(6.dp))
+            Tx(Str.t(if (rem) "alRem" else "alNotif"), size = 12.5.sp, maxLines = 1)
         }
     }
 }
