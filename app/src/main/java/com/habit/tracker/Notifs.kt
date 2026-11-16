@@ -52,7 +52,61 @@ object Notifs {
         if (Build.VERSION.SDK_INT >= 26) {
             val nm = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.createNotificationChannel(NotificationChannel("default", "Default", NotificationManager.IMPORTANCE_HIGH))
+            val ch = NotificationChannel("reminder", "Reminder", NotificationManager.IMPORTANCE_HIGH)
+            val uri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
+                ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
+            ch.setSound(uri, android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_ALARM)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION).build())
+            ch.enableVibration(true)
+            ch.vibrationPattern = longArrayOf(0, 500, 300, 500, 300, 500)
+            ch.lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+            nm.createNotificationChannel(ch)
         }
+    }
+
+    /** Android 14+: the reminder screen needs the "full screen notification" permission (usually already allowed). */
+    fun askFullScreen(ctx: Context, onToast: (String) -> Unit) {
+        if (Build.VERSION.SDK_INT < 34) return
+        val nm = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (nm.canUseFullScreenIntent()) return
+        onToast(lt(lang(Store.s), "fsiAsk"))
+        try {
+            ctx.startActivity(Intent(android.provider.Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT)
+                .setData(android.net.Uri.parse("package:" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (e: Exception) { }
+    }
+
+    /** Alarm-like reminder: rings and opens the full reminder screen (even on the lock screen). */
+    fun showReminder(ctx: Context, nid: Int, kind: String, eid: Long, title: String, body: String, time: String, withSnooze: Boolean) {
+        ensureChannel(ctx)
+        val i = Intent(ctx, ReminderActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            .putExtra("nid", nid).putExtra("kind", kind).putExtra("eid", eid)
+            .putExtra("title", title).putExtra("body", body).putExtra("time", time).putExtra("snooze", withSnooze)
+        val pi = PendingIntent.getActivity(ctx, nid, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val b = NotificationCompat.Builder(ctx, "reminder")
+            .setSmallIcon(R.drawable.ic_stat_icon)
+            .setColor(0xFF2196F3.toInt())
+            .setContentTitle(title)
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setAutoCancel(false)
+            .setTimeoutAfter(3 * 60 * 1000L)
+            .setContentIntent(pi)
+            .setFullScreenIntent(pi, true)
+        val n = b.build()
+        n.flags = n.flags or android.app.Notification.FLAG_INSISTENT // keep ringing until it is turned off
+        try { NotificationManagerCompat.from(ctx).notify(nid, n) } catch (e: SecurityException) { }
+    }
+
+    /** Show a habit / task alert the way the user chose for it (notification or reminder screen). */
+    private fun alert(ctx: Context, item: JSONObject, nid: Int, kind: String, eid: Long, title: String, body: String, time: String, withSnooze: Boolean) {
+        if (item.optString("alert") == "rem") showReminder(ctx, nid, kind, eid, title, body, time, withSnooze)
+        else show(ctx, nid, "", body, kind, eid, withSnooze)
     }
 
     private fun fireIntent(ctx: Context, kind: String, eid: Long): Intent =
@@ -206,17 +260,20 @@ object Notifs {
             "focus" -> { show(ctx, FOCUS_CODE, extras.getStringExtra("title") ?: "", extras.getStringExtra("body") ?: "", null, 0L, false); return }
             "habit" -> {
                 val a = d.optJSONArray("acts").list().find { it.optLong("id") == eid }
-                if (a != null) show(ctx, 1_000_000 + a.optInt("nid"), "", nlb(l, "lbHabit", notifB(l, a.optString("name"))), "habit", eid, false)
+                if (a != null) alert(ctx, a, 1_000_000 + a.optInt("nid"), "habit", eid, a.optString("name"),
+                    nlb(l, "lbHabit", notifB(l, a.optString("name"))), a.optString("time"), false)
                 scheduleAll(ctx, d, leadMs = 30_000)
             }
             "todo" -> {
                 val x = d.optJSONArray("todos").list().find { it.optLong("id") == eid }
-                if (x != null && !x.optBoolean("done")) show(ctx, 2_000_000 + x.optInt("nid"), "", nlb(l, "lbTodo", todoB(l, x.optString("text"))), "todo", eid, true)
+                if (x != null && !x.optBoolean("done")) alert(ctx, x, 2_000_000 + x.optInt("nid"), "todo", eid, x.optString("text"),
+                    nlb(l, "lbTodo", todoB(l, x.optString("text"))), x.optString("time"), true)
                 scheduleAll(ctx, d, "todo", eid)
             }
             "todo_snooze" -> {
                 val x = d.optJSONArray("todos").list().find { it.optLong("id") == eid }
-                if (x != null && !x.optBoolean("done")) show(ctx, 2_000_000 + x.optInt("nid"), "", nlb(l, "lbTodo", todoB(l, x.optString("text"))), "todo", eid, true)
+                if (x != null && !x.optBoolean("done")) alert(ctx, x, 2_000_000 + x.optInt("nid"), "todo", eid, x.optString("text"),
+                    nlb(l, "lbTodo", todoB(l, x.optString("text"))), x.optString("time"), true)
             }
             "rem" -> {
                 val x = d.optJSONArray("rems").list().find { it.optLong("id") == eid }

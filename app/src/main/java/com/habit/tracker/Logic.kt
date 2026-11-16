@@ -308,33 +308,33 @@ object LogicExt {
         return arr
     }
 
-    fun saveTask(edit: JSONObject?, text: String, date: String, time: String, rep: String, cat: String, subText: String) {
+    fun saveTask(edit: JSONObject?, text: String, date: String, time: String, rep: String, cat: String, subText: String, alert: String = "notif") {
         val tm = if (time == "00:00") "" else time
         if (edit != null) {
             val old = edit.optJSONArray("sub").list()
             edit.put("text", text); edit.put("date", date.ifEmpty { Logic.todayKey() }); edit.put("time", tm)
-            edit.put("rep", rep); edit.put("cat", cat); edit.put("sub", parseSubs(subText, old))
+            edit.put("rep", rep); edit.put("cat", cat); edit.put("sub", parseSubs(subText, old)); edit.put("alert", alert)
         } else {
             val nid = Store.s.optInt("nid", 1)
             Store.s.put("nid", nid + 1)
             val x = JSONObject()
             x.put("id", System.currentTimeMillis()); x.put("nid", nid); x.put("text", text)
             x.put("date", date.ifEmpty { Logic.todayKey() }); x.put("time", tm); x.put("done", false)
-            x.put("pri", 0); x.put("rep", rep); x.put("cat", cat); x.put("sub", parseSubs(subText, emptyList()))
+            x.put("pri", 0); x.put("rep", rep); x.put("cat", cat); x.put("sub", parseSubs(subText, emptyList())); x.put("alert", alert)
             Store.s.getJSONArray("todos").put(x)
         }
         Store.touch()
     }
 
-    fun saveHabit(edit: JSONObject?, name: String, time: String, gall: Boolean, gm: Int, gt: Int, days: List<Int>, color: String = "") {
+    fun saveHabit(edit: JSONObject?, name: String, time: String, gall: Boolean, gm: Int, gt: Int, days: List<Int>, color: String = "", alert: String = "notif") {
         val vals = JSONObject()
         vals.put("name", name); vals.put("time", time.ifEmpty { "00:00" })
         vals.put("goalAll", gall); vals.put("goalM", if (gall) 31 else minOf(31, maxOf(0, gm)))
-        vals.put("goalT", gt); vals.put("days", JSONArray(days))
+        vals.put("goalT", gt); vals.put("days", JSONArray(days)); vals.put("alert", alert)
         val a: JSONObject
         if (edit != null) {
             a = edit
-            for (k in listOf("name", "time", "goalAll", "goalM", "goalT", "days")) a.put(k, vals.get(k))
+            for (k in listOf("name", "time", "goalAll", "goalM", "goalT", "days", "alert")) a.put(k, vals.get(k))
             if (color.isNotEmpty()) a.put("color", color)
         } else {
             val nid = Store.s.optInt("nid", 1)
@@ -343,7 +343,7 @@ object LogicExt {
             a = JSONObject()
             a.put("id", System.currentTimeMillis()); a.put("nid", nid); a.put("start", Logic.todayKey())
             a.put("color", color.ifEmpty { pickColor(used) })
-            for (k in listOf("name", "time", "goalAll", "goalM", "goalT", "days")) a.put(k, vals.get(k))
+            for (k in listOf("name", "time", "goalAll", "goalM", "goalT", "days", "alert")) a.put(k, vals.get(k))
             Store.s.getJSONArray("acts").put(a)
         }
         UiState.sel = a.optLong("id")

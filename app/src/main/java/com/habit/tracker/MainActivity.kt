@@ -261,6 +261,8 @@ fun NavBar(rev: Int, tab: String, onTab: (String) -> Unit) {
                 .fillMaxWidth()
                 .navigationBarsPadding()
                 .padding(start = 14.dp, end = 14.dp, bottom = 12.dp)
+                .clip(RoundedCornerShape(22.dp))
+                .background(if (p.dark) Color(0xFF0B0F1A) else Color(0xFFE9F1F9)) // solid base so content never shows through
                 .glass(22.dp)
                 .padding(4.dp),
         ) {

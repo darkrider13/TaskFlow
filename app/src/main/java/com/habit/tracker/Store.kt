@@ -21,6 +21,9 @@ object Store {
     var rev by mutableIntStateOf(0)
         private set
 
+    /** Start the store only if the app process has not done it yet (used by the reminder screen). */
+    fun ensureInit(ctx: Context) { if (file == null) init(ctx) }
+
     fun init(ctx: Context) {
         val f = File(ctx.filesDir, "hb.json")
         file = f

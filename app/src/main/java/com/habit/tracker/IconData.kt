@@ -43,6 +43,8 @@ object IconData {
         "expand" to listOf(Part("M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5", false)),
         "reset" to listOf(Part("M3 12a9 9 0 1 0 3-6.7L3 8", false), Part("M3 3v5h5", false)),
         "tag" to listOf(Part("M3 12V4h8l9 9-8 8z", false), Part("M7.5 8h.01", false)),
+        "bell" to listOf(Part("M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9", false), Part("M13.7 21a2 2 0 0 1-3.4 0", false)),
+        "alarm" to listOf(Part("M5.0,13.0a7.0,7.0 0 1,0 14.0,0a7.0,7.0 0 1,0 -14.0,0z", false), Part("M12 9v4l2 2", false), Part("M5 3L2 6M22 6l-3-3M6 19l-2 2M18 19l2 2", false)),
         "plus" to listOf(Part("M12 5v14M5 12h14", false)),
         "nav_rep" to listOf(Part("M5 20V10M12 20V4M19 20v-7", false)),
         "nav_more" to listOf(Part("M3.2,12.0a1.8,1.8 0 1,0 3.6,0a1.8,1.8 0 1,0 -3.6,0z", true), Part("M10.2,12.0a1.8,1.8 0 1,0 3.6,0a1.8,1.8 0 1,0 -3.6,0z", true), Part("M17.2,12.0a1.8,1.8 0 1,0 3.6,0a1.8,1.8 0 1,0 -3.6,0z", true)),

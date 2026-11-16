@@ -163,6 +163,29 @@ private fun FRow(label: String, wide: Boolean = false, content: @Composable RowS
     }
 }
 
+/** "Alert" row: Notification (bell) or Reminder (alarm screen). */
+@Composable
+private fun AlertRow(alert: String, onPick: (String) -> Unit) {
+    val p = LocalPal.current
+    FRow(Str.t("alertL"), wide = true) {
+        Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            for ((k, ic, lb) in listOf(Triple("notif", "bell", "alNotif"), Triple("rem", "alarm", "alRem"))) {
+                val on = alert == k
+                val shape = RoundedCornerShape(9.dp)
+                Row(
+                    Modifier.weight(1f).height(34.dp).clip(shape).background(if (on) p.ac else p.glass2)
+                        .border(1.dp, if (on) Color.Transparent else p.edge, shape).tap { onPick(k) }.padding(horizontal = 6.dp),
+                    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Ic(ic, size = 16.dp, tint = if (on) p.tink else p.ink)
+                    Spacer(Modifier.width(5.dp))
+                    Tx(Str.t(lb), size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun PillBtn(label: String, on: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val p = LocalPal.current
@@ -200,6 +223,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
     var wsel by remember { mutableStateOf(initDays) }
     var strict by remember { mutableStateOf(initDays.isNotEmpty()) }
     var hcolor by remember { mutableStateOf(ea?.optString("color")?.ifEmpty { null } ?: LogicExt.pickColor(Logic.acts().map { it.optString("color").uppercase() }.toSet())) }
+    var alert by remember { mutableStateOf((ea ?: et)?.optString("alert")?.ifEmpty { null } ?: "notif") }
     var errName by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf<String?>(null) } // "task" or "habit"
     var showGoal by remember { mutableStateOf(false) }
@@ -213,6 +237,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
             FormInput(text, { text = it; errName = false }, Str.t("taskPh"), errName)
             FRow(Str.t("dateL")) { ValBtn(LogicExt.shortDate(date)) { showDate = true } }
             FRow(Str.t("timeL")) { ValBtn(if (time == "00:00") Str.dig("00:00") else Str.t12(time)) { showTime = "task" } }
+            AlertRow(alert) { alert = it }
             FRow(Str.t("repL"), wide = true) {
                 Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     PillBtn(Str.t("r0"), rep == "none", Modifier.weight(1f)) { rep = "none" }
@@ -250,6 +275,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
         } else {
             FormInput(name, { name = it; errName = false }, Str.t("namePh"), errName)
             FRow(Str.t("askTime")) { ValBtn(if (atime == "00:00") Str.dig("00:00") else Str.t12(atime)) { showTime = "habit" } }
+            AlertRow(alert) { alert = it }
             FRow(Str.t("gmL")) {
                 ValBtn(if (gall) Str.t("gaL") else if (gm > 0) Str.dig(gm.toString()) + " " + Str.t("gdU") else Str.dig("00")) { showGoal = true }
             }
@@ -295,7 +321,8 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
             RowBtn(Str.t("save"), Modifier.weight(1f)) {
                 if (kind == "task") {
                     if (text.trim().isEmpty()) { errName = true; return@RowBtn }
-                    LogicExt.saveTask(et, text.trim(), date, time, rep, cat, subs)
+                    if (alert == "rem" && time != "00:00") Notifs.askFullScreen(ctx, onToast)
+                    LogicExt.saveTask(et, text.trim(), date, time, rep, cat, subs, alert)
                     onSaved()
                 } else {
                     if (name.trim().isEmpty()) { errName = true; return@RowBtn }
@@ -316,7 +343,8 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
                             return@RowBtn
                         }
                     }
-                    LogicExt.saveHabit(ea, name.trim(), atime, gall, gm, goalT, if (!strict || wsel.size == 7) emptyList() else wsel.sorted(), hcolor)
+                    if (alert == "rem") Notifs.askFullScreen(ctx, onToast)
+                    LogicExt.saveHabit(ea, name.trim(), atime, gall, gm, goalT, if (!strict || wsel.size == 7) emptyList() else wsel.sorted(), hcolor, alert)
                     onSaved()
                 }
             }
