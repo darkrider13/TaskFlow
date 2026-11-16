@@ -202,7 +202,7 @@ fun Root() {
             }
 
             // popups that sit under a picker / second popup are blurred too
-            Box(Modifier.fillMaxSize().then(if (UiState.pickers > 0) Modifier.blur(14.dp) else Modifier)) {
+            Box(Modifier.fillMaxSize().then(if (UiState.pickers > 0 || UiState.dlg != null) Modifier.blur(14.dp) else Modifier)) {
             UiState.dayKey?.let { DaySheet(rev, it, onClose = { UiState.dayKey = null }, onToast = toast) }
             UiState.edit?.let { FormSheet(rev, it, toast) }
             if (UiState.showCats) CatSheet(rev) { UiState.showCats = false }
