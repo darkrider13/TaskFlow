@@ -3,6 +3,7 @@ package com.habit.tracker
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -180,8 +181,8 @@ fun EventList(items: List<Triple<String, String, Boolean>>, todayKey: String, on
             Modifier.fillMaxWidth().height(EV_CARD_H * n + EV_GAP * (n - 1)),
             state = state, flingBehavior = fling, verticalArrangement = Arrangement.spacedBy(EV_GAP),
         ) {
-            androidx.compose.foundation.lazy.itemsIndexed(items) { i, it ->
-                EventCard(it.first, it.second, todayKey, onOpenDay, hol = it.third, first = i == 0)
+            itemsIndexed(items) { i, ev ->
+                EventCard(ev.first, ev.second, todayKey, onOpenDay, hol = ev.third, first = i == 0)
             }
         }
     }
