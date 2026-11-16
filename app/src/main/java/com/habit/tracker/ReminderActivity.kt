@@ -139,11 +139,7 @@ private fun ReminderScreen(d: RemData, onOff: () -> Unit, onAct: (String) -> Uni
                 Spacer(Modifier.height(14.dp))
                 Tx(Str.t("lbRem"), size = 15.sp, color = pal.muted, weight = FontWeight.SemiBold)
 
-                Column(Modifier.weight(1f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    if (d.time.isNotEmpty()) {
-                        Tx(Str.t12(d.time), size = 52.sp, weight = FontWeight.Bold, align = TextAlign.Center)
-                        Spacer(Modifier.height(18.dp))
-                    }
+                Column(Modifier.weight(0.6f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     Tx(d.title, size = 28.sp, weight = FontWeight.Bold, align = TextAlign.Center, maxLines = 4)
                     Spacer(Modifier.height(10.dp))
                     Tx(d.body, size = 15.sp, color = pal.muted, align = TextAlign.Center, maxLines = 4)
@@ -171,7 +167,7 @@ private fun ReminderScreen(d: RemData, onOff: () -> Unit, onAct: (String) -> Uni
                     Tx(Str.t("slideOff"), size = 14.sp, color = pal.muted, weight = FontWeight.Medium)
                     Ic("chevr", size = 18.dp, tint = pal.muted)
                 }
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.weight(0.4f))
             }
         }
     }

@@ -66,7 +66,7 @@ fun WheelColumn(items: List<String>, start: Int, loop: Boolean, modifier: Modifi
 }
 
 @Composable
-fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, setColor: Color = Color(0xFF00FF00), body: @Composable ColumnScope.() -> Unit) {
+fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, setColor: Color = Color.White, body: @Composable ColumnScope.() -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(32.dp)
     DisposableEffect(Unit) { UiState.pickers++; onDispose { UiState.pickers-- } }
@@ -99,11 +99,11 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
                 body()
                 Row(Modifier.padding(top = 24.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(Color(0xFFFF0000)).tap(onCancel),
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.glass).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onCancel),
                         contentAlignment = Alignment.Center,
-                    ) { Tx(Str.t("cancelT"), size = 16.sp, color = Color.Black, weight = FontWeight.Bold) }
+                    ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.Bold) }
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor).tap(onSet),
+                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onSet),
                         contentAlignment = Alignment.Center,
                     ) { Tx(Str.t("setB"), size = 16.sp, color = Color(0xFF041014), weight = FontWeight.Bold) }
                 }

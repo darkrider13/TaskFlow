@@ -335,7 +335,7 @@ fun AppDlg(d: DlgSpec) {
                     }
                 }
                 Row(
-                    (if (d.cancel != null) Modifier.weight(1f) else Modifier.width(140.dp)).height(43.dp).clip(bs).background(if (d.kind == "ask") green2 else red).tap { close(); d.onOk() },
+                    (if (d.cancel != null) Modifier.weight(1f) else Modifier.width(140.dp)).height(43.dp).clip(bs).background(if (d.kind == "ask") green2 else Color.White).border(1.dp, p.edge, bs).tap { close(); d.onOk() },
                     horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (d.kind == "ask") {
