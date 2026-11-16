@@ -71,7 +71,7 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
                     Spacer(Modifier.width(6.dp))
                     Tx(if (on) Str.t("undo") else Str.f("did", a.optString("name")), size = 15.sp, color = p.ink, weight = FontWeight.Bold, maxLines = 1)
                 }
-                IconBox("edit", false) { UiState.backDay = k; UiState.dayKey = null; UiState.edit = FormSpec("habit", a, null) }
+                IconBox("edit") { UiState.backDay = k; UiState.dayKey = null; UiState.edit = FormSpec("habit", a, null) }
             }
         } else {
             val tl = Logic.todos().filter { it.optString("date") == k }
@@ -91,15 +91,15 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
 }
 
 @Composable
-private fun IconBox(icon: String, red: Boolean, onClick: () -> Unit) {
+private fun IconBox(icon: String, onClick: () -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(12.dp)
     Box(
         Modifier.width(44.dp).height(40.dp).clip(shape)
-            .background(if (red) Color(0x1AFF0000) else p.glass)
-            .border(1.dp, if (red) Color(0x59FF0000) else p.edge, shape).tap(onClick),
+            .background(p.glass)
+            .border(1.dp, p.edge, shape).tap(onClick),
         contentAlignment = Alignment.Center,
-    ) { Ic(icon, size = 20.dp, tint = if (red) p.cross else p.ink) }
+    ) { Ic(icon, size = 20.dp, tint = p.ink) }
 }
 
 @Composable
@@ -128,10 +128,10 @@ fun ConfirmDlg(title: String, text: String, ok: String, cancel: String, onOk: ()
             Tx(text, size = 15.sp, color = p.muted, align = androidx.compose.ui.text.style.TextAlign.Center)
             Spacer(Modifier.height(20.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(Color(0xFF22C55E)).tap { onCancel() }, contentAlignment = Alignment.Center) {
-                    Tx(cancel, size = 15.sp, color = Color.Black, weight = FontWeight.Bold, maxLines = 1)
+                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(p.glass2).border(1.dp, p.edge, bs).tap { onCancel() }, contentAlignment = Alignment.Center) {
+                    Tx(cancel, size = 15.sp, weight = FontWeight.Bold, maxLines = 1)
                 }
-                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(red).tap { onOk() }, contentAlignment = Alignment.Center) {
+                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(Color.White).border(1.dp, p.edge, bs).tap { onOk() }, contentAlignment = Alignment.Center) {
                     Tx(ok, size = 15.sp, color = Color.Black, weight = FontWeight.Bold, maxLines = 1)
                 }
             }

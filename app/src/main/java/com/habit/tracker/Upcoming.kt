@@ -159,7 +159,7 @@ fun CatEditSheet(key: String, rev: Int, onClose: () -> Unit) {
         TfInput(n, { n = it; err = false }, Str.t("catNamePh"), Modifier.fillMaxWidth())
         Spacer(Modifier.height(12.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            RowBtn(Str.t("del"), Modifier.weight(1f), icon = "trash", color = Color(0xFFFF4D4D)) {
+            RowBtn(Str.t("del"), Modifier.weight(1f), icon = "trash") {
                 UiState.dlg = DlgSpec(
                     Str.t("delT"), oldName, Str.t("del"), cancel = Str.t("cancelT"), kind = "ask", icon = "trash",
                     onOk = { LogicExt.delCat(key); onClose() },
