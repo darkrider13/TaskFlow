@@ -46,15 +46,21 @@ fun Modifier.tap(onClick: () -> Unit): Modifier = composed {
     clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { onClick() }
 }
 
-/** The "glass" card look of the original app. */
+/** "Soft glass" card style (dark theme): white 4% fill, 1dp white 8% border, radius 16, no shadow, no gradient. */
+object SoftGlass {
+    val bg = Color(0x0AFFFFFF)
+    val border = Color(0x14FFFFFF)
+}
+
+/** The card look: Soft glass in dark mode, the original glass in day mode. */
 @Composable
-fun Modifier.glass(radius: Dp = 18.dp): Modifier {
+fun Modifier.glass(radius: Dp = 16.dp): Modifier {
     val p = LocalPal.current
     val shape = RoundedCornerShape(radius)
     return this
         .clip(shape)
-        .background(p.glass)
-        .border(1.dp, p.edge, shape)
+        .background(if (p.dark) SoftGlass.bg else p.glass)
+        .border(1.dp, if (p.dark) SoftGlass.border else p.edge, shape)
 }
 
 @Composable

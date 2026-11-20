@@ -125,7 +125,7 @@ fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Un
     }
     // swipe to the LEFT = delete this habit (asks first, because all its ticks go too)
     SwipeToDelete(
-        key = a, radius = 18.dp,
+        key = a, radius = 16.dp,
         onSwiped = { UiState.delHabit = a },
         holdOpen = UiState.delHabit === a,
         exit = UiState.removingHabit === a,
@@ -183,14 +183,14 @@ fun TaskRow(
     var gone by remember(x) { mutableStateOf(false) }
 
     SwipeToDelete(
-        key = x, radius = 14.dp,
+        key = x, radius = 16.dp,
         onSwiped = { gone = true },
         exit = gone,
         onExited = { LogicExt.deleteTask(x) },
     ) {
         Row(
             Modifier.fillMaxWidth()
-                .glass(14.dp)
+                .glass()
                 .let { if (expandable && hasSubs) it.tap { onToggleOpen() } else it }
                 .padding(horizontal = 12.dp, vertical = 11.dp),
             verticalAlignment = if (hasSubs) Alignment.Top else Alignment.CenterVertically,

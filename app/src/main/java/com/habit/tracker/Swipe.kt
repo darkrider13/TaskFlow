@@ -163,7 +163,10 @@ fun SwipeToDelete(
                             }
                         },
                     ),
-            ) { content() }
+            ) {
+                // soft glass cards are almost see-through: a solid page-coloured layer keeps the red delete background from showing through
+                if (p.dark) Box(Modifier.clip(RoundedCornerShape(radius)).background(p.bgc)) { content() } else content()
+            }
         }
     }
 }
