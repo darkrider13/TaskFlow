@@ -86,7 +86,7 @@ object Notifs {
             .putExtra("title", title).putExtra("body", body).putExtra("time", time).putExtra("snooze", withSnooze)
         val pi = PendingIntent.getActivity(ctx, nid, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val b = NotificationCompat.Builder(ctx, "reminder")
-            .setSmallIcon(R.drawable.ic_stat_icon)
+            .setSmallIcon(R.drawable.ic_stat_app)
             .setColor(0xFF2196F3.toInt())
             .setContentTitle(title)
             .setContentText(body)
@@ -245,7 +245,7 @@ object Notifs {
     fun show(ctx: Context, nid: Int, title: String, body: String, kind: String?, eid: Long, withSnooze: Boolean) {
         ensureChannel(ctx)
         val b = NotificationCompat.Builder(ctx, "default")
-            .setSmallIcon(R.drawable.ic_stat_icon)
+            .setSmallIcon(R.drawable.ic_stat_app)
             .setColor(0xFF2196F3.toInt())
             .setContentTitle(title)
             .setContentText(body)
