@@ -316,7 +316,7 @@ fun LockTypeDlg(onClose: () -> Unit, onToast: (String) -> Unit) {
 
 /** The "App Security" card on the More tab. */
 @Composable
-fun LockCard(onToast: (String) -> Unit) {
+fun LockCard(rev: Int, onToast: (String) -> Unit) {
     val p = LocalPal.current
     val activity = LocalContext.current as FragmentActivity
     val ty = LockState.lkType()

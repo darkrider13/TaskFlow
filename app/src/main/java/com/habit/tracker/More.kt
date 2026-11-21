@@ -144,7 +144,7 @@ fun MoreScreen(rev: Int, todayKey: String, bottomPad: Dp, onToast: (String) -> U
             contentAlignment = Alignment.Center,
         ) { Tx(Str.t("remAdd"), size = 13.sp, color = p.muted) }
 
-        LockCard(onToast)
+        LockCard(rev, onToast)
 
         // footer
         Column(Modifier.fillMaxWidth().padding(top = 18.dp).glass().padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {

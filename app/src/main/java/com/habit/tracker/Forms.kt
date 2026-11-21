@@ -42,6 +42,7 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
 
     Box(Modifier.fillMaxSize()) {
     SheetFrame(LogicExt.longDate(k), onClose) {
+        @Suppress("UNUSED_VARIABLE") val revRead = rev // makes the popup redraw as soon as data changes
         val hi = Hol.info(k)
         val banners = (if (hi.g.isNotEmpty()) hi.gx else emptyList()).map { it to false } + hi.o.map { it to true }
         for ((txt, other) in banners) {

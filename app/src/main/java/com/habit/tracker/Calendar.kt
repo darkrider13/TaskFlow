@@ -95,7 +95,7 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
                 }
             }
         }
-        if (a != null) HabitInfo(a, vy, vm, todayKey)
+        if (a != null) HabitInfo(rev, a, vy, vm, todayKey)
 
         // month name
         Box(Modifier.fillMaxWidth().heightIn(min = 40.dp).padding(bottom = 6.dp), contentAlignment = Alignment.Center) {
@@ -134,7 +134,7 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     for (c in 0 until 7) {
                         val d = r * 7 + c - firstDow + 1
-                        if (d < 1 || d > last) Box(Modifier.weight(1f).height(44.dp)) else DayCell(ym.atDay(d), a, todayKey, Modifier.weight(1f), onOpenDay)
+                        if (d < 1 || d > last) Box(Modifier.weight(1f).height(44.dp)) else DayCell(rev, ym.atDay(d), a, todayKey, Modifier.weight(1f), onOpenDay)
                     }
                 }
             }
@@ -223,7 +223,7 @@ fun EventCard(k: String, title: String, todayKey: String, onOpenDay: (String) ->
 }
 
 @Composable
-fun DayCell(date: LocalDate, a: JSONObject?, todayKey: String, modifier: Modifier, onOpenDay: (String) -> Unit) {
+fun DayCell(rev: Int, date: LocalDate, a: JSONObject?, todayKey: String, modifier: Modifier, onOpenDay: (String) -> Unit) {
     val p = LocalPal.current
     val k = date.toString()
     val today = k == todayKey
@@ -269,7 +269,7 @@ fun DayCell(date: LocalDate, a: JSONObject?, todayKey: String, modifier: Modifie
 }
 
 @Composable
-fun HabitInfo(a: JSONObject, vy: Int, vm: Int, todayKey: String) {
+fun HabitInfo(rev: Int, a: JSONObject, vy: Int, vm: Int, todayKey: String) {
     val p = LocalPal.current
     val color = parseColor(a.optString("color"))
     val id = a.optLong("id")
