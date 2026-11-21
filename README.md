@@ -4,12 +4,12 @@
 
 **A beautiful, offline-first task & habit tracker for Android — built natively with Kotlin and Jetpack Compose.**
 
-[![Build TaskFlow APK](https://github.com/darkrider13/TaskFlow-v2/actions/workflows/build.yml/badge.svg)](https://github.com/darkrider13/TaskFlow-v2/actions/workflows/build.yml)
+[![Build TaskFlow APK](https://github.com/darkrider13/TaskFlow/actions/workflows/build.yml/badge.svg)](https://github.com/darkrider13/TaskFlow/actions/workflows/build.yml)
 ![Platform](https://img.shields.io/badge/platform-Android%207.0%2B-3DDC84?logo=android&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/Kotlin-Jetpack%20Compose-7F52FF?logo=kotlin&logoColor=white)
 ![Languages](https://img.shields.io/badge/language-বাংলা%20%7C%20English-blue)
 
-[**⬇ Download the latest APK**](https://github.com/darkrider13/TaskFlow-v2/releases/tag/latest)
+[**⬇ Download the latest APK**](https://github.com/darkrider13/TaskFlow/releases/tag/latest)
 
 </div>
 
@@ -54,7 +54,7 @@ Every task and habit has an **Alert** option:
 
 ## Install
 
-1. Open the [**latest release**](https://github.com/darkrider13/TaskFlow-v2/releases/tag/latest).
+1. Open the [**latest release**](https://github.com/darkrider13/TaskFlow/releases/tag/latest).
 2. Download `TaskFlow.apk`.
 3. Open it on your phone and allow *Install from this source* if Android asks.
 4. New builds install **over** the old version and keep your data.
