@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -111,6 +112,19 @@ fun HomeScreen(
     }
 }
 
+/** Habit card bg like the "pill" look: the habit's colour glows from the top-left corner and fades into dark, with a soft coloured border. */
+@Composable
+private fun Modifier.tintGlass(c: Color, radius: androidx.compose.ui.unit.Dp = 16.dp): Modifier {
+    val p = LocalPal.current
+    if (!p.dark) return this.glass(radius)
+    val shape = RoundedCornerShape(radius)
+    val brush = Brush.linearGradient(listOf(c.copy(alpha = 0.30f), c.copy(alpha = 0.07f)))
+    return this
+        .clip(shape)
+        .background(brush)
+        .border(1.dp, c.copy(alpha = 0.28f), shape)
+}
+
 @Composable
 fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Unit, onOpen: (JSONObject) -> Unit) {
     val p = LocalPal.current
@@ -133,7 +147,7 @@ fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Un
     ) {
     Row(
         Modifier.fillMaxWidth()
-            .glass().tap { onOpen(a) }.height(IntrinsicSize.Min),
+            .tintGlass(color).tap { onOpen(a) }.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.width(4.dp).fillMaxHeight().background(color))
