@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/icon.png" width="120" alt="TaskFlow app icon">
+
 # TaskFlow
 
 **A beautiful, offline-first task & habit tracker for Android — built natively with Kotlin and Jetpack Compose.**
@@ -131,4 +133,8 @@ Your tasks, habits and notes never leave your phone. There are no accounts, no a
 
 - Diary screen and badges (their data is still kept inside backups).
 
-Made with ❤️ by [**darkrider13**](https://github.com/darkrider13)
+## Credits
+
+Designed and developed by **MD. INSANUL ISLAM ABIR**.
+
+© Copyright MD. Insanul Islam Abir. All rights reserved.
