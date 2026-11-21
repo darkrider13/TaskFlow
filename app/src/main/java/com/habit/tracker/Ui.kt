@@ -143,7 +143,8 @@ fun Seg(items: List<SegItem>, sel: String, onSel: (String) -> Unit, modifier: Mo
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(p.glass)
+            .background(if (p.dark) Color(0x73000000) else p.glass) // dark: soft black track so the moon/background never blends into it
+            .border(1.dp, if (p.dark) p.fieldEdge else Color.Transparent, RoundedCornerShape(14.dp))
             .padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
