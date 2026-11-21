@@ -53,7 +53,7 @@ fun FocusFullscreen(onClose: () -> Unit) {
         val r = Focus.remaining()
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Tx(
+                ClockText(
                     Str.dig(Str.pad2(r / 60) + ":" + Str.pad2(r % 60)),
                     Modifier.padding(vertical = 10.dp).tap { Focus.toggle(); Notifs.focus(appCtx, Focus.run, Focus.end, Focus.mode == "focus") },
                     size = with(LocalDensity.current) { fsDp.dp.toSp() }, color = ink, weight = FontWeight.Bold,

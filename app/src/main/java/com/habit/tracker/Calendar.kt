@@ -50,6 +50,12 @@ object UiState {
     fun resetToToday() {
         val n = LocalDate.now(); vy = n.year; vm = n.monthValue - 1; pickKey = null
     }
+    /** bumped every time the Calendar page must start fresh (its scroll, list tab etc. reset too) */
+    var calReset by mutableIntStateOf(0)
+    /** Calendar back to its default page: this month, no date picked, no habit picked. */
+    fun resetCalendar() {
+        resetToToday(); sel = null; calReset++
+    }
 }
 
 /** kind: "ok" (green tick), "err" (red cross) or "ask" (question with [icon]). */

@@ -66,10 +66,10 @@ fun MoreScreen(rev: Int, todayKey: String, bottomPad: Dp, onToast: (String) -> U
             )
             val r = Focus.remaining()
             Box(Modifier.fillMaxWidth()) {
-                Tx(
+                ClockText(
                     Str.dig(Str.pad2(r / 60) + ":" + Str.pad2(r % 60)),
                     Modifier.fillMaxWidth().padding(top = 14.dp, bottom = 10.dp).tap { if (!Focus.run) showCustom = true },
-                    size = 56.sp, weight = FontWeight.Bold, align = TextAlign.Center,
+                    size = 56.sp, weight = FontWeight.Bold,
                 )
                 Box(Modifier.align(Alignment.BottomEnd).size(34.dp).clip(RoundedCornerShape(9.dp)).tap { Focus.fs = true }, contentAlignment = Alignment.Center) { Ic("expand", size = 20.dp) }
             }

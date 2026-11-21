@@ -63,6 +63,19 @@ fun Modifier.glass(radius: Dp = 16.dp): Modifier {
         .border(1.dp, if (p.dark) SoftGlass.border else p.edge, shape)
 }
 
+/** Clock text like "25:00". The ':' is drawn on its own and lifted so its dots sit in the middle of the digits' height (in most fonts a plain ':' sits too low). */
+@Composable
+fun ClockText(text: String, modifier: Modifier = Modifier, size: TextUnit, color: Color = LocalPal.current.ink, weight: FontWeight = FontWeight.Normal) {
+    val at = text.indexOf(':')
+    if (at < 0) { Tx(text, modifier, size = size, color = color, weight = weight); return }
+    val lift = with(androidx.compose.ui.platform.LocalDensity.current) { (size.toPx() * 0.09f).toDp() }
+    Row(modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+        Tx(text.substring(0, at), size = size, color = color, weight = weight, maxLines = 1)
+        Tx(":", Modifier.offset(y = -lift), size = size, color = color, weight = weight, maxLines = 1)
+        Tx(text.substring(at + 1), size = size, color = color, weight = weight, maxLines = 1)
+    }
+}
+
 @Composable
 fun Tx(
     text: String,

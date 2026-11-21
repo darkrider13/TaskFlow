@@ -54,11 +54,12 @@ fun ReportsScreen(rev: Int, todayKey: String, bottomPad: Dp) {
                 }
             } else {
                 val groups: List<List<LocalDate>> = if (rmode == "y") (1..now.monthValue).map { m -> days.filter { it.monthValue == m } } else days.map { listOf(it) }
-                val vals: List<Float?> = groups.map { g ->
+                fun ratio(g: List<LocalDate>): Float? {
                     var sc = 0; var dn = 0
                     for (d in g) { val k = d.toString(); for (a in acts) { val o = on(a, k); if (cnt(a, d, k) || o) { sc++; if (o) dn++ } } }
-                    if (sc > 0) dn.toFloat() / sc else null
+                    return if (sc > 0) dn.toFloat() / sc else null
                 }
+                val vals: List<Float?> = groups.map { ratio(it) }
                 data class Row2(val a: org.json.JSONObject, val sc: Int, val dn: Int)
                 val rows = acts.map { a ->
                     var sc = 0; var dn = 0
@@ -74,7 +75,12 @@ fun ReportsScreen(rev: Int, todayKey: String, bottomPad: Dp) {
                     Tx(Str.f("rTasks", Str.bn(tdone), Str.bn(tt.size)), size = 13.sp, color = p.muted)
                 }
                 SectionTitle(Str.t(if (rmode == "y") "rChartM" else "rChart"))
-                Box(Modifier.fillMaxWidth().padding(bottom = 12.dp).glass().padding(14.dp)) {
+                if (rmode == "m") {
+                    // whole month, 10 days per slide (the last slide takes the rest: 8 to 11 days)
+                    val mDays = (1..now.lengthOfMonth()).map { LocalDate.of(now.year, now.monthValue, it) }
+                    val mVals = mDays.map { if (it.isAfter(now)) null else ratio(listOf(it)) }
+                    MonthSlides(mDays.map { it.dayOfMonth }, mVals, (now.dayOfMonth - 1) / 10)
+                } else Box(Modifier.fillMaxWidth().padding(bottom = 12.dp).glass().padding(14.dp)) {
                     BoxWithConstraints(Modifier.fillMaxWidth()) {
                         val sc = maxWidth.value / 320f
                         val n = groups.size
@@ -92,10 +98,10 @@ fun ReportsScreen(rev: Int, todayKey: String, bottomPad: Dp) {
                                     val lab = when (rmode) {
                                         "w" -> Str.arr("wds")[g[0].dayOfWeek.value % 7]
                                         "y" -> Str.dig(i + 1)
-                                        else -> if (i == 0 || (i + 1) % 5 == 0) Str.dig(i + 1) else ""
+                                        else -> Str.dig(i + 1)
                                     }
                                     Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
-                                        Tx(lab, size = (if (rmode == "m") 8f else 10f).times(sc).sp, color = p.muted, align = TextAlign.Center, maxLines = 1)
+                                        Tx(lab, size = 10f.times(sc).sp, color = p.muted, align = TextAlign.Center, maxLines = 1)
                                     }
                                 }
                             }
@@ -114,6 +120,46 @@ fun ReportsScreen(rev: Int, todayKey: String, bottomPad: Dp) {
                 }
             }
             Spacer(Modifier.height(bottomPad))
+        }
+    }
+}
+
+/** Month chart: 3 slides - days 1-10, 11-20, 21-end (28 to 31 days, so the last slide shows 8 to 11 days). Every bar has its day number under it. */
+@Composable
+private fun MonthSlides(dayNums: List<Int>, vals: List<Float?>, startPage: Int) {
+    val p = LocalPal.current
+    val pageCount = 3
+    val pager = androidx.compose.foundation.pager.rememberPagerState(initialPage = startPage.coerceIn(0, pageCount - 1), pageCount = { pageCount })
+    Column(Modifier.fillMaxWidth().padding(bottom = 12.dp).glass().padding(14.dp)) {
+        BoxWithConstraints(Modifier.fillMaxWidth()) {
+            val sc = maxWidth.value / 320f
+            androidx.compose.foundation.pager.HorizontalPager(pager, Modifier.fillMaxWidth()) { page ->
+                val from = page * 10
+                val to = if (page == pageCount - 1) dayNums.size else minOf(from + 10, dayNums.size)
+                Column(Modifier.fillMaxWidth()) {
+                    Row(Modifier.fillMaxWidth().height((96 * sc).dp)) {
+                        for (i in from until to) {
+                            val v = vals[i]
+                            val hh = if (v == null) 2f else maxOf(2f, v * 84f)
+                            Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.BottomCenter) {
+                                Box(Modifier.fillMaxWidth(.7f).height((hh * sc).dp).clip(RoundedCornerShape((3 * sc).dp)).background(if (v == null) p.glass2 else p.mono))
+                            }
+                        }
+                    }
+                    Row(Modifier.fillMaxWidth().height((22 * sc).dp)) {
+                        for (i in from until to) {
+                            Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
+                                Tx(Str.dig(dayNums[i]), size = (10f * sc).sp, color = p.muted, align = TextAlign.Center, maxLines = 1)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.Center) {
+            for (i in 0 until pageCount) {
+                Box(Modifier.padding(horizontal = 3.dp).size(6.dp).clip(androidx.compose.foundation.shape.CircleShape).background(if (pager.currentPage == i) p.mono else p.glass2))
+            }
         }
     }
 }

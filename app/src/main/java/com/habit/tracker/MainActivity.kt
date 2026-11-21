@@ -192,13 +192,17 @@ fun Root() {
                             onEditHabit = { UiState.backDay = null; UiState.edit = FormSpec("habit", it, null) },
                         )
                         "rep" -> ReportsScreen(rev, todayKey, 134.dp + navBottom)
-                        "cal" -> CalendarScreen(rev, todayKey, 134.dp + navBottom, onOpenDay = { UiState.dayKey = it })
+                        "cal" -> key(UiState.calReset) { CalendarScreen(rev, todayKey, 134.dp + navBottom, onOpenDay = { UiState.dayKey = it }) }
                         "more" -> MoreScreen(rev, todayKey, 134.dp + navBottom, toast)
                         else -> ComingSoon(rev)
                     }
                 }
             }
-            NavBar(rev, tab) { tab = it }
+            NavBar(rev, tab) {
+                // leaving the Calendar, or tapping its button again, brings it back to the default page
+                if (tab == "cal" || it == "cal") UiState.resetCalendar()
+                tab = it
+            }
             }
 
             // popups that sit under a picker / second popup are blurred too
