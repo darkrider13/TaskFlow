@@ -39,9 +39,8 @@ fun UpcomingScreen(rev: Int, todayKey: String, bottomPad: Dp, onEditTask: (JSONO
             if (acts.isEmpty()) EmptyCard { Tx(Str.t("noDailyR"), size = 14.sp, color = p.muted, align = TextAlign.Center) }
             else for (a in acts) {
                 val color = parseColor(a.optString("color"))
-                Row(Modifier.fillMaxWidth().padding(bottom = 8.dp).glass().tap { onEditHabit(a) }.height(IntrinsicSize.Min)) {
-                    Box(Modifier.width(4.dp).fillMaxHeight().background(color))
-                    Column(Modifier.weight(1f).padding(horizontal = 12.dp, vertical = 10.dp)) {
+                Row(Modifier.fillMaxWidth().padding(bottom = 8.dp).tintGlass(color).tap { onEditHabit(a) }.height(IntrinsicSize.Min)) {
+                    Column(Modifier.weight(1f).padding(horizontal = 14.dp, vertical = 10.dp)) {
                         Tx(a.optString("name"), size = 15.sp, weight = FontWeight.Bold)
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Ic("clock", size = 13.dp, tint = p.muted)

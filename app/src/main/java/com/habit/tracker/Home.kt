@@ -114,7 +114,7 @@ fun HomeScreen(
 
 /** Habit card bg like the "pill" look: the habit's colour glows from the top-left corner and fades into dark, with a soft coloured border. */
 @Composable
-private fun Modifier.tintGlass(c: Color, radius: androidx.compose.ui.unit.Dp = 16.dp): Modifier {
+fun Modifier.tintGlass(c: Color, radius: androidx.compose.ui.unit.Dp = 16.dp): Modifier {
     val p = LocalPal.current
     if (!p.dark) return this.glass(radius)
     val shape = RoundedCornerShape(radius)
@@ -150,31 +150,10 @@ fun HabitCard(a: JSONObject, today: LocalDate, rev: Int, onToast: (String) -> Un
             .tintGlass(color).tap { onOpen(a) }.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.width(4.dp).fillMaxHeight().background(color))
-        Row(Modifier.weight(1f).padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.weight(1f).padding(horizontal = 14.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Tx(a.optString("name"), size = 15.sp, weight = FontWeight.Bold)
                 Tx(sub, size = 12.5.sp, color = p.muted)
-            }
-            val on = Logic.marksOf(id).has(Logic.todayKey())
-            Box(
-                Modifier.size(40.dp).clip(CircleShape).border(2.dp, if (on) p.mono else p.edge, CircleShape).tap {
-                    val k = Logic.todayKey()
-                    if (Logic.marksOf(id).has(k)) {
-                        Logic.habAns(id, k, false)
-                        // original: un-tick only removes the tick (no "no" mark)
-                        Store.s.getJSONObject("nos").optJSONObject(id.toString())?.remove(k)
-                        Store.touch()
-                    } else if (!Logic.canMark(a, k)) {
-                        onToast(Str.f("tooEarly", Str.t12(a.optString("time"))))
-                    } else {
-                        Logic.habAns(id, k, true)
-                        Store.touch()
-                    }
-                },
-                contentAlignment = Alignment.Center,
-            ) {
-                if (on) Ic("check", size = 20.dp, tint = p.mono)
             }
         }
     }
