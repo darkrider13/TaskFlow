@@ -58,7 +58,7 @@ fun DaySheet(rev: Int, k: String, onClose: () -> Unit, onToast: (String) -> Unit
             Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
                     Modifier.weight(1f).height(42.dp).alpha(if (disabled) .4f else 1f).clip(RoundedCornerShape(12.dp))
-                        .background(p.glass2)
+                        .background(p.field).border(1.dp, p.fieldEdge, RoundedCornerShape(12.dp))
                         .tap {
                             if (k < a.optString("start") && !on) return@tap
                             if (!on && !Logic.canMark(a, k)) { onToast(Str.f("tooEarly", Str.t12(a.optString("time")))); return@tap }
@@ -112,8 +112,8 @@ fun ConfirmDlg(title: String, text: String, ok: String, cancel: String, onOk: ()
     Box(Modifier.fillMaxSize().background(p.shade).tap { onCancel() }.padding(16.dp), contentAlignment = Alignment.Center) {
         Column(
             Modifier.fillMaxWidth().clip(shape)
-                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
-                .border(1.dp, p.edge, shape).tap { }
+                .background(p.sheet)
+                .border(1.dp, p.fieldEdge, shape).tap { }
                 .padding(horizontal = 18.dp, vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -128,7 +128,7 @@ fun ConfirmDlg(title: String, text: String, ok: String, cancel: String, onOk: ()
             Tx(text, size = 15.sp, color = p.muted, align = androidx.compose.ui.text.style.TextAlign.Center)
             Spacer(Modifier.height(20.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(p.glass2).border(1.dp, p.edge, bs).tap { onCancel() }, contentAlignment = Alignment.Center) {
+                Box(Modifier.weight(1f).height(43.dp).clip(bs).background(p.field).border(1.dp, p.fieldEdge, bs).tap { onCancel() }, contentAlignment = Alignment.Center) {
                     Tx(cancel, size = 15.sp, weight = FontWeight.Bold, maxLines = 1)
                 }
                 Box(Modifier.weight(1f).height(43.dp).clip(bs).background(Color.White).border(1.dp, p.edge, bs).tap { onOk() }, contentAlignment = Alignment.Center) {
@@ -171,7 +171,7 @@ private fun AlertRow(alert: String, onPick: (String) -> Unit) {
     FRow(Str.t("alertL")) {
         val shape = RoundedCornerShape(9.dp)
         Row(
-            Modifier.width(140.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape)
+            Modifier.width(140.dp).height(34.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape)
                 .tap { onPick(if (rem) "notif" else "rem") }.padding(horizontal = 10.dp),
             horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -187,7 +187,7 @@ private fun PillBtn(label: String, on: Boolean, modifier: Modifier = Modifier, o
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
     Box(
-        modifier.height(34.dp).clip(shape).background(if (on) p.ac else p.glass2).border(1.dp, if (on) Color.Transparent else p.edge, shape).tap(onClick).padding(horizontal = 6.dp),
+        modifier.height(34.dp).clip(shape).background(if (on) p.ac else p.field).border(1.dp, if (on) Color.Transparent else p.fieldEdge, shape).tap(onClick).padding(horizontal = 6.dp),
         contentAlignment = Alignment.Center,
     ) { Tx(label, size = 12.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1) }
 }
@@ -260,7 +260,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
             BasicTextField(
                 value = subs, onValueChange = { subs = normDigits(it) }, visualTransformation = BnDigits,
                 textStyle = TextStyle(color = p.ink, fontSize = 13.sp), cursorBrush = SolidColor(p.ink),
-                modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape),
                 decorationBox = { inner ->
                     Box(Modifier.padding(11.dp)) {
                         if (subs.isEmpty()) Tx(Str.t("subPh"), size = 13.sp, color = p.muted)
@@ -294,7 +294,7 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
                             androidx.compose.ui.text.input.OffsetMapping.Identity,
                         )
                     },
-                    modifier = Modifier.width(140.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape),
+                    modifier = Modifier.width(140.dp).height(34.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape),
                     decorationBox = { inner -> Box(Modifier.fillMaxSize().padding(horizontal = 10.dp), contentAlignment = Alignment.Center) { inner() } },
                 )
             }
@@ -367,14 +367,14 @@ fun TfForm(spec: FormSpec, inline: Boolean, onToast: (String) -> Unit, onSaved: 
 private fun FormInput(value: String, onChange: (String) -> Unit, hint: String, err: Boolean) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
-    val bg = if (p.dark) p.glass2 else Color.White
+    val bg = if (p.dark) p.field else Color.White
     val fg = if (p.dark) p.ink else Color.Black
     Row(Modifier.fillMaxWidth().padding(top = 2.dp)) {
         BasicTextField(
             value = value, onValueChange = { onChange(normDigits(it)) }, visualTransformation = BnDigits, singleLine = true,
             textStyle = TextStyle(color = fg, fontSize = 14.sp), cursorBrush = SolidColor(fg),
             modifier = Modifier.weight(1f).height(38.dp).clip(shape).background(bg)
-                .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.edge else Color(0x4010253A), shape),
+                .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.fieldEdge else Color(0x4010253A), shape),
             decorationBox = { inner ->
                 Box(Modifier.fillMaxSize().padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) Tx(hint, size = 14.sp, color = p.muted)
@@ -390,7 +390,7 @@ private fun ValBtn(label: String, onClick: () -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
     Box(
-        Modifier.width(140.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape).tap(onClick).padding(horizontal = 10.dp),
+        Modifier.width(140.dp).height(34.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape).tap(onClick).padding(horizontal = 10.dp),
         contentAlignment = Alignment.Center,
     ) { Tx(label, size = 12.5.sp, maxLines = 1) }
 }

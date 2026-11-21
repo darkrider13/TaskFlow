@@ -83,7 +83,7 @@ fun MoreScreen(rev: Int, todayKey: String, bottomPad: Dp, onToast: (String) -> U
                 ) { Tx(label, size = 14.sp, color = p.tink, weight = FontWeight.Bold, maxLines = 1) }
                 val shape = RoundedCornerShape(12.dp)
                 Box(
-                    Modifier.weight(1f).height(42.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape).padding(horizontal = 5.dp),
+                    Modifier.weight(1f).height(42.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape).padding(horizontal = 5.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Tx(Str.f("fToday", Str.bn(Store.s.getJSONObject("focus").optInt(todayKey, 0))), size = 12.5.sp, align = TextAlign.Center)
@@ -276,8 +276,8 @@ private fun RemBox(value: String, onChange: (String) -> Unit, hint: String, modi
         textStyle = TextStyle(color = fg, fontSize = 14.sp, textAlign = if (numeric) TextAlign.Center else TextAlign.Start),
         cursorBrush = SolidColor(fg),
         keyboardOptions = if (numeric) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
-        modifier = modifier.height(38.dp).clip(shape).background(if (p.dark) p.glass2 else Color.White)
-            .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.edge else Color(0x4010253A), shape),
+        modifier = modifier.height(38.dp).clip(shape).background(if (p.dark) p.field else Color.White)
+            .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.fieldEdge else Color(0x4010253A), shape),
         decorationBox = { inner ->
             Box(Modifier.fillMaxSize().padding(horizontal = if (numeric) 4.dp else 12.dp), contentAlignment = if (numeric) Alignment.Center else Alignment.CenterStart) {
                 if (value.isEmpty()) Tx(hint, size = if (numeric) 9.5.sp else 14.sp, color = p.muted)
@@ -291,7 +291,7 @@ private fun RemBox(value: String, onChange: (String) -> Unit, hint: String, modi
 private fun RemValBtn(label: String, onClick: () -> Unit) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
-    Box(Modifier.width(148.dp).height(34.dp).clip(shape).background(p.glass2).border(1.dp, p.edge, shape).tap(onClick), contentAlignment = Alignment.Center) { Tx(label, size = 12.5.sp) }
+    Box(Modifier.width(148.dp).height(34.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape).tap(onClick), contentAlignment = Alignment.Center) { Tx(label, size = 12.5.sp) }
 }
 
 /** Message popup: round icon on top, centred title + text, buttons below (backup questions / results). */
@@ -312,8 +312,8 @@ fun AppDlg(d: DlgSpec) {
     Box(Modifier.fillMaxSize().background(p.shade).tap { close() }.padding(16.dp), contentAlignment = Alignment.Center) {
         Column(
             Modifier.fillMaxWidth().clip(shape)
-                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
-                .border(1.dp, p.edge, shape).tap { }
+                .background(p.sheet)
+                .border(1.dp, p.fieldEdge, shape).tap { }
                 .padding(horizontal = 18.dp, vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -360,8 +360,8 @@ fun ExportDlg(onSave: () -> Unit, onShare: () -> Unit, onClose: () -> Unit) {
     Box(Modifier.fillMaxSize().background(p.shade).tap { onClose() }.padding(16.dp), contentAlignment = Alignment.Center) {
         Column(
             Modifier.fillMaxWidth().clip(shape)
-                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
-                .border(1.dp, p.edge, shape).tap { }
+                .background(p.sheet)
+                .border(1.dp, p.fieldEdge, shape).tap { }
                 .padding(horizontal = 18.dp, vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -377,7 +377,7 @@ fun ExportDlg(onSave: () -> Unit, onShare: () -> Unit, onClose: () -> Unit) {
             Spacer(Modifier.height(20.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(
-                    Modifier.weight(1f).height(46.dp).clip(bs).background(p.glass2).border(1.dp, p.edge, bs).tap { onSave() },
+                    Modifier.weight(1f).height(46.dp).clip(bs).background(p.field).border(1.dp, p.fieldEdge, bs).tap { onSave() },
                     horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Ic("save", size = 18.dp)

@@ -273,8 +273,8 @@ fun SheetFrame(title: String, onClose: () -> Unit, centerTitle: Boolean = false,
                 .fillMaxWidth()
                 .heightIn(max = 620.dp)
                 .clip(shape)
-                .background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
-                .border(1.dp, p.edge, shape)
+                .background(p.sheet)
+                .border(1.dp, p.fieldEdge, shape)
                 .tap { }
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
@@ -309,9 +309,9 @@ fun SectionTitle(text: String, first: Boolean = false, center: Boolean = false) 
 fun TfInput(value: String, onChange: (String) -> Unit, hint: String, modifier: Modifier = Modifier) {
     val p = LocalPal.current
     val shape = RoundedCornerShape(9.dp)
-    val bg = if (p.dark) p.glass2 else Color.White
+    val bg = if (p.dark) p.field else Color.White
     val fg = if (p.dark) p.ink else Color.Black
-    val bd = if (p.dark) p.edge else Color(0x4010253A)
+    val bd = if (p.dark) p.fieldEdge else Color(0x4010253A)
     BasicTextField(
         value = value,
         onValueChange = { onChange(normDigits(it)) },
@@ -338,8 +338,8 @@ fun RowBtn(label: String, modifier: Modifier = Modifier, icon: String? = null, c
     val ink = Color(0xFF041014)
     Row(
         modifier.height(34.dp).clip(shape)
-            .background(if (white) Color.White else p.glass2)
-            .border(1.dp, if (white) (if (p.dark) Color.Transparent else Color(0x3310253A)) else p.edge, shape)
+            .background(if (white) Color.White else p.field)
+            .border(1.dp, if (white) (if (p.dark) Color.Transparent else Color(0x3310253A)) else p.fieldEdge, shape)
             .tap(onClick).padding(horizontal = 14.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,

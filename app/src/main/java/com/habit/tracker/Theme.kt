@@ -29,6 +29,11 @@ class Pal(
     val ac: Color,
     val tink: Color,
     val mono: Color,
+    /** popup / sheet background */
+    val sheet: Color,
+    /** input boxes, option chips and buttons inside popups (soft glass) */
+    val field: Color,
+    val fieldEdge: Color,
 )
 
 val DarkPal = Pal(
@@ -36,6 +41,7 @@ val DarkPal = Pal(
     rgba(10, 14, 26, .68f), rgba(255, 255, 255, .15f), rgba(255, 255, 255, .16f), rgba(255, 255, 255, .24f),
     rgba(0, 0, 0, .5f), rgba(22, 22, 26, .88f), rgba(255, 255, 255, .06f), Color(0xFFFF0000),
     rgba(0, 0, 0, .6f), Color(0xFFFFFFFF), Color(0xFF041014), Color(0xFFFFFFFF),
+    Color(0xF2000000), rgba(255, 255, 255, .06f), rgba(255, 255, 255, .10f),
 )
 
 val LightPal = Pal(
@@ -43,6 +49,7 @@ val LightPal = Pal(
     rgba(255, 255, 255, .5f), rgba(255, 255, 255, .78f), rgba(255, 255, 255, .95f), rgba(255, 255, 255, .9f),
     rgba(40, 70, 110, .18f), rgba(244, 249, 255, .85f), rgba(255, 255, 255, .45f), Color(0xFFFF0000),
     rgba(16, 37, 58, .35f), Color(0xFF00FFFF), Color(0xFF041014), Color(0xFF000000),
+    Color(0xF2F4F9FF), rgba(255, 255, 255, .78f), rgba(255, 255, 255, .95f),
 )
 
 val LocalPal = staticCompositionLocalOf { DarkPal }

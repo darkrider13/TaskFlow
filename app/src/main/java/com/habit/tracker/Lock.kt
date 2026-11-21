@@ -286,7 +286,7 @@ fun LockTypeDlg(onClose: () -> Unit, onToast: (String) -> Unit) {
     val shape = RoundedCornerShape(30.dp)
     Box(Modifier.fillMaxSize().background(p.shade).tap { onClose() }.padding(16.dp), contentAlignment = Alignment.Center) {
         Column(
-            Modifier.widthIn(max = 380.dp).fillMaxWidth().clip(shape).background(if (p.dark) Color(0xF2161618) else Color(0xF2F4F9FF)).border(1.dp, p.edge, shape).tap { }
+            Modifier.widthIn(max = 380.dp).fillMaxWidth().clip(shape).background(p.sheet).border(1.dp, p.fieldEdge, shape).tap { }
                 .padding(start = 18.dp, end = 18.dp, top = 24.dp, bottom = 18.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {

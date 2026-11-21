@@ -115,7 +115,7 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
 @Composable
 fun WheelBand() {
     val p = LocalPal.current
-    Box(Modifier.fillMaxWidth().padding(top = 44.dp).height(44.dp).clip(RoundedCornerShape(16.dp)).background(p.glass2).border(1.dp, p.edge, RoundedCornerShape(16.dp)))
+    Box(Modifier.fillMaxWidth().padding(top = 44.dp).height(44.dp).clip(RoundedCornerShape(16.dp)).background(p.field).border(1.dp, p.fieldEdge, RoundedCornerShape(16.dp)))
 }
 
 /** 12-hour time picker (hour, minute, AM/PM). Returns "HH:mm" (24-hour) like the original. */

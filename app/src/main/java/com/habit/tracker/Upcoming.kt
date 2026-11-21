@@ -59,8 +59,8 @@ fun UpcomingScreen(rev: Int, todayKey: String, bottomPad: Dp, onEditTask: (JSONO
                     value = q, onValueChange = { q = normDigits(it) }, visualTransformation = BnDigits, singleLine = true,
                     textStyle = TextStyle(color = if (p.dark) p.ink else Color.Black, fontSize = 14.sp),
                     cursorBrush = SolidColor(p.ink),
-                    modifier = Modifier.fillMaxWidth().height(40.dp).clip(shape).background(if (p.dark) p.glass2 else Color.White)
-                        .border(1.dp, if (p.dark) p.edge else Color(0x4010253A), shape),
+                    modifier = Modifier.fillMaxWidth().height(40.dp).clip(shape).background(if (p.dark) p.field else Color.White)
+                        .border(1.dp, if (p.dark) p.fieldEdge else Color(0x4010253A), shape),
                     decorationBox = { inner ->
                         Box(Modifier.fillMaxSize().padding(start = 38.dp, end = 12.dp), contentAlignment = Alignment.CenterStart) {
                             if (q.isEmpty()) Tx(Str.t("searchPh"), size = 14.sp, color = p.muted)
@@ -132,8 +132,8 @@ fun CatSheet(rev: Int, onClose: () -> Unit) {
             BasicTextField(
                 value = n, onValueChange = { n = normDigits(it); err = false }, visualTransformation = BnDigits, singleLine = true,
                 textStyle = TextStyle(color = if (p.dark) p.ink else Color.Black, fontSize = 14.sp), cursorBrush = SolidColor(p.ink),
-                modifier = Modifier.weight(1f).height(38.dp).clip(shape).background(if (p.dark) p.glass2 else Color.White)
-                    .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.edge else Color(0x4010253A), shape),
+                modifier = Modifier.weight(1f).height(38.dp).clip(shape).background(if (p.dark) p.field else Color.White)
+                    .border(if (err) 2.dp else 1.dp, if (err) Color(0xFFFF0000) else if (p.dark) p.fieldEdge else Color(0x4010253A), shape),
                 decorationBox = { inner ->
                     Box(Modifier.fillMaxSize().padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart) {
                         if (n.isEmpty()) Tx(Str.t("catNamePh"), size = 14.sp, color = p.muted)

@@ -239,7 +239,7 @@ fun Root() {
                     Box(
                         Modifier.widthIn(max = 340.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(if (pal.dark) Color(0xF2161618) else Color(0xF2F4F9FF))
+                            .background(pal.sheet)
                             .border(1.dp, pal.edge, RoundedCornerShape(16.dp))
                             .padding(horizontal = 18.dp, vertical = 12.dp),
                     ) { Tx(msg, size = 14.sp, align = TextAlign.Center) }
