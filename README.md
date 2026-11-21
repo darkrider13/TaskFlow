@@ -131,8 +131,4 @@ Your tasks, habits and notes never leave your phone. There are no accounts, no a
 
 - Diary screen and badges (their data is still kept inside backups).
 
-## Credits
-
-Designed and developed by **MD. INSANUL ISLAM ABIR**.
-
-© Copyright MD. Insanul Islam Abir. All rights reserved.
+Made with ❤️ by [**darkrider13**](https://github.com/darkrider13)
