@@ -68,7 +68,8 @@ fun WheelColumn(items: List<String>, start: Int, loop: Boolean, modifier: Modifi
 @Composable
 fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> Unit, setColor: Color = Color.White, body: @Composable ColumnScope.() -> Unit) {
     val p = LocalPal.current
-    val shape = RoundedCornerShape(32.dp)
+    val shape = RoundedCornerShape(22.dp)
+    val bs = RoundedCornerShape(14.dp)
     DisposableEffect(Unit) { UiState.pickers++; onDispose { UiState.pickers-- } }
     // a real popup window on top of everything (so it is never cut off inside the form sheet)
     Dialog(onDismissRequest = onCancel, properties = DialogProperties(dismissOnClickOutside = false, usePlatformDefaultWidth = false)) {
@@ -76,19 +77,13 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
         SideEffect {
             val w = (view.parent as? DialogWindowProvider)?.window
             w?.addFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            w?.setDimAmount(0.6f)
-            if (w != null && android.os.Build.VERSION.SDK_INT >= 31) {
-                w.addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                val lp = w.attributes
-                lp.blurBehindRadius = 28
-                w.attributes = lp
-            }
+            w?.setDimAmount(0.6f) // same dim as the other popups (p.shade), no blur
         }
         Box(Modifier.fillMaxSize().tap { onCancel() }.padding(16.dp), contentAlignment = Alignment.Center) {
             Column(
                 Modifier.widthIn(max = 400.dp).fillMaxWidth().clip(shape)
-                    .background(if (p.dark) Color(0xFF1C1C1E) else Color(0xFAFFFFFF))
-                    .border(1.dp, p.edge, shape).tap { }
+                    .background(p.sheet)
+                    .border(1.dp, p.fieldEdge, shape).tap { }
                     .padding(start = 22.dp, end = 22.dp, top = 26.dp, bottom = 22.dp),
             ) {
                 Row(Modifier.padding(start = 6.dp, bottom = 18.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -99,11 +94,11 @@ fun PickerCard(icon: String, title: String, onCancel: () -> Unit, onSet: () -> U
                 body()
                 Row(Modifier.padding(top = 24.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(p.glass).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onCancel),
+                        Modifier.weight(1f).height(52.dp).clip(bs).background(p.field).border(1.dp, p.fieldEdge, bs).tap(onCancel),
                         contentAlignment = Alignment.Center,
                     ) { Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.Bold) }
                     Box(
-                        Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(18.dp)).background(setColor).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap(onSet),
+                        Modifier.weight(1f).height(52.dp).clip(bs).background(setColor).tap(onSet),
                         contentAlignment = Alignment.Center,
                     ) { Tx(Str.t("setB"), size = 16.sp, color = Color(0xFF041014), weight = FontWeight.Bold) }
                 }

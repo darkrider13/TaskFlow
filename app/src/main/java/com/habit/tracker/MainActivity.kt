@@ -462,8 +462,9 @@ fun Onboarding(rev: Int) {
             Modifier
                 .padding(top = 56.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(32.dp))
-                .background(if (p.dark) Color(0xFF1C1C1E) else Color(0xBFFFFFFF))
+                .clip(RoundedCornerShape(22.dp))
+                .background(p.sheet)
+                .border(1.dp, p.fieldEdge, RoundedCornerShape(22.dp))
                 .padding(start = 22.dp, end = 22.dp, top = 26.dp, bottom = 28.dp),
         ) {
             Tx(Str.t("obProf"), size = 26.sp, weight = FontWeight.Bold, modifier = Modifier.padding(start = 2.dp, bottom = 20.dp))

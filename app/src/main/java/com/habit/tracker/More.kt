@@ -139,8 +139,8 @@ fun MoreScreen(rev: Int, todayKey: String, bottomPad: Dp, onToast: (String) -> U
         }
         val addShape = RoundedCornerShape(20.dp)
         Box(
-            Modifier.padding(top = 4.dp).height(34.dp).clip(addShape).background(p.glass)
-                .border(1.dp, p.muted, addShape).tap { UiState.remObj = null; UiState.remSheet = true }.padding(horizontal = 14.dp),
+            Modifier.padding(top = 4.dp).height(34.dp).clip(addShape).background(p.field)
+                .border(1.dp, p.fieldEdge, addShape).tap { UiState.remObj = null; UiState.remSheet = true }.padding(horizontal = 14.dp),
             contentAlignment = Alignment.Center,
         ) { Tx(Str.t("remAdd"), size = 13.sp, color = p.muted) }
 
@@ -365,7 +365,7 @@ fun ExportDlg(onSave: () -> Unit, onShare: () -> Unit, onClose: () -> Unit) {
                 .padding(horizontal = 18.dp, vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Box(Modifier.size(75.dp).clip(CircleShape).background(p.glass), contentAlignment = Alignment.Center) {
+            Box(Modifier.size(75.dp).clip(CircleShape).background(p.field), contentAlignment = Alignment.Center) {
                 Box(Modifier.size(60.dp).clip(CircleShape).background(p.glass2), contentAlignment = Alignment.Center) {
                     Ic("export", size = 30.dp, tint = p.ink, stroke = 2.6f)
                 }

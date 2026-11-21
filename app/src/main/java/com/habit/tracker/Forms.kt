@@ -96,8 +96,8 @@ private fun IconBox(icon: String, onClick: () -> Unit) {
     val shape = RoundedCornerShape(12.dp)
     Box(
         Modifier.width(44.dp).height(40.dp).clip(shape)
-            .background(p.glass)
-            .border(1.dp, p.edge, shape).tap(onClick),
+            .background(p.field)
+            .border(1.dp, p.fieldEdge, shape).tap(onClick),
         contentAlignment = Alignment.Center,
     ) { Ic(icon, size = 20.dp, tint = p.ink) }
 }

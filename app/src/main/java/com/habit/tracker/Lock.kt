@@ -189,7 +189,7 @@ fun LockOverlay(spec: LockSpec, onToast: (String) -> Unit) {
                             val k = keys[r * 3 + c]
                             if (k.isEmpty()) Spacer(Modifier.weight(1f).height(56.dp)) else
                                 Box(
-                                    Modifier.weight(1f).height(56.dp).clip(RoundedCornerShape(18.dp)).background(p.glass).border(1.dp, p.edge, RoundedCornerShape(18.dp)).tap {
+                                    Modifier.weight(1f).height(56.dp).clip(RoundedCornerShape(18.dp)).background(p.field).border(1.dp, p.fieldEdge, RoundedCornerShape(18.dp)).tap {
                                         err = ""
                                         if (k == "bk") pin = pin.dropLast(1)
                                         else if (k == "bio") tryBio()
@@ -259,7 +259,7 @@ fun LockOverlay(spec: LockSpec, onToast: (String) -> Unit) {
             if (fp || (pat && bb)) {
                 val shape = RoundedCornerShape(18.dp)
                 Row(
-                    Modifier.padding(top = 18.dp).clip(shape).background(p.glass).border(1.dp, p.edge, shape).tap { tryBio() }.padding(horizontal = 22.dp, vertical = 12.dp),
+                    Modifier.padding(top = 18.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape).tap { tryBio() }.padding(horizontal = 22.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Ic("finger", size = 22.dp)
@@ -297,7 +297,7 @@ fun LockTypeDlg(onClose: () -> Unit, onToast: (String) -> Unit) {
                 val sel = k == cur
                 val s2 = RoundedCornerShape(20.dp)
                 Row(
-                    Modifier.fillMaxWidth().padding(bottom = 10.dp).clip(s2).background(p.glass).border(2.dp, if (sel) p.mono else Color.Transparent, s2)
+                    Modifier.fillMaxWidth().padding(bottom = 10.dp).clip(s2).background(p.field).border(2.dp, if (sel) p.mono else Color.Transparent, s2)
                         .tap { onClose(); LockState.pick(activity, k, onToast) }.padding(horizontal = 14.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
@@ -307,7 +307,7 @@ fun LockTypeDlg(onClose: () -> Unit, onToast: (String) -> Unit) {
                 }
             }
             val s3 = RoundedCornerShape(18.dp)
-            Box(Modifier.fillMaxWidth().padding(top = 6.dp).height(50.dp).clip(s3).background(p.glass).border(1.dp, p.edge, s3).tap { onClose() }, contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxWidth().padding(top = 6.dp).height(50.dp).clip(s3).background(p.field).border(1.dp, p.fieldEdge, s3).tap { onClose() }, contentAlignment = Alignment.Center) {
                 Tx(Str.t("cancelT"), size = 16.sp, weight = FontWeight.Bold)
             }
         }

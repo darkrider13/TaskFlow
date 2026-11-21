@@ -216,7 +216,7 @@ fun ChipsRow(items: List<Pair<String, String>>, sel: String, onAdd: (() -> Unit)
         if (onAdd != null) {
             Spacer(Modifier.width(gap))
             Box(
-                Modifier.height(28.dp).clip(shape).background(p.glass).border(1.dp, p.edge, shape).tap { onAdd() }.padding(horizontal = 12.dp),
+                Modifier.height(28.dp).clip(shape).background(p.field).border(1.dp, p.fieldEdge, shape).tap { onAdd() }.padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center,
             ) { Ic("plus", size = 14.dp) }
         }
