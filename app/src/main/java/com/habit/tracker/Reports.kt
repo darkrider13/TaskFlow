@@ -43,7 +43,7 @@ fun ReportsScreen(rev: Int, todayKey: String, bottomPad: Dp) {
     val tdone = tt.count { it.optBoolean("done") }
 
     Column(Modifier.fillMaxSize()) {
-        Seg(listOf(SegItem("w", Str.t("rW")), SegItem("m", Str.t("rM")), SegItem("y", Str.t("rY"))), rmode, { rmode = it }, Modifier.padding(bottom = 6.dp))
+        Seg(listOf(SegItem("w", Str.t("rW")), SegItem("m", Str.t("rM"))), rmode, { rmode = it }, Modifier.padding(bottom = 6.dp))
         Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())) {
             if (acts.isEmpty()) {
                 Column(Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 12.dp).glass().padding(14.dp)) {
