@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter
  */
 object HolRemote {
     /** Your own override file. Change user / repository / branch if yours are different. */
-    const val URL = "https://raw.githubusercontent.com/darkrider13/TaskFlow-v2/main/holidays.json"
+    const val URL = "https://raw.githubusercontent.com/darkrider13/TaskFlow/main/holidays.json"
 
     /** Public calendar feed with all Bangladesh government holidays (the same kind of feed a phone calendar subscribes to). */
     const val ICS_EN = "https://www.bangladatetoday.com/api/ical/holidays-bd.ics"

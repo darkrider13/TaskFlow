@@ -23,11 +23,11 @@ import java.net.URL
  */
 object Updater {
     /** Change user / repository if yours are different (the repository must be public). */
-    const val API = "https://api.github.com/repos/darkrider13/TaskFlow-v2/releases/tags/latest"
+    const val API = "https://api.github.com/repos/darkrider13/TaskFlow/releases/tags/latest"
 
     /** Plain web page of the same release; used when the API refuses (e.g. its hourly limit on shared mobile networks). */
-    const val WEB = "https://github.com/darkrider13/TaskFlow-v2/releases/tag/latest"
-    const val APK = "https://github.com/darkrider13/TaskFlow-v2/releases/download/latest/TaskFlow.apk"
+    const val WEB = "https://github.com/darkrider13/TaskFlow/releases/tag/latest"
+    const val APK = "https://github.com/darkrider13/TaskFlow/releases/download/latest/TaskFlow.apk"
 
     /** HTTP code of the last failed request, shown in the error text to find the cause. */
     var errCode by mutableIntStateOf(0)

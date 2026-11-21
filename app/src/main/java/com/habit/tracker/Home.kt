@@ -114,15 +114,15 @@ fun HomeScreen(
 
 /** Habit card bg like the "pill" look: the habit's colour glows from the top-left corner and fades into dark, with a soft coloured border. */
 @Composable
-fun Modifier.tintGlass(c: Color, radius: androidx.compose.ui.unit.Dp = 16.dp): Modifier {
+fun Modifier.tintGlass(c: Color, radius: androidx.compose.ui.unit.Dp = 16.dp, strength: Float = 1f): Modifier {
     val p = LocalPal.current
     if (!p.dark) return this.glass(radius)
     val shape = RoundedCornerShape(radius)
-    val brush = Brush.linearGradient(listOf(c.copy(alpha = 0.30f), c.copy(alpha = 0.07f)))
+    val brush = Brush.linearGradient(listOf(c.copy(alpha = (0.30f * strength).coerceAtMost(1f)), c.copy(alpha = (0.07f * strength).coerceAtMost(1f))))
     return this
         .clip(shape)
         .background(brush)
-        .border(1.dp, c.copy(alpha = 0.28f), shape)
+        .border(1.dp, c.copy(alpha = (0.28f * strength).coerceAtMost(1f)), shape)
 }
 
 @Composable

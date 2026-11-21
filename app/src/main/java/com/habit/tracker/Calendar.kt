@@ -79,14 +79,19 @@ fun CalendarScreen(rev: Int, todayKey: String, bottomPad: Dp, onOpenDay: (String
                 for (h in acts) {
                     val on = h.optLong("id") == UiState.sel
                     val shape = RoundedCornerShape(20.dp)
+                    val hc = parseColor(h.optString("color"))
                     Box(
-                        Modifier.height(34.dp).clip(shape)
-                            .background(if (on) parseColor(h.optString("color")) else p.glass)
-                            .border(1.dp, if (on) Color.Transparent else p.edge, shape)
+                        Modifier.height(34.dp)
+                            .let { m ->
+                                if (on && p.dark) m.tintGlass(hc, 20.dp, 1.7f)
+                                else m.clip(shape)
+                                    .background(if (on) hc else p.glass)
+                                    .border(1.dp, if (on) Color.Transparent else p.edge, shape)
+                            }
                             .tap { UiState.sel = if (on) null else h.optLong("id") }
                             .padding(horizontal = 14.dp),
                         contentAlignment = Alignment.Center,
-                    ) { Tx(h.optString("name"), size = 13.sp, color = if (on) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1) }
+                    ) { Tx(h.optString("name"), size = 13.sp, color = if (on && !p.dark) p.tink else p.ink, weight = if (on) FontWeight.Bold else FontWeight.Normal, maxLines = 1) }
                 }
             }
         }
