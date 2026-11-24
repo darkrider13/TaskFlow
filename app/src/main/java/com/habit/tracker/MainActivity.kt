@@ -47,6 +47,10 @@ class MainActivity : FragmentActivity() {
     override fun onResume() {
         super.onResume()
         Notifs.drain(this)
+        // coming back (e.g. from the "Alarms & reminders" settings): set every alarm again so they become exact
+        val text = Store.s.toString()
+        val app = applicationContext
+        Thread { try { Notifs.scheduleAll(app, org.json.JSONObject(text)) } catch (e: Exception) { } }.start()
     }
 
     override fun onStop() {
@@ -118,6 +122,15 @@ fun Root() {
             val i = Perms.intent(activity, permStep)
             if (i == null) permStep++
             else try { settingsLauncher.launch(i) } catch (e: Exception) { permStep++ }
+        }
+    }
+    // exact alarms still off on a later launch (denied before, or switched off in Settings): ask once per app opening
+    var exactAsked by rememberSaveable { mutableStateOf(!Perms.done(activity)) }
+    LaunchedEffect(permStep) {
+        if (permStep > Perms.LAST && !exactAsked) {
+            exactAsked = true
+            val i = Perms.intent(activity, 1)
+            if (i != null) try { settingsLauncher.launch(i) } catch (e: Exception) { }
         }
     }
     // keep the phone alarms in step with the data (a short pause lets quick edits settle)
