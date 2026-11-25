@@ -365,7 +365,6 @@ fun BigBtn(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
 /** Footer social icons (not part of the main icon set). */
 object IconExtra {
     val all: Map<String, List<IconData.Part>> = mapOf(
-        "fb" to listOf(IconData.Part("M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V9a1 1 0 0 1 1-1z", true)),
         "wa" to listOf(
             IconData.Part("M3 21L4.2 16.5A9 9 0 1 1 7.5 19.8Z", false),
             IconData.Part("M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z", true, 0.4f, 7.2f),

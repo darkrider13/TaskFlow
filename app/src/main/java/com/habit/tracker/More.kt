@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import org.json.JSONObject
 
 private val FOOT_LINKS = mapOf(
-    "fb" to "https://www.facebook.com/insanul.islam.abirr",
     "wa" to "https://wa.me/insanul.islam.abir",
     "ig" to "https://www.instagram.com/md.insanulislam",
     "tg" to "https://t.me/insanul13",
@@ -147,7 +146,7 @@ fun MoreScreen(rev: Int, todayKey: String, bottomPad: Dp, onToast: (String) -> U
         LockCard(rev, onToast)
 
         // footer
-        Column(Modifier.fillMaxWidth().padding(top = 18.dp).glass().padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.fillMaxWidth().padding(top = 18.dp).padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Tx(Str.t("ftDev"), size = 14.sp, weight = FontWeight.Bold, align = TextAlign.Center)
             Row(Modifier.padding(horizontal = 6.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 for ((k, url) in FOOT_LINKS) {
